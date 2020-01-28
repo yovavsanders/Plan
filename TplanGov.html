@@ -1,0 +1,811 @@
+
+
+
+<!DOCTYPE html>
+<html style='width:100%; height:100%;'>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+
+
+
+
+
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 600px) {
+    #myTitle {
+      display: none;
+    }
+	#myMenu{
+      display: none;
+    }
+  }
+
+   @media (min-width: 600px) {
+    #myTitleMobile {
+      display: none;
+    }
+	#myMenuMobile{
+      display: none;
+    }
+  }
+
+
+
+
+  
+.list__tile__title {
+    text-align: right;
+}
+
+.toolbar__title {
+    margin-right: 16px;
+}
+
+.input-group--text-field label {
+    position: absolute;
+    top: 18px;
+    right: 0;
+}
+
+.input-group label {
+    text-align: right;
+    -webkit-transform-origin: top right;
+    transform-origin: top right;
+}
+.input-group.input-group--selection-controls label{
+    right: 32px;
+    left: auto;
+}
+.input-group.input-group--selection-controls .icon--selection-control {
+    left: auto;
+    right: 0;
+}
+.input-group--selection-controls__ripple {
+    -webkit-transform: translate3d(12px,-52%,0);
+    transform: translate3d(12px,-52%,0);
+    left: auto;
+    right: 0;
+}
+
+.v-dialog {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.watermark
+{
+    position: absolute;
+    right: 0%!important;
+    bottom: 7%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+
+</style>
+<html>
+
+<head>
+  
+<!-- 		<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">  -->
+		<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  
+<!-- 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> -->
+
+
+
+
+   <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'> 
+   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://www.govmap.gov.il/govmap/api/govmap.api.js" ></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script> 
+</head>
+<body style='width:100%; height:95%;' scrolling='no' dir="rtl">
+  <div id="toolbar_app">
+    <v-app>
+
+		
+
+
+
+
+    <v-app-bar
+      color="blue lighten-1"
+      dense
+	  dark
+	  id="myTitle"
+    >
+
+
+  <div class="text-right" style="width:25%; text-align:right">
+	<img src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40" style="background-color: transparent; vertical-align: middle; margin-top: 5px"/>
+	  <v-menu
+	  	right
+		v-model="menu"
+
+	
+        :close-on-content-click="false"
+        
+        offset-x
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn text
+          class="ma-2" 
+            color="white--text"
+
+            v-on="on"
+          >
+          <v-icon dark right right>menu</v-icon>
+            
+          </v-btn>
+        </template>
+  
+        <v-card id="myMenu">
+
+  
+          <v-list>
+
+				<v-container id="progress_line" class="d-none">
+						<v-layout
+						  fill-height
+						  wrap
+						>
+						  <v-flex xs12>
+							<v-progress-linear
+							  
+							  color="deep-orange accent-4"
+							  indeterminate
+							  rounded
+							  height="6"
+							></v-progress-linear>
+						  </v-flex>
+						</v-layout>
+				</v-container>
+
+
+
+              	<v-list-item>
+					<div class="my-2">
+						<v-btn text @click="dialog_search = true; menu=false;">חיפוש תכנית</v-btn>
+					</div>
+				</v-list-item>
+				
+				<v-list-item>
+					<div class="my-2">
+						<v-btn text @click="dialog_filter = true; menu=false;">סינון תכנית</v-btn>
+					</div>
+				</v-list-item>
+
+                <v-list-item>
+                <div class="my-2">
+                    <v-btn text color="warning"  @click="selectFromMapClick" dark>בחירה מהמפה
+
+					</v-btn disable>
+                </div>
+              </v-list-item>
+
+
+              <v-list-item>
+              	<div class="my-2">
+                	<v-btn text color="error" id="cancel_button"  class="d-flex" @click="cancelClick" dark>ביטול בחירה </v-btn>
+                </div>
+              </v-list-item>
+
+
+
+
+          </v-list>
+
+        </v-card>
+	</v-menu>
+    </div>
+	
+		<v-divider vertical></v-divider>
+
+
+
+
+	<v-spacer></v-spacer>
+      <v-toolbar-title class="white--text" style="text-align: center; width:50%">TplanGov</v-toolbar-title>
+    <v-spacer></v-spacer>
+	
+	
+		<v-divider vertical></v-divider>
+		
+		<v-text-field v-model="geocode_text" style="margin-top: 30px; text-align: right;"
+		label="התמקדות לכתובת או ישוב"
+		outlined
+	  ></v-text-field>
+
+      <v-btn
+      class="ma-2"
+      :loading="loading"
+      :disabled="loading"
+      color="success"
+	  @click="geocode"
+	  style="width:5%"
+    >
+
+      <template v-slot:loader>
+        <span class="custom-loader">
+          <v-icon light>cached</v-icon>
+        </span>
+      </template>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+	</v-app-bar>
+
+
+
+	<v-app-bar
+	color="blue lighten-1"
+	dense
+	dark
+	id="myTitleMobile"
+  >
+
+
+
+
+
+<div class="text-right" style="width:25%; text-align:right; vertical-align: middle;">
+	<v-menu
+		right
+	  v-model="menu"
+
+  
+	  :close-on-content-click="false"
+	  
+	  offset-x
+	>
+	  <template v-slot:activator="{ on }">
+		<v-btn text
+		class="ma-1" 
+		  color="white--text"
+
+		  v-on="on"
+		>
+		
+		<v-icon dark right center>menu</v-icon>
+		  
+		</v-btn>
+	  </template>
+
+	  <v-card id="myMenuMobile" right>
+
+
+		<v-list>
+
+			  <v-container id="progress_line_mobile" class="d-none">
+					  <v-layout
+						fill-height
+						wrap
+					  >
+						<v-flex xs12>
+						  <v-progress-linear
+							
+							color="deep-orange accent-4"
+							indeterminate
+							rounded
+							height="6"
+						  ></v-progress-linear>
+						</v-flex>
+					  </v-layout>
+			  </v-container>
+
+
+
+			<v-list-item>
+				<div class="my-2" block >
+						<v-btn text @click="dialog_search = true; menu=false;">חיפוש תכנית</v-btn>
+				  </div>
+			  </v-list-item>
+	
+			  <v-list-item>
+				  <div class="my-2">
+					<v-btn text @click="dialog_filter = true; menu=false;">סינון תכנית</v-btn>
+				  </div>
+			  </v-list-item>
+
+			  <v-list-item>
+			  <div class="my-2">
+				  <v-btn text color="warning"  @click="selectFromMapClick" dark>בחירה מהמפה
+
+				  </v-btn disable>
+			  </div>
+			</v-list-item>
+
+
+			<v-list-item>
+			<div class="my-2">
+				<v-btn text color="error" id="cancel_button"  class="d-flex" @click="cancelClick" dark>ביטול בחירה </v-btn>
+			  </div>
+			</v-list-item>
+
+
+
+
+		</v-list>
+
+	  </v-card>
+	</v-menu>
+  </div>
+
+  
+  
+	  <v-divider vertical></v-divider>
+	  
+	  <v-text-field v-model="geocode_text" style="margin-top: 25px; text-align: right;"
+	  label="התמקדות לכתובת או ישוב"
+	  outlined
+	></v-text-field>
+
+	<v-btn
+	class="ma-1"
+	:loading="loading"
+	:disabled="loading"
+	color="success"
+	@click="geocode"
+	style="width:5%"
+  >
+
+	<template v-slot:loader>
+	  <span class="custom-loader">
+		<v-icon light>cached</v-icon>
+	  </span>
+	</template>
+	<v-icon>mdi-magnify</v-icon>
+  </v-btn>
+  </v-app-bar>
+	
+
+
+
+	<v-navigation-drawer disable-resize-watcher
+	v-model="dialog_search"
+	id="tchum_dialog"
+	right
+
+	absolute
+	temporary
+	width="320px"
+	
+  >
+	<v-card right id="search_card">
+	 <v-card-title style="margin-top: 0%">חיפוש תכנית</v-card-title>
+	  <v-divider></v-divider>
+	  <v-card-text right scrollable style="overflow: auto;"  >
+
+			<v-container fluid style="text-align: right;" right >
+
+				<v-text-field v-model = "POLYGON_NAME" label="ת.ז. של המתחם" @keydown.enter="POLYGON_NAME_kdown"></v-text-field>
+
+				<v-text-field v-model = "PLAN_NB" label="מספר תכנית" @keydown.enter="PLAN_NB_kdown"></v-text-field>
+
+				<v-text-field v-model = "PLAN_NAME" label="שם תכנית" @keydown.enter="PLAN_NAME_kdown"></v-text-field>
+
+			</v-container>
+
+	  </v-card-text>
+	  <v-divider></v-divider>
+	  <v-card-actions style="margin-bottom: 0%">
+			<v-btn
+			v-model="search_selected" 
+			id="SearchButton"
+			class="ma-2"
+			color="success"
+			@click="SearchSelected"
+		  >
+			בצע בחירה
+			<v-icon>mdi-magnify</v-icon>
+		  </v-btn>
+
+		  <v-btn
+		  id="ClearSearchButton"
+		  class="ma-2"
+		  color="error"
+		  @click="ClearSearch"
+		>
+		  נקה בחירה
+		  <v-icon>mdi-cancel</v-icon>
+		</v-btn>
+	  </v-card-actions>
+	</v-card>
+  </v-navigation-drawer>
+  
+  
+  
+  
+<v-navigation-drawer
+	v-model="dialog_filter"
+	id="filter_dialog"
+	right
+
+	absolute
+	temporary
+	width="320px"
+	hight="100%"
+  >
+	<v-card right>
+        <v-row>
+		  <v-card-title>סינון תכנית</v-card-title>
+        </v-row>
+
+
+
+	  <v-divider></v-divider>
+	  <v-card-text right>
+			<v-container fluid style="text-align: right;" hight=100% right>
+
+			<v-select
+				v-model ="POLYGON_TYPE"
+				:items="POLYGON_TYPE_items"
+				label="סוג מתחם"
+			></v-select>
+
+			<v-select
+				v-model = "MAIN_STATUS"
+				:items="MAIN_STATUS_items"
+				label="סטטוס עיקרי"
+			></v-select>
+
+			<v-select
+				v-model = "PLAN_STATUS"
+			    :items="PLAN_STATUS_items"
+			    label="סטטוס"
+			></v-select>
+
+			<v-select
+				v-model = "FLAT_NUMBER"
+			    :items="FLAT_NUMBER_items"
+			    label='תוספת יח"ד'
+		    ></v-select>
+
+			<v-select
+			v-model = "YEARLY_WORK_PLAN"
+		  	    :items="YEARLY_WORK_PLAN_items"
+		  	    label='תכנית עבודה'
+		   ></v-select>
+
+
+			</v-container>
+	  </v-card-text>
+	  <v-card-actions>
+			<v-btn
+			v-model="filter_selected" 
+			id="FilterButton"
+			class="ma-2"
+			color="success"
+			@click="FilterSelected"
+		  >
+			בצע בחירה
+			<v-icon>mdi-magnify</v-icon>
+		  </v-btn>
+
+		  <v-btn
+		  id="ClearFilterhButton"
+		  class="ma-2"
+		  color="error"
+		  @click="ClearFilter"
+		>
+		  נקה בחירה
+		  <v-icon>mdi-cancel</v-icon>
+		</v-btn>
+	  </v-card-actions>
+	</v-card>
+  </v-navigation-drawer>
+
+  <img class="watermark" src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40"/>
+	<form name="form" style='height: 100%;' scrolling='no'> 
+			
+			<div id="map_div" style="width: 100%; height: 100%; float:left">
+					
+					
+            </div> 			
+    </form>
+
+</v-app>
+</div>
+
+
+
+
+<!-- <script type="text/javascript" src="AtudotAll_2019.js"></script> -->
+<script type="text/javascript" src="https://atudot.gov.il/scripts/mapi/AtudotAll_2019.js"></script>
+<script>
+	var cars = [];
+	$(document).ready(function(){
+	https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=typeahead-with-local-dataset
+		cars = [];
+		for(var i = 0; i < AtudotAll.items.length; i++) {
+			var opt = AtudotAll.items[i].שם;
+			cars.push(opt);
+		}
+		appVue.ac_items = cars.sort();
+		appVue.ac_items_mobile = cars.sort();
+	});
+
+var myDataAll = AtudotAll;
+var myRadiusData = {
+
+};
+var myData = {
+};
+
+var myComboTchumData = [];
+var myComboTochnitData = [];
+var myComboSetlData = [];
+
+function isInArray(value, array) {
+	return array.indexOf(value) > -1;
+}
+
+
+var layerData;
+$(document).ready(function(){
+    //var my_token = "5a4b8472-b95b-4687-8179-0ccb621c7990";//localhost
+	//var my_token = "0fff9694-a045-4ede-b997-ee9927b0d56c";//govmap
+	var my_token ='aafedfe5-8dfa-4fd5-9af9-8b95759447bd';
+    $(function () {
+            govmap.createMap('map_div', {
+                token: my_token,
+                visibleLayers: ['PerekDiurMitcham'],
+                layers:['PerekDiurMitcham', 'METRO_STAT', 'METRO_LINE'], 
+				layersMode: 2, 
+                showXY: true,
+				level: 2,
+				center: {x: 186000, y: 658000},
+                identifyOnClick: true
+			});
+		
+            	
+    });
+});
+
+
+var appVue = new Vue({
+    el:"#toolbar_app",
+    vuetify: new Vuetify(),
+    data () {
+      return {
+		POLYGON_TYPE: "",
+		MAIN_STATUS: "",
+		PLAN_STATUS: "",
+		FLAT_NUMBER: "",
+		YEARLY_WORK_PLAN: "",
+		PLAN_STATUS: "",
+
+		POLYGON_TYPE_items: ['לא סטטוטורי', 'מסמך מדיניות', 'תכנית כוללנית', 'תכנית מועדפת לדיור', 'תכנית מפורטת', 'תכנית מתאר כוללנית/ מתאר', 'תכנית מתאר מקומית'],
+		MAIN_STATUS_items: ['אסטרטגי', 'קדם תכנון', 'בתהליך', 'מאושר'],
+		PLAN_STATUS_items: ['בבדיקה תכנונית', 'בהליך אישור', 'בהליך סטטוטורי', 'בהמתנה', 'בהפקדה', 'במילוי תנאים להפקדה', 'הוסר', 'הופק נוסח אישור', 'טרום הגשה', 'מאושר', 'ממתינות להכרעה בתכנית', 'פורסם לאישור', 'קליטת תכנית'],
+		FLAT_NUMBER_items: ['50 - 250', '250 - 500','500 - 1000','1000 - 5000','5000 - 10000','10000 - 20000','20000 - 50000','50000 - 100000','100000 - 500000' ],
+		YEARLY_WORK_PLAN_items: ['2017','2018','2019','2020','2021','2022', '2023 - 2025','2026 - 2030','2030 - 2040'],
+        dialog_search: false,
+		dialog_filter: false,
+		filter_selected: [],
+		tchum_cbx_selected: [],
+		menu: false,
+		dialog :false,
+
+		POLYGON_NAME: "",
+		PLAN_NB: "",
+		PLAN_NAME: "",
+
+		geocode_text: "",
+
+		loading: false,
+		search_selected: [],
+      }
+    },
+    methods: {
+		selectFromMapClick(){
+
+			if (document.getElementById("cancel_button"))
+			{
+				appVue.menu = true;
+				govmap.draw(govmap.drawType.Circle).progress(function (e)
+				{
+					appVue.menu = true;
+					progress_line = document.getElementById("progress_line");
+					progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
+					progress_line_mobile = document.getElementById("progress_line_mobile");
+					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
+					var counter = 0;
+					govmap.getLayerData({ 'LayerName': "PerekDiurMitcham", 'Point': { 'x': e.x, 'y':  e.y }, 'Radius':e.radius  })
+					.then(function (e) {
+					res = e;
+					console.log(e);
+					var ids = "";
+					for (i = 0; i < e.data.length; i++) {
+						//console.log(e.data[i].Fields);
+						var id = e.data[i].Fields[0].Value;
+						if (i == e.data.length - 1)
+						{
+							ids = ids + "'"+id + "'";
+						}
+						else{
+							ids = ids + "'"+id + "', ";
+						}
+
+					}
+
+					govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': 'POLYGON_NAME IN ('+ids+')', 'zoomToExtent': true});
+
+					progress_line = document.getElementById("progress_line");
+					progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
+					progress_line_mobile = document.getElementById("progress_line_mobile");
+					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
+					
+					});
+				});
+			}
+		},
+
+		geocode () {
+			
+			console.log(this.geocode_text);
+
+
+			govmap.geocode({keyword: this.geocode_text},govmap.geocodeType.FullResult)
+					.then(function(response){
+						console.log("then:");
+						console.log(response);
+						govmap.zoomToXY({ x: response.data[0].X, y: response.data[0].Y, level: 10, marker: true });
+					});
+
+		},
+        FilterSelected(){
+			var query = "OBJECTID > 0 AND ";
+			if (this.POLYGON_TYPE){
+
+				query = query + "POLYGON_TYPE ='"+this.POLYGON_TYPE+"' AND ";
+			}
+
+			if (this.MAIN_STATUS){
+				query = query + "MAIN_STATUS ='"+this.MAIN_STATUS+"' AND ";
+
+			}
+			if (this.PLAN_STATUS){
+				query = query + "PLAN_STATUS ='"+this.PLAN_STATUS+"' AND ";
+
+			}
+			if (this.FLAT_NUMBER){
+				query = query + "FLAT_NUMBER ='"+this.FLAT_NUMBER+"' AND ";
+			}
+			if (this.YEARLY_WORK_PLAN)
+			{
+				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
+			}
+			query = query + " OBJECTID > -1"
+			if (this.POLYGON_TYPE || this.PLAN_STATUS || this.MAIN_STATUS  || this.FLAT_NUMBER || this.YEARLY_WORK_PLAN)
+			{
+				govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': query, 'zoomToExtent': true});
+			}
+			console.log(query);
+		},
+		
+		SearchSelected(){
+
+			var query = "OBJECTID > 0 AND ";
+			if (this.POLYGON_NAME){
+
+				query = query + "POLYGON_NAME ='"+this.POLYGON_NAME+"' AND ";
+			}
+
+			if (this.PLAN_NB){
+				query = query + "PLAN_NB ='"+this.PLAN_NB+"' AND ";
+
+			}
+			if (this.PLAN_NAME){
+				query = query + "PLAN_NAME ='"+this.PLAN_NAME+"' AND ";
+			}
+			query = query + " OBJECTID > -1"
+			if (this.POLYGON_NAME || this.PLAN_NB || this.PLAN_NAME)
+			{
+				govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': query, 'zoomToExtent': true});
+			}
+			console.log(query);		
+		
+		
+		},
+
+		ClearSearch(){
+			
+		this.POLYGON_NAME =  "";
+		this.PLAN_NB = "";
+		this.PLAN_NAME = "";
+
+
+		},
+
+		ClearFilter(){
+			
+			this.POLYGON_TYPE = "";
+			this.MAIN_STATUS=  "";
+			this.FLAT_NUMBER=  "";
+			this.YEARLY_WORK_PLAN=  "";
+			this.PLAN_STATUS=  "";
+	
+	
+			},
+
+		cancelClick()
+		{
+			this.POLYGON_NAME =  "";
+			this.PLAN_NB = "";
+			this.PLAN_NAME = "";
+
+			this.POLYGON_TYPE = "";
+			this.MAIN_STATUS=  "";
+			this.FLAT_NUMBER=  "";
+			this.YEARLY_WORK_PLAN=  "";
+			this.PLAN_STATUS=  "";
+
+			govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': "", 'zoomToExtent': false});
+			govmap.refreshResource({ layerName: 'PerekDiurMitcham' });
+		}
+    }
+})
+
+
+</script>
+</body>
+</html>
+
+
