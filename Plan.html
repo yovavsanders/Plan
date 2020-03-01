@@ -1,0 +1,1485 @@
+
+
+<!DOCTYPE html>
+<html style='width:100%; height:100%;'>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+
+
+
+
+
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 600px) {
+    #myTitle {
+      display: none;
+    }
+	#myMenu{
+      display: none;
+    }
+  }
+
+   @media (min-width: 600px) {
+    #myTitleMobile {
+      display: none;
+    }
+	#myMenuMobile{
+      display: none;
+    }
+  }
+
+
+
+
+  
+.list__tile__title {
+    text-align: right;
+}
+
+.toolbar__title {
+    margin-right: 16px;
+}
+
+.input-group--text-field label {
+    position: absolute;
+    top: 18px;
+    right: 0;
+}
+
+.input-group label {
+    text-align: right;
+    -webkit-transform-origin: top right;
+    transform-origin: top right;
+}
+.input-group.input-group--selection-controls label{
+    right: 32px;
+    left: auto;
+}
+.input-group.input-group--selection-controls .icon--selection-control {
+    left: auto;
+    right: 0;
+}
+.input-group--selection-controls__ripple {
+    -webkit-transform: translate3d(12px,-52%,0);
+    transform: translate3d(12px,-52%,0);
+    left: auto;
+    right: 0;
+}
+
+.v-dialog {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.watermark
+{
+    position: absolute;
+    right: 0%!important;
+    bottom: 7%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+
+</style>
+<html>
+
+<head>
+  
+<!-- 		<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+		<link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">  -->
+		<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  
+<!-- 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> -->
+
+
+
+
+   <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'> 
+   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://www.govmap.gov.il/govmap/api/govmap.api.js" ></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script> 
+</head>
+<body style='width:100%; height:95%;' scrolling='no' dir="rtl">
+  <div id="toolbar_app">
+    <v-app>
+
+		
+
+
+
+
+    <v-app-bar
+      color="blue lighten-1"
+      dense
+	  dark
+	  id="myTitle"
+    >
+
+
+  <div class="text-right" style="width:25%; text-align:right">
+	<img src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40" style="background-color: transparent; vertical-align: middle; margin-top: 5px"/>
+	  <v-menu
+	  	right
+		v-model="menu"
+
+	
+        :close-on-content-click="false"
+        
+        offset-x
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn text
+          class="ma-2" 
+            color="white--text"
+
+            v-on="on"
+          >
+          <v-icon dark right right>menu</v-icon>
+            
+          </v-btn>
+        </template>
+  
+        <v-card id="myMenu">
+
+  
+          <v-list>
+
+				<v-container id="progress_line" class="d-none">
+						<v-layout
+						  fill-height
+						  wrap
+						>
+						  <v-flex xs12>
+							<v-progress-linear
+							  
+							  color="deep-orange accent-4"
+							  indeterminate
+							  rounded
+							  height="6"
+							></v-progress-linear>
+						  </v-flex>
+						</v-layout>
+				</v-container>
+
+
+				
+				<v-list-item>
+					<div class="my-2">
+						<v-btn text @click="dialog_layers = true; menu=false;">שכבות מידע</v-btn>
+					</div>
+				</v-list-item>
+
+				<!-------------------------------------CHAYA--------------------------------------------------->
+				<v-list-item>
+					<div class="my-2">
+						<v-btn text @click="dialog_layers_tama1 = true; menu=false;">תמא 1</v-btn>
+					</div>
+				</v-list-item>
+				<!-------------------------------------END CHAYA--------------------------------------------------->
+
+              	<v-list-item>
+					<div class="my-2">
+						<v-btn text @click="dialog_search = true; menu=false;">חיפוש תכנית</v-btn>
+					</div>
+				</v-list-item>
+				
+				<v-list-item>
+					<div class="my-2">
+						<v-btn text @click="dialog_filter = true; menu=false;">סינון תכנית / מתחם</v-btn>
+					</div>
+				</v-list-item>
+
+                <v-list-item>
+                <div class="my-2">
+                    <v-btn text color="warning"  @click="selectFromMapClick" dark>בחירה מהמפה
+
+					</v-btn disable>
+                </div>
+              </v-list-item>
+
+
+              <v-list-item>
+              	<div class="my-2">
+                	<v-btn text color="error" id="cancel_button"  class="d-flex" @click="cancelClick" dark>ביטול בחירה </v-btn>
+                </div>
+              </v-list-item>
+
+
+
+
+          </v-list>
+
+        </v-card>
+	</v-menu>
+    </div>
+	
+		<v-divider vertical></v-divider>
+
+
+
+
+	<v-spacer></v-spacer>
+      <v-toolbar-title class="white--text" style="text-align: center; width:50%">שולחן השרטוט הממשלתי TPlanGov</v-toolbar-title>
+    <v-spacer></v-spacer>
+	
+	
+		<v-divider vertical></v-divider>
+		
+		<v-text-field v-model="geocode_text" style="margin-top: 30px; text-align: right;"
+		label="התמקדות לכתובת או ישוב"
+		outlined
+	  ></v-text-field>
+
+      <v-btn
+      class="ma-2"
+      :loading="loading"
+      :disabled="loading"
+      color="success"
+	  @click="geocode"
+	  style="width:5%"
+    >
+
+      <template v-slot:loader>
+        <span class="custom-loader">
+          <v-icon light>cached</v-icon>
+        </span>
+      </template>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+	</v-app-bar>
+
+
+
+	<v-app-bar
+	color="blue lighten-1"
+	dense
+	dark
+	id="myTitleMobile"
+  >
+
+
+
+
+
+<div class="text-right" style="width:25%; text-align:right; vertical-align: middle;">
+	<v-menu
+		right
+	  v-model="menu"
+
+  
+	  :close-on-content-click="false"
+	  
+	  offset-x
+	>
+	  <template v-slot:activator="{ on }">
+		<v-btn text
+		class="ma-1" 
+		  color="white--text"
+
+		  v-on="on"
+		>
+		
+		<v-icon dark right center>menu</v-icon>
+		  
+		</v-btn>
+	  </template>
+
+	  <v-card id="myMenuMobile" right>
+
+
+		<v-list>
+
+			  <v-container id="progress_line_mobile" class="d-none">
+					  <v-layout
+						fill-height
+						wrap
+					  >
+						<v-flex xs12>
+						  <v-progress-linear
+							
+							color="deep-orange accent-4"
+							indeterminate
+							rounded
+							height="6"
+						  ></v-progress-linear>
+						</v-flex>
+					  </v-layout>
+			  </v-container>
+
+			  <v-list-item>
+				<div class="my-2">
+					<v-btn text @click="dialog_layers = true; menu=false;">שכבות מידע</v-btn>
+				</div>
+			</v-list-item>
+
+			<!-------------------------------------CHAYA--------------------------------------------------->
+			<v-list-item>
+				<div class="my-2">
+					<v-btn text @click="dialog_layers_tama1 = true; menu=false;">תמא 1</v-btn>
+				</div>
+			</v-list-item>
+			<!-------------------------------------END CHAYA--------------------------------------------------->
+
+			<v-list-item>
+				<div class="my-2" block >
+						<v-btn text @click="dialog_search = true; menu=false;">חיפוש תכנית</v-btn>
+				  </div>
+			  </v-list-item>
+	
+			  <v-list-item>
+				  <div class="my-2">
+					<v-btn text @click="dialog_filter = true; menu=false;">סינון תכנית / מתחם</v-btn>
+				  </div>
+			  </v-list-item>
+
+			  <v-list-item>
+			  <div class="my-2">
+				  <v-btn text color="warning"  @click="selectFromMapClick" dark>בחירה מהמפה
+
+				  </v-btn disable>
+			  </div>
+			</v-list-item>
+
+
+			<v-list-item>
+			<div class="my-2">
+				<v-btn text color="error" id="cancel_button"  class="d-flex" @click="cancelClick" dark>ביטול בחירה </v-btn>
+			  </div>
+			</v-list-item>
+
+
+
+
+		</v-list>
+
+	  </v-card>
+	</v-menu>
+  </div>
+
+  
+  
+	  <v-divider vertical></v-divider>
+	  
+	  <v-text-field v-model="geocode_text" style="margin-top: 25px; text-align: right;"
+	  label="התמקדות לכתובת או ישוב"
+	  outlined
+	></v-text-field>
+
+	<v-btn
+	class="ma-1"
+	:loading="loading"
+	:disabled="loading"
+	color="success"
+	@click="geocode"
+	style="width:5%"
+  >
+
+	<template v-slot:loader>
+	  <span class="custom-loader">
+		<v-icon light>cached</v-icon>
+	  </span>
+	</template>
+	<v-icon>mdi-magnify</v-icon>
+  </v-btn>
+  </v-app-bar>
+
+
+
+
+
+<!---------------------------------------------CHAYA------------------------------------------------------------>
+
+<v-navigation-drawer disable-resize-watcher
+v-model="dialog_layers_tama1"
+id="layers_dialog"
+right
+
+absolute
+temporary
+width="320px"
+
+>
+
+<v-card right id="layers_card"
+	max-width="500"
+	class="mx-auto"
+  >
+	<v-toolbar
+	  color="teal"
+	  dark
+	>
+
+	  <v-toolbar-title>תמא 1 </v-toolbar-title>
+
+	  <v-spacer></v-spacer>
+
+	  <v-btn icon>
+		<v-icon>mdi-dots-vertical</v-icon>
+	  </v-btn>
+	</v-toolbar>
+
+	<v-list>
+	  <v-list-group
+		v-for="item in items_tama1"
+		:key="item.title"
+		v-model="item.active"
+		:prepend-icon="item.action"
+		no-action
+	  >
+		<template v-slot:activator>
+		  <v-list-item-content>
+			<v-list-item-title v-text="item.title"></v-list-item-title>
+		  </v-list-item-content>
+		</template>
+
+		<v-list-item
+		  v-for="subItem in item.items"
+		  :key="subItem.title"
+		  @click="LayerChange_tama1(subItem)"
+		>
+		<template v-slot:default="{ active }">
+			<v-list-item-action>
+			  <v-checkbox
+				v-model="active"
+				color="primary"
+			  ></v-checkbox>
+			</v-list-item-action>
+		  <v-list-item-content>
+			<v-list-item-title v-text="subItem.title"></v-list-item-title>
+		  </v-list-item-content>
+		</template>
+		</v-list-item>
+	  </v-list-group>
+
+
+	</v-list>
+</v-card>
+</v-navigation-drawer>
+<!--
+END CHAYA
+--> 
+
+
+	
+  <v-navigation-drawer disable-resize-watcher
+	v-model="dialog_layers"
+	id="layers_dialog"
+	right
+
+	absolute
+	temporary
+	width="320px"
+	
+  >
+	<v-card right id="layers_card"
+		max-width="500"
+		class="mx-auto"
+	  >
+		<v-toolbar
+		  color="teal"
+		  dark
+		>
+	
+		  <v-toolbar-title>שכבות מידע </v-toolbar-title>
+	
+		  <v-spacer></v-spacer>
+	
+		  <v-btn icon>
+			<v-icon>mdi-dots-vertical</v-icon>
+		  </v-btn>
+		</v-toolbar>
+	
+		<v-list>
+		  <v-list-group
+			v-for="item in items"
+			:key="item.title"
+			v-model="item.active"
+			:prepend-icon="item.action"
+			no-action
+		  >
+			<template v-slot:activator>
+			  <v-list-item-content>
+				<v-list-item-title v-text="item.title"></v-list-item-title>
+			  </v-list-item-content>
+			</template>
+	
+			<v-list-item
+			  v-for="subItem in item.items"
+			  :key="subItem.title"
+			  @click="LayerChange(subItem)"
+			>
+			<template v-slot:default="{ active }">
+				<v-list-item-action>
+				  <v-checkbox
+					v-model="active"
+					color="primary"
+				  ></v-checkbox>
+				</v-list-item-action>
+			  <v-list-item-content>
+				<v-list-item-title v-text="subItem.title"></v-list-item-title>
+			  </v-list-item-content>
+			</template>
+			</v-list-item>
+		  </v-list-group>
+
+
+		</v-list>
+	</v-card>
+  </v-navigation-drawer>
+
+
+
+	<v-navigation-drawer disable-resize-watcher
+	v-model="dialog_search"
+	id="tchum_dialog"
+	right
+
+	absolute
+	temporary
+	width="320px"
+	
+  >
+	<v-card right id="search_card">
+	 <v-card-title style="margin-top: 0%">חיפוש תכנית</v-card-title>
+	  <v-divider></v-divider>
+	  <v-card-text right scrollable style="overflow: auto;"  >
+
+		<v-container fluid style="text-align: right;" right >
+
+			<v-autocomplete id="name_ac" reverse
+				v-model="POLYGON_NAME"
+				:loading="loading"
+				:items="name_items"
+				:search-input.sync="name_search"
+				cache-items
+				flat
+				hide-no-data
+				hide-details
+				label="ת.ז. של המתחם"
+				append-icon=""
+			></v-autocomplete>
+
+			<v-autocomplete id="paln_nb_ac" reverse
+			  v-model="PLAN_NB"
+			  :loading="loading"
+			  :items="plan_nbs_items"
+			  :search-input.sync="paln_nbs_search"
+			  cache-items
+			  flat
+			  hide-no-data
+			  hide-details
+			  label="מספר תכנית"
+			  append-icon=""
+			></v-autocomplete>
+
+			<v-autocomplete id="paln_name_ac" reverse
+				v-model="PLAN_NAME"
+				:loading="loading"
+				:items="plan_names_items"
+				:search-input.sync="plan_names_search"
+				cache-items
+				flat
+				hide-no-data
+				hide-details
+				label="שם תכנית"
+				append-icon=""
+			></v-autocomplete>
+
+		</v-container>
+
+	  </v-card-text>
+	  <v-divider></v-divider>
+	  <v-card-actions style="margin-bottom: 0%">
+			<v-btn
+			v-model="search_selected" 
+			id="SearchButton"
+			class="ma-2"
+			color="success"
+			@click="SearchSelected"
+		  >
+			בצע בחירה
+			<v-icon>mdi-magnify</v-icon>
+		  </v-btn>
+
+		  <v-btn
+		  id="ClearSearchButton"
+		  class="ma-2"
+		  color="error"
+		  @click="ClearSearch"
+		>
+		  נקה בחירה
+		  <v-icon>mdi-cancel</v-icon>
+		</v-btn>
+	  </v-card-actions>
+	</v-card>
+  </v-navigation-drawer>
+  
+  
+  
+  
+<v-navigation-drawer
+	v-model="dialog_filter"
+	id="filter_dialog"
+	right
+
+	absolute
+	temporary
+	width="320px"
+	hight="100%"
+  >
+	<v-card right>
+        <v-row>
+		  <v-card-title>סינון תכנית / מתחם</v-card-title>
+        </v-row>
+
+
+
+	  <v-divider></v-divider>
+	  <v-card-text right>
+			<v-container fluid style="text-align: right;" hight=100% right>
+
+			<v-select
+				v-model ="PLANING_TYPE"
+				:items="PLANING_TYPE_items"
+				label="חדש / התחדשות"
+			></v-select>
+
+			<v-select
+				v-model = "MAIN_STATUS"
+				:items="MAIN_STATUS_items"
+				label="סטטוס עיקרי"
+			></v-select>
+
+			<v-select
+				v-model = "PLAN_STATUS"
+			    :items="PLAN_STATUS_items"
+			    label="סטטוס"
+			></v-select>
+
+			<v-select
+				v-model = "FLAT_NUMBER"
+			    :items="FLAT_NUMBER_items"
+			    label='תוספת יח"ד'
+		    ></v-select>
+
+			<v-select
+			v-model = "YEARLY_WORK_PLAN"
+		  	    :items="YEARLY_WORK_PLAN_items"
+		  	    label='תכנית עבודה'
+		   ></v-select>
+
+
+			</v-container>
+	  </v-card-text>
+	  <v-card-actions>
+			<v-btn
+			v-model="filter_selected" 
+			id="FilterButton"
+			class="ma-2"
+			color="success"
+			@click="FilterSelected"
+		  >
+			בצע בחירה
+			<v-icon>mdi-magnify</v-icon>
+		  </v-btn>
+
+		  <v-btn
+		  id="ClearFilterhButton"
+		  class="ma-2"
+		  color="error"
+		  @click="ClearFilter"
+		>
+		  נקה בחירה
+		  <v-icon>mdi-cancel</v-icon>
+		</v-btn>
+	  </v-card-actions>
+	</v-card>
+  </v-navigation-drawer>
+
+  <img class="watermark" src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40"/>
+	<form name="form" style='height: 100%;' scrolling='no'> 
+			
+			<div id="map_div" style="width: 100%; height: 100%; float:left">
+					
+					
+            </div> 			
+	</form>
+	
+
+	<div class="text-center">
+		<v-bottom-sheet v-model="sheet">
+		  <template v-slot:activator="{ on }">
+			<v-btn
+			  block 
+			  color="info"
+			  dark
+			  v-on="on"
+			  @click="sheet = false"
+			>
+			  הצגת טבלה
+			</v-btn>
+		  </template>
+
+			<v-layout column style="height: 50vh">       
+				  <v-flex md12 style="overflow: auto">
+					<v-card>
+					<v-card-title>
+						 שם התכנית
+						<v-spacer></v-spacer>
+						<v-text-field
+						  v-model="search"
+						  append-icon="mdi-magnify"
+						  label="חיפוש בתוצאות"
+						  single-line
+						  hide-details
+						></v-text-field>
+					  </v-card-title>       
+					<v-data-table
+					:headers="headers"
+					:items="desserts"
+					:search="search"
+					class="elevation-1"
+					>
+					<template v-slot:item.flat_number="{ item }">
+						<v-chip :color='getColor(item["flat_number"])' dark>{{ item.flat_number }}</v-chip>
+					</template>
+
+					<template v-slot:item.action="{ item }">
+						<v-icon
+						  color="blue"
+						  @click="zoomItem(item)"
+						>
+						mdi-map-marker-radius
+						</v-icon>
+					  </template>
+				   
+					
+					</v-data-table>
+					</v-card>
+				</v-flex>
+			</v-layout>
+		</v-bottom-sheet>
+	  </div>
+
+</v-app>
+</div>
+
+
+<script>
+
+function isInArray(value, array) {
+	return array.indexOf(value) > -1;
+}
+
+
+var layerData;
+//var my_token = "5a4b8472-b95b-4687-8179-0ccb621c7990";//localhost
+//var my_token = "0fff9694-a045-4ede-b997-ee9927b0d56c";//govmap
+var my_token ='aafedfe5-8dfa-4fd5-9af9-8b95759447bd'; // my github
+var WktExtent;
+var names = [];
+var paln_nbs = [];
+var paln_names = [];
+var features = []
+$(document).ready(function (){
+		govmap.createMap('map_div', {
+			token: my_token,
+			visibleLayers: [],
+			layers:['PerekDiurMitcham', 'RAIL_STRATEGIC', 'METRO_STAT', 'METRO_LINE', 'WPLAN2019Q2', 'perekTaasukaTiadufim', 'perekTaasukaTochniyot', 'perekShrachimPtuchimNekudot', 'perekShrachimPtuchimBasis', "sites_tama1Points","sites_tama1Lines","sites_tama1Polygon"], 
+			layersMode: 2, 
+			showXY: true,
+			level: 2,
+			center: {x: 186000, y: 658000},
+			identifyOnClick: true
+		});
+
+		$.getJSON('PerekDiyur.json', function(data) {
+				//data is the JSON string
+				for (i = 0; i < data.length; i++)
+				{
+					features.push(data[i]);
+					names.push(data[i].POLYGON_NAME);
+					paln_nbs.push(data[i].PLAN_NB);
+					paln_names.push(data[i].PLAN_NAME);
+				}
+				console.log("features loaded succesfully");
+		});
+		appVue.name_items = names.sort();
+		appVue.plan_nbs_items = paln_nbs.sort();
+		appVue.plan_names_items = paln_names.sort();
+});
+
+var tableData = [];
+var WktExtent = ""
+var planning_types = {};
+var appVue = new Vue({
+    el:"#toolbar_app",
+    vuetify: new Vuetify(),
+    data () {
+      return {
+		search: '',
+		sheet: false,
+		headers: [
+          {
+            text: 'ת.ז של המתחם',
+            align: 'right',
+            value: 'POLYGON_NAME',
+          },
+          { text: 'מספר יח"ד', value: "flat_number" },
+          { text: 'שם תכנית', value: 'PLAN_NAME' },
+          { text: 'סוג מתחם', value: 'POLYGON_TYPE' },
+          { text: 'שם ישוב', value: 'SETTLE_NAME' },
+          { text: 'סטטוס עיקרי', value: 'MAIN_STATUS' },
+		  {text: 'התמקדות', value: 'action'},
+        ],
+        desserts: [
+	
+        ],
+ 
+
+		items: [
+			{
+				action: 'location_city',
+				title: 'דיור',
+				items: [
+					{ title: 'פרק דיור מתחמי דיור', value: 'PerekDiurMitcham', active: false},
+				],
+			},
+			{
+				action: 'directions_transit',
+				title: 'תחבורה',
+				items: [
+					{ title: 'מטרו - תחנות במטרופולין ת"א', value: 'METRO_LINE', active: false },
+					{ title: 'מטרו - קווים במטרופולין ת"א', value: 'METRO_STAT', active: false },
+				],
+			},
+			{
+				action: 'flash_on',
+				title: 'תשתיות הנדסיות',
+				items: [
+				{ title: 'פרויקטי תשתית תחבורה', value: 'WPLAN2019Q2', active: false },
+				],
+			},
+			{
+				action: 'card_travel',
+				title: 'תעסוקה',
+				items: [
+					{ title: 'פרק תוכניות תעסוקה' , value: 'perekTaasukaTochniyot', active: false},
+				],
+			},
+			{
+				action: 'spa',
+				title: 'שטחים פתוחים',
+				items: [
+					{ title: 'פרק שטחים פתוחים - שכבת נקודות' , value: 'perekShrachimPtuchimNekudot', active: false},
+					{ title: 'פרק שטחים פתוחים - שכבת רמות' , value: 'perekShrachimPtuchimBasis', active: false},
+				],
+			},
+		],
+
+
+
+//polygons = 'אזור רגישות להחדרת מי נגר עילי', 'אתר איגום והחדרה', 'אתר גפמ', 'אתר התפלה', 'אתר פסולת', 'יער', 'יערות - תוויות', 'מכלול חוף', 'מכלול עם הנחיות מיוחדות', 'מתחם ימי לרצועת תשתיות', 'מתקן גז טבעי', 'פארק חוף עירוני', 'פשט הצפה', 'שטח בעל חשיבות להחדרה והעשרה של מי תהום', 'שטח הצפה', 'שמורה וגן', 'תחום יער', 'תחנת כוח', 'תיירות', 'תיירות מוטת חוף פתוח'
+//
+//--------------------------------------------------CHAYA---------------------------------------------------------------------------
+items_tama1: [
+			{
+				action: 'location_city',
+				title: 'תשריט ראשי',
+				items: [
+					{ title: 'אתר איגום והחדרה', value: 'sites_tama1Points', active: false, layer: 'אתר איגום והחדרה'},
+					{ title: 'אתר התפלה', value: 'sites_tama1Points', active: false, layer:'אתר התפלה'},
+					{ title: 'מוצא ימי למי רכז', value: 'sites_tama1Points', active: false, layer:'מוצא ימי למי רכז'},
+					{ title: 'מתקן טיפול בשפכים', value: 'sites_tama1Points', active: false, layer:'מתקן טיפול בשפכים'},
+					{ title: 'תחנת חשמל - לידיעה בלבד', value: 'sites_tama1Points', active: false, layer:'תחנת חשמל - לידיעה בלבד'},
+					{ title: 'אתר גפ"מ', value: 'sites_tama1Points', active: false, layer:'אתר גפ"מ'},
+					{ title: 'מחלף', value: 'sites_tama1Points', active: false, layer:'מחלף'},
+					{ title: 'נמל ומעגנה', value: 'sites_tama1Points', active: false, layer:'נמל ומעגנה'},
+					{ title: 'אזור מוטה שימושים נמליים, תשתיות, מע"ר ופארק נחל', value: 'sites_tama1Points', active: false, layer:'אזור מוטה שימושים נמליים, תשתיות, מע"ר ופארק נחל'},
+					{ title: 'מוביל ארצי', value: 'sites_tama1Lines', active: false, layer:'מוביל ארצי'},
+					{ title: 'קו קולחין', value: 'sites_tama1Lines', active: false, layer:'קו קולחין'},
+					{ title: 'קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד', value: 'sites_tama1Lines', active: false, layer:'קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד'},
+					{ title: 'קו צינור הולכת גז טבעי', value: 'sites_tama1Lines', active: false, layer:'קו צינור הולכת גז טבעי'},
+					{ title: 'דרכים', value: 'sites_tama1Lines', active: false, layer:'דרכים'},
+					{ title: 'מסילות ברזל', value: 'sites_tama1Lines', active: false, layer:'מסילות ברזל'},
+					{ title: 'נחל', value: 'sites_tama1Lines', active: false, layer:'נחל'},
+					{ title: 'סיווג חוף', value: 'sites_tama1Lines', active: false, layer:'סיווג חוף'},
+					{ title: 'תחנת כוח', value: 'sites_tama1Polygon', active: false, layer:'תחנת כוח'},
+					{ title: 'מתחם ימי לרצועת תשתיות', value: 'sites_tama1Polygon', active: false, layer:'מתחם ימי לרצועת תשתיות'},
+					{ title: 'יער', value: 'sites_tama1Polygon', active: false, layer:'יער'},
+					{ title: 'שמורה וגן', value: 'sites_tama1Polygon', active: false, layer:'שמורה וגן'},
+					{ title: 'פשט הצפה', value: 'sites_tama1Polygon', active: false, layer:'פשט הצפה'},
+					{ title: 'שטח הצפה', value: 'sites_tama1Polygon', active: false, layer:'שטח הצפה'},
+					{ title: 'תיירות מוטת חוף יישוב עירוני', value: 'sites_tama1Polygon', active: false, layer:'תיירות מוטת חוף יישוב עירוני'},
+					{ title: 'מכלול חוף', value: 'sites_tama1Polygon', active: false, layer:'מכלול חוף'},
+					{ title: 'מכלול עם הנחיות מיוחדות', value: 'sites_tama1Polygon', active: false, layer:'מכלול עם הנחיות מיוחדות'},
+					{ title: 'תיירות מוטת חוף פתוח', value: 'sites_tama1Polygon', active: false, layer:'תיירות מוטת חוף פתוח'},					
+					],
+			},
+			{
+				action: 'directions_transit',
+				title: 'עזר',
+				items: [
+					{ title: 'יערות - תוויות', value: 'sites_tama1Lines', active: false },
+				//POLYGON'יערות - תוויות'
+				],
+			},
+			{
+				action: 'spa',
+				title: 'נספחים',
+				items: [
+				{ title: 'פארק חוף עירוני', value: '', active: false },
+			/*	POLYGON'פארק חוף עירוני'
+				'אתר איגום והחדרה'
+				'אתר התפלה'
+				'אתר פסולת'
+				'אתר גפ"מ'
+				'פארק חוף עירוני'
+				'תיירות'*/
+				],
+			},
+			{
+				action: 'card_travel',
+				title: 'תשריט_משלים',
+				items: [
+					{ title: 'שטח בעל חשיבות להחדרה והעשרה של מי תהום' , value: '', active: false},
+				/*	POLYGON'שטח בעל חשיבות להחדרה והעשרה של מי תהום'
+					'תחום יער'*/
+				],
+			},
+			{
+				action: 'card_travel',
+				title: 'רקע',
+				items: [
+					{ title: 'תחום התוכנית' , value: 'sites_tama1Polygon', active: false},
+					/*LINE'תחום התוכנית'
+					'קו סביבה חופית - 300 מטר'
+					'רצועת דלק'*/
+				],
+			},
+			
+		],
+		query_tama1 : "OBJECTID > 0 AND LayerName in (",
+		in_query_tama1: "",
+		//---------------------------------------------END CHAYA--------------------------------------------------------------
+
+		
+		layers_on: [],
+		layers_off: [],
+
+		
+		selected: [],
+
+		PLANING_TYPE: "",
+		MAIN_STATUS: "",
+		PLAN_STATUS: "",
+		FLAT_NUMBER: "",
+		YEARLY_WORK_PLAN: "",
+		PLAN_STATUS: "",
+
+		PLANING_TYPE_items_groups: {התחדשות:['התחדשות', 'התחדשות - אחר , התחדשות - פינוי בינוי אחר',  'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי', 'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי , התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - אחר , התחדשות - פינוי בינוי רשויות', 'התחדשות - אחר , התחדשות - תמ\"א 38', 'התחדשות - פינוי בינוי אחר', 'התחדשות - פינוי בינוי מיסוי', 'התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - פינוי בינוי מתחם מוכרז , התחדשות - פינוי בינוי רשויות', 'התחדשות - פינוי בינוי רשויות', 'התחדשות - שכונתית/רובעית', 'התחדשות - תמ\"א 38', 'התחדשות עירונית'], חדש: ['חדשה'],הסדרה: ['הסדרה', 'הסדרה , התחדשות - אחר', 'אחר']},
+
+
+	
+
+		PLANING_TYPE_items: ['התחדשות', 'חדש', 'הסדרה'],
+		//PLANING_TYPE_items: ['לא סטטוטורי', 'מסמך מדיניות', 'תכנית כוללנית', 'תכנית מועדפת לדיור', 'תכנית מפורטת', 'תכנית מתאר כוללנית/ מתאר', 'תכנית מתאר מקומית'],
+		MAIN_STATUS_items: ['אסטרטגי', 'קדם תכנון', 'בתהליך', 'מאושר'],
+		PLAN_STATUS_items: ['בבדיקה תכנונית', 'בהליך אישור', 'בהליך סטטוטורי', 'בהמתנה', 'בהפקדה', 'במילוי תנאים להפקדה', 'הוסר', 'הופק נוסח אישור', 'טרום הגשה', 'מאושר', 'ממתינות להכרעה בתכנית', 'פורסם לאישור', 'קליטת תכנית'],
+		FLAT_NUMBER_items: ['50 - 250', '250 - 500','500 - 1000','1000 - 5000','5000 - 10000','10000 - 20000','20000 - 50000','50000 - 100000','100000 - 500000' ],
+		YEARLY_WORK_PLAN_items: ['2017', '2018', '2019', '2020', '2021', '2021-2040', '2022', '2022-2025', '2023-2025', '2024', '2026-2030', '2027', '2031-2035', '2036-2040'],
+		dialog_layers: false,
+		dialog_layers_tama1: false,
+        dialog_search: false,
+		dialog_filter: false,
+		filter_selected: [],
+		tchum_cbx_selected: [],
+		menu: false,
+		dialog :false,
+
+		POLYGON_NAME: "",
+		name_items: [],
+		name_search: null,
+
+		PLAN_NB: "",
+		plan_nbs_items: [],
+		paln_nbs_search: null,
+
+		PLAN_NAME: "",
+		plan_names_items: [],
+		plan_names_search: null,
+
+
+		geocode_text: "",
+
+		loading: false,
+		search_selected: []
+      }
+    },
+    methods: {
+
+
+
+
+		getColor (FLAT_NUMBER) {
+			if (FLAT_NUMBER > 50000) return 'red'
+			else if (FLAT_NUMBER > 500) return 'orange'
+			else return 'green'
+		},
+
+
+		selectFromMapClick(){
+			if (document.getElementById("cancel_button"))
+			{
+				appVue.desserts = [];
+				appVue.menu = true;
+				govmap.draw(govmap.drawType.Circle).progress(function (e)
+				{
+					appVue.menu = true;
+					progress_line = document.getElementById("progress_line");
+					progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
+					progress_line_mobile = document.getElementById("progress_line_mobile");
+					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
+					var counter = 0;
+					govmap.getLayerData({ 'LayerName': "PerekDiurMitcham", 'Point': { 'x': e.x, 'y':  e.y }, 'Radius':e.radius  })
+					.then(function (e) {
+					res = e;
+					console.log(e);
+					var ids = "";
+					var id_list = [];
+					for (i = 0; i < e.data.length; i++) {
+						//console.log(e.data[i].Fields);
+						var id = e.data[i].Fields[0].Value;
+						id_list.push(id);
+						if (i == e.data.length - 1)
+						{
+							ids = ids + "'"+id + "'";
+						}
+						else{
+							ids = ids + "'"+id + "', ";
+						}
+
+					}
+
+					var filteredData = features.filter(function(item) {
+						return isInArray(item["POLYGON_NAME"], id_list);
+					});
+					for (i = 0; i < filteredData.length; i++)
+					{
+						obj = filteredData[i];
+						obj.flat_number = obj.FLAT_NUMBER;
+						delete obj.FLAT_NUMBER;
+						tableData.push(obj);
+					}
+					
+					appVue.desserts = tableData;
+
+					govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': 'POLYGON_NAME IN ('+ids+')', 'zoomToExtent': true});
+
+					progress_line = document.getElementById("progress_line");
+					progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
+					progress_line_mobile = document.getElementById("progress_line_mobile");
+					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
+					
+					});
+				});
+			}
+		},
+
+		geocode () {
+			
+			console.log(this.geocode_text);
+
+
+			govmap.geocode({keyword: this.geocode_text},govmap.geocodeType.FullResult)
+					.then(function(response){
+						console.log("then:");
+						console.log(response);
+						govmap.zoomToXY({ x: response.data[0].X, y: response.data[0].Y, level: 10, marker: true });
+					});
+
+		},
+        FilterSelected(){
+			this.desserts = [];
+			var query = "OBJECTID > 0 AND ";
+			tableData = [];
+			if (this.PLANING_TYPE){
+				p_types = this.PLANING_TYPE_items_groups[this.PLANING_TYPE];
+				p_type = this.PLANING_TYPE;
+				in_query = ""
+				for (i = 0; i < p_types.length; i++)
+				{
+					in_query = in_query + "'" + p_types[i] + "',";
+					var filteredData = features.filter(function(item) {
+						return item["PLANING_TYPE"] == p_types[i];
+					});
+					for (i = 0; i < filteredData.length; i++)
+					{
+						obj = filteredData[i];
+						obj.flat_number = obj.FLAT_NUMBER;
+						delete obj.FLAT_NUMBER;
+						tableData.push(obj);
+					}
+				}
+				in_query = in_query.substring(0, in_query.length - 1);
+				query = query + "PLANING_TYPE IN ("+in_query+") AND ";
+
+			}
+
+			if (this.MAIN_STATUS){
+				var main_s = this.MAIN_STATUS;
+				//query = query + "MAIN_STATUS ='"+this.MAIN_STATUS+"' AND ";
+				var filteredData = features.filter(function(item) {
+						return item["MAIN_STATUS"] == main_s;
+				});
+				in_query = "";
+				for (i = 0; i < filteredData.length; i++)
+				{
+					in_query = in_query  + filteredData[i].OBJECTID + ",";
+					obj = filteredData[i];
+					obj.flat_number = obj.FLAT_NUMBER;
+					delete obj.FLAT_NUMBER;
+					tableData.push(obj);
+				};
+				in_query = in_query.substring(0, in_query.length - 1);
+				console.log(filteredData);
+				query = query + "OBJECTID IN ("+in_query+") AND ";
+
+				
+
+			}
+			if (this.PLAN_STATUS){
+				var plan_s = this.PLAN_STATUS;
+				var filteredData = features.filter(function(item) {
+						return item["PLAN_STATUS"] == plan_s;
+				});
+				for (i = 0; i < filteredData.length; i++)
+				{
+					obj = filteredData[i];
+					obj.flat_number = obj.FLAT_NUMBER;
+					delete obj.FLAT_NUMBER;
+					tableData.push(obj);
+				}
+				query = query + "PLAN_STATUS ='"+this.PLAN_STATUS+"' AND "
+			}
+			if (this.FLAT_NUMBER){
+				flats_numbers = this.FLAT_NUMBER.split(" - ");
+				var min = flats_numbers[0];
+				var max = flats_numbers[1];
+				var filteredData = features.filter(function(item) {
+						return item["FLAT_NUMBER"] > min &&  item["FLAT_NUMBER"] < max;
+				});
+				for (i = 0; i < filteredData.length; i++)
+				{
+					obj = filteredData[i];
+					obj.flat_number = obj.FLAT_NUMBER;
+					delete obj.FLAT_NUMBER;
+					tableData.push(obj);
+				}
+
+				query = query + "(FLAT_NUMBER BETWEEN "+flats_numbers[0]+" AND "+ flats_numbers[1] + ") AND ";
+			}
+			if (this.YEARLY_WORK_PLAN)
+			{
+				var yearly_work = this.YEARLY_WORK_PLAN;
+				var filteredData = features.filter(function(item) {
+						return item["YEARLY_WORK_PLAN"] == yearly_work;
+				});
+				for (i = 0; i < filteredData.length; i++)
+				{
+					obj = filteredData[i];
+					obj.flat_number = obj.FLAT_NUMBER;
+					delete obj.FLAT_NUMBER;
+					tableData.push(obj);
+				}
+				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
+			}
+			query = query + " OBJECTID > -1"
+
+			if (this.PLANING_TYPE || this.PLAN_STATUS || this.MAIN_STATUS  || this.FLAT_NUMBER || this.YEARLY_WORK_PLAN)
+			{
+
+					govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': query, 'zoomToExtent': true});
+
+			}
+			console.log(query);
+			this.desserts = tableData;
+
+		},
+		
+		SearchSelected(){
+
+			this.desserts = [];
+
+			var query = "OBJECTID > 0 AND ";
+			if (this.POLYGON_NAME){
+
+				query = query + "POLYGON_NAME ='"+this.POLYGON_NAME+"' AND ";
+			}
+
+			if (this.PLAN_NB){
+				query = query + "PLAN_NB ='"+this.PLAN_NB+"' AND ";
+
+			}
+			if (this.PLAN_NAME){
+				query = query + "PLAN_NAME ='"+this.PLAN_NAME+"' AND ";
+			}
+			query = query + " OBJECTID > -1"
+
+			var filteredData = features.filter(function(item) {
+						return (item["POLYGON_NAME"] == appVue.POLYGON_NAME || item["PLAN_NB"] == appVue.PLAN_NB || item["PLAN_NAME"] == appVue.PLAN_NAME)
+						&& (item["POLYGON_NAME"] != "" &&  item["PLAN_NB"] != "" && item["PLAN_NAME"] != "")
+			});
+			for (i = 0; i < filteredData.length; i++)
+				{
+					obj = filteredData[i];
+					obj.flat_number = obj.FLAT_NUMBER;
+					delete obj.FLAT_NUMBER;
+					tableData.push(obj);
+				}
+			this.desserts = tableData;
+			console.log(query);		
+		
+
+			if (this.POLYGON_NAME || this.PLAN_NB || this.PLAN_NAME)
+			{
+				govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': query, 'zoomToExtent': true});
+			}
+		
+		},
+
+		ClearSearch(){
+			
+		this.POLYGON_NAME =  "";
+		this.PLAN_NB = "";
+		this.PLAN_NAME = "";
+
+
+		},
+
+		ClearFilter(){
+			
+			this.PLANING_TYPE = "";
+			this.MAIN_STATUS=  "";
+			this.FLAT_NUMBER=  "";
+			this.YEARLY_WORK_PLAN=  "";
+			this.PLAN_STATUS=  "";
+	
+	
+			},
+
+		cancelClick()
+		{
+			this.POLYGON_NAME =  "";
+			this.PLAN_NB = "";
+			this.PLAN_NAME = "";
+
+			this.PLANING_TYPE = "";
+			this.MAIN_STATUS=  "";
+			this.FLAT_NUMBER=  "";
+			this.YEARLY_WORK_PLAN=  "";
+			this.PLAN_STATUS=  "";
+
+			govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': "", 'zoomToExtent': false});
+			govmap.refreshResource({ layerName: 'PerekDiurMitcham' });
+		},
+
+
+		LayerChange(e){
+			var layers_on = [];
+			var layers_off = [];
+			if (e.active == false)
+			{
+				e.active = true;
+				console.log(e);
+			}
+			else
+			{
+				e.active =false;
+				console.log(e);
+			}
+			for (i = 0; i < this.items.length; i++)
+			{
+				inner_items = this.items[i].items;
+				for (ii = 0; ii < inner_items.length; ii++)
+				{
+					if (inner_items[ii].active == true)
+					{
+						layers_on.push(inner_items[ii].value)
+					}
+					else
+					{
+						layers_off.push(inner_items[ii].value)
+					}
+				}
+			}
+			console.log(layers_on);
+			console.log(layers_off);
+			govmap.setVisibleLayers(layers_on, layers_off);
+
+		},
+
+
+		//---------------------CHAYA----------------------------------------
+		LayerChange_tama1(e){
+			var layers_on = [];
+			var layers_off = [];
+			
+			if (e.active == false)
+			{
+				e.active = true;
+				console.log(e);
+			}
+			else
+			{
+				e.active = false;
+				console.log(e);
+			}
+			
+			sites_tama1Points_fl = false;
+			sites_tama1Lines_fl = false;
+			sites_tama1Polygon_fl = false;
+			this.query_tama1 = "OBJECTID > 0 AND LayerName in (";
+			this.in_query_tama1 = "";
+			for (i = 0; i < this.items_tama1.length; i++)
+			{
+				inner_items = this.items_tama1[i].items;
+				
+				for (ii = 0; ii < inner_items.length; ii++)
+				{
+					
+					if (inner_items[ii].active == true)
+					{
+						if (this.in_query_tama1 != "")
+						{
+							this.in_query_tama1 = this.in_query_tama1+",";
+						}
+						this.in_query_tama1 = this.in_query_tama1 + "'" + inner_items[ii].layer + "'";
+						if (inner_items[ii].value == "sites_tama1Points")
+						{
+							sites_tama1Points_fl = true;
+						}
+						else if (inner_items[ii].value == "sites_tama1Lines")
+						{
+							sites_tama1Lines_fl = true;
+						}
+						else if(inner_items[ii].value == "sites_tama1Polygons")
+						{
+							sites_tama1Polygon_fl = true;
+						}
+						console.log('layer val: '+inner_items[ii].value)
+						layers_on.push(inner_items[ii].value);
+					}
+					else
+					{
+						if (inner_items[ii].value == "sites_tama1Points" && sites_tama1Points_fl == false)
+						{
+							layers_off.push(inner_items[ii].value);
+						}
+						else if (inner_items[ii].value == "sites_tama1Lines" && sites_tama1Lines_fl == false)
+						{
+							layers_off.push(inner_items[ii].value);
+						}
+						else if(inner_items[ii].value == "sites_tama1Polygons" && sites_tama1Polygon_fl == false)
+						{
+							layers_off.push(inner_items[ii].value);
+						}
+						
+					}
+					
+					
+				}
+			}
+			this.query_tama1 = this.query_tama1 + this.in_query_tama1 +")";
+			console.log('on: '+layers_on);
+			console.log('Off: '+layers_off);
+			//------------------CHAYA--------------------
+			for (i=0;i<layers_on.length;i++)
+			{
+			var params ={ 
+                 layerName: layers_on[i],  
+				 whereClause: this.query_tama1,
+                 zoomToExtent: false 
+                 }
+			//	 console.log('params: '+params); //whereClause: "OBJECTID > 0 AND LayerName in ('אתר התפלה')",
+            //govmap.filterLayers({'LayerName': 'sites_tama1Points','whereClause':'OBJECTID > 0 AND LayerName in ('+'אתר התפלה'+')','zoomToExtent':true}); 
+			govmap.filterLayers(params);
+			}
+		    //govmap.setVisibleLayers('sites_tama1Points','sites_tama1Lines');
+			//govmap.filterLayers({ 'layerName': layers_on, 'whereClause': query, 'zoomToExtent': true});
+			govmap.setVisibleLayers(layers_on, layers_off);
+		},
+
+		zoomItem(item)
+		{
+			var pid = item.POLYGON_NAME;
+			console.log(pid);
+			govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': "POLYGON_NAME = '"+pid+"'", 'zoomToExtent': true});
+
+
+		}
+		
+    }
+})
+
+
+</script>
+</body>
+</html>
+
