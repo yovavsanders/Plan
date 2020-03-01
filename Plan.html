@@ -772,7 +772,14 @@ END CHAYA
 			  v-on="on"
 			  @click="sheet = false"
 			>
-			  הצגת טבלה
+
+			<v-badge
+			color="green"
+			:content="desserts.length"
+			:value="desserts.length"
+		  >
+		  הצגת טבלה
+		  </v-badge>
 			</v-btn>
 		  </template>
 
@@ -1088,6 +1095,7 @@ items_tama1: [
 			if (document.getElementById("cancel_button"))
 			{
 				appVue.desserts = [];
+				tableData = [];
 				appVue.menu = true;
 				govmap.draw(govmap.drawType.Circle).progress(function (e)
 				{
@@ -1156,7 +1164,8 @@ items_tama1: [
 
 		},
         FilterSelected(){
-			this.desserts = [];
+			appVue.desserts = [];
+			tableData = [];
 			var query = "OBJECTID > 0 AND ";
 			tableData = [];
 			if (this.PLANING_TYPE){
@@ -1259,14 +1268,14 @@ items_tama1: [
 
 			}
 			console.log(query);
-			this.desserts = tableData;
+			appVue.desserts = tableData;
 
 		},
 		
 		SearchSelected(){
 
-			this.desserts = [];
-
+			appVue.desserts = [];
+			tableData = []
 			var query = "OBJECTID > 0 AND ";
 			if (this.POLYGON_NAME){
 
@@ -1283,8 +1292,8 @@ items_tama1: [
 			query = query + " OBJECTID > -1"
 
 			var filteredData = features.filter(function(item) {
-						return (item["POLYGON_NAME"] == appVue.POLYGON_NAME || item["PLAN_NB"] == appVue.PLAN_NB || item["PLAN_NAME"] == appVue.PLAN_NAME)
-						&& (item["POLYGON_NAME"] != "" &&  item["PLAN_NB"] != "" && item["PLAN_NAME"] != "")
+						return ((item["POLYGON_NAME"] == appVue.POLYGON_NAME && item["POLYGON_NAME"] != "") || (item["PLAN_NB"] == appVue.PLAN_NB &&  item["PLAN_NB"]) ||  (item["PLAN_NAME"] == appVue.PLAN_NAME && item["PLAN_NAME"] != ""))
+						//&& (item["POLYGON_NAME"] != "" &&  item["PLAN_NB"] != "" && item["PLAN_NAME"] != "")
 			});
 			for (i = 0; i < filteredData.length; i++)
 				{
@@ -1293,7 +1302,7 @@ items_tama1: [
 					delete obj.FLAT_NUMBER;
 					tableData.push(obj);
 				}
-			this.desserts = tableData;
+			appVue.desserts = tableData;
 			console.log(query);		
 		
 
@@ -1326,6 +1335,8 @@ items_tama1: [
 
 		cancelClick()
 		{
+			appVue.desserts = [];
+			tableData = [];
 			this.POLYGON_NAME =  "";
 			this.PLAN_NB = "";
 			this.PLAN_NAME = "";
