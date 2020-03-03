@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html style='width:100%; height:100%;'>
 <head>
@@ -783,11 +782,11 @@ END CHAYA
 			</v-btn>
 		  </template>
 
-			<v-layout column style="height: 50vh">       
-				  <v-flex md12 style="overflow: auto">
-					<v-card>
+			<v-layout column style="max-height: 50vh">       
+				  <v-flex style="overflow: auto;">
+					<v-card style="bottom: 0; ">
 					<v-card-title>
-						 שם התכנית
+						 מתחמי דיור
 						<v-spacer></v-spacer>
 						<v-text-field
 						  v-model="search"
@@ -796,13 +795,45 @@ END CHAYA
 						  single-line
 						  hide-details
 						></v-text-field>
-					  </v-card-title>       
+					  </v-card-title>   
+
 					<v-data-table
 					:headers="headers"
 					:items="desserts"
+					:single-expand="true"
+					:expanded.sync="expanded"
+					item-key="POLYGON_NAME"
+					show-expand
 					:search="search"
 					class="elevation-1"
 					>
+
+					<template v-slot:expanded-item="{ headers, item }">
+						
+						<td :colspan="headers.length">
+						<v-row style="text-align: right;">
+							<v-col>
+								<h4>מחוז:  {{ item.DISTRICT_NAME }}</h4>			
+								<h4>מרחב תכנון: {{ item.PLANING_AREA }}</h4>
+								<h4>סוג מתחם: {{ item.POLYGON_TYPE }}</h4>
+								<h4>סטטוס: {{ item.PLAN_STATUS }}</h4>
+								<h4>מגזר: {{  item.SECTOR_TYPE }}</h4>
+								<h4>חדש / :התחדשות {{  item.PLANING_TYPE }}</h4>
+								<h4>שם ועדה: {{  item.SUBMITTER_NAME }}</h4>
+							</v-col>
+						</v-row>
+						</td>
+							
+
+<!-- 						DISTRICT_NAME מחוז
+						PLANING_AREA מרחב תכנון
+						POLYGON_TYPE סוג מתחם
+						PLAN_STATUS סטטוס
+						SECTOR_TYPE מגזר
+						PLANING_TYPE חדש / התחדשות
+						SUBMITTER_NAME שם ועדה -->
+					</template>
+
 					<template v-slot:item.flat_number="{ item }">
 						<v-chip :color='getColor(item["flat_number"])' dark>{{ item.flat_number }}</v-chip>
 					</template>
@@ -832,6 +863,11 @@ END CHAYA
 
 function isInArray(value, array) {
 	return array.indexOf(value) > -1;
+}
+
+function getValue(obj)
+{
+	return obj
 }
 
 
@@ -880,6 +916,7 @@ var appVue = new Vue({
     vuetify: new Vuetify(),
     data () {
       return {
+		expanded: [],
 		search: '',
 		sheet: false,
 		headers: [
@@ -1081,7 +1118,12 @@ items_tama1: [
     },
     methods: {
 
-
+		getValueByFieldName(polygonname, field){//, Field){
+			var filteredData = this.desserts.filter(function(item) {
+				item["POLYGON_NAME"] == polygonname;
+			});
+			return filteredData[0];
+		},
 
 
 		getColor (FLAT_NUMBER) {
@@ -1493,4 +1535,3 @@ items_tama1: [
 </script>
 </body>
 </html>
-
