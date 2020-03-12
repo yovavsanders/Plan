@@ -1747,7 +1747,6 @@ items_tama1: [
 
 		shareWhatsapp()
 		{
-			
 			var isMobile = {
 				Android: function() {
 					return navigator.userAgent.match(/Android/i);
@@ -1771,17 +1770,14 @@ items_tama1: [
 			};
 			if( isMobile.any() ) {
 
-				var text = $(this).attr("data-text");
-				var url = $(this).attr("data-link");
-				var message = encodeURIComponent(text) + " - " + encodeURIComponent(url);
+				var url = window.location.href;
+				var message = encodeURIComponent(window.location.href);
 				var whatsapp_url = "whatsapp://send?text=" + message;
 				window.location.href = whatsapp_url;
 			} else {
 				var win = window.open('https://web.whatsapp.com/', '_blank');
   				win.focus();
 			}
-
-
 
 		}
 		
