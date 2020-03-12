@@ -1338,10 +1338,10 @@ items_tama1: [
 				govmap.draw(govmap.drawType.Polygon).progress(function (e)
 				{
 					//appVue.menu = true;
-					progress_line = document.getElementById("progress_line");
-					progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
-					progress_line_mobile = document.getElementById("progress_line_mobile");
-					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
+					//progress_line = document.getElementById("progress_line");
+					//progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
+					//progress_line_mobile = document.getElementById("progress_line_mobile");
+					//progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
 					var counter = 0;
 					//govmap.getLayerData({ 'LayerName': "PerekDiurMitcham", 'Point': { 'x': e.x, 'y':  e.y }, 'Radius':e.radius  })
 					govmap.intersectFeatures({
@@ -1383,10 +1383,10 @@ items_tama1: [
 
 					govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': 'POLYGON_NAME IN ('+ids+')', 'zoomToExtent': true});
 
-					progress_line = document.getElementById("progress_line");
-					progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
-					progress_line_mobile = document.getElementById("progress_line_mobile");
-					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
+					//progress_line = document.getElementById("progress_line");
+					//progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
+					//progress_line_mobile = document.getElementById("progress_line_mobile");
+					//progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
 
 					appVue.sheet = true;
 					
