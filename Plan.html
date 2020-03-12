@@ -1029,6 +1029,7 @@ color="#1A237E"
 			    dark
 				fab
 				small
+				@click="shareFacebook()"
 				>
 			<v-icon>mdi-facebook</v-icon>
 			</v-btn>
@@ -1779,6 +1780,14 @@ items_tama1: [
   				win.focus();
 			}
 
+		},
+
+		shareFacebook()
+		{
+			window.open(
+			'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
+			'facebook-share-dialog', 
+			'width=626,height=436');
 		}
 		
 	}
