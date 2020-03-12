@@ -124,6 +124,77 @@
     display: inline-block;
 }
 
+.select_map_watermark
+{
+    position: absolute;
+    right: 0%!important;
+    bottom: 50%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+.info_watermark
+{
+    position: absolute;
+    left: 0%!important;
+    bottom: 50%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+.search_watermark
+{
+    position: absolute;
+    left: 0%!important;
+    bottom: 40%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+.filter_watermark
+{
+    position: absolute;
+    left: 0%!important;
+    bottom: 30%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+.share_watermark
+{
+    position: absolute;
+    left: 0%!important;
+    bottom: 20%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+
+#create .v-speed-dial {
+    position: absolute;
+  }
+
+  #create .v-btn--floating {
+    position: relative;
+  }
+
+
+
 
 </style>
 <html>
@@ -168,11 +239,19 @@
       dense
 	  dark
 	  id="myTitle"
-    >
+	>
+	
+	<v-progress-linear
+	:active="loading"
+	:indeterminate="loading"
+	absolute
+	bottom
+	color="deep-purple accent-4"
+  ></v-progress-linear>
 
 
   <div class="text-right" style="width:25%; text-align:right">
-	<img src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40" style="background-color: transparent; vertical-align: middle; margin-top: 5px"/>
+	
 	  <v-menu
 	  	right
 		v-model="menu"
@@ -183,15 +262,15 @@
         offset-x
       >
         <template v-slot:activator="{ on }">
-          <v-btn text
-          class="ma-2" 
-            color="white--text"
+		  <v-btn
+		  	block
+			color="#1A237E"
+			dark
 
             v-on="on"
-          >
-          <v-icon dark right right>menu</v-icon>
-            
-          </v-btn>
+		  >
+		  שכבות מידע  
+		  </v-btn>
         </template>
   
         <v-card id="myMenu">
@@ -300,7 +379,8 @@
         </span>
       </template>
       <v-icon>mdi-magnify</v-icon>
-    </v-btn>
+	</v-btn>
+	<img src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40" style="background-color: transparent; vertical-align: middle; margin-top: 5px"/>
 	</v-app-bar>
 
 
@@ -452,6 +532,7 @@ right
 absolute
 temporary
 width="320px"
+style="background-color:transparent;"
 
 >
 
@@ -524,6 +605,7 @@ END CHAYA
 	absolute
 	temporary
 	width="320px"
+	height="auto"
 	
   >
 	<v-card right id="layers_card"
@@ -592,6 +674,7 @@ END CHAYA
 	absolute
 	temporary
 	width="320px"
+	height="auto"
 	
   >
 	<v-card right id="search_card">
@@ -680,7 +763,7 @@ END CHAYA
 	absolute
 	temporary
 	width="320px"
-	hight="100%"
+	height="auto"
   >
 	<v-card right>
         <v-row>
@@ -751,6 +834,11 @@ END CHAYA
 	</v-card>
   </v-navigation-drawer>
 
+
+
+
+
+
   <img class="watermark" src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40"/>
 	<form name="form" style='height: 100%;' scrolling='no'> 
 			
@@ -818,20 +906,12 @@ END CHAYA
 								<h4>סוג מתחם: {{ item.POLYGON_TYPE }}</h4>
 								<h4>סטטוס: {{ item.PLAN_STATUS }}</h4>
 								<h4>מגזר: {{  item.SECTOR_TYPE }}</h4>
-								<h4>חדש / :התחדשות {{  item.PLANING_TYPE }}</h4>
+								<h4>חדש / התחדשות: {{  item.PLANING_TYPE }}</h4>
 								<h4>שם ועדה: {{  item.SUBMITTER_NAME }}</h4>
 							</v-col>
 						</v-row>
 						</td>
-							
-
-<!-- 						DISTRICT_NAME מחוז
-						PLANING_AREA מרחב תכנון
-						POLYGON_TYPE סוג מתחם
-						PLAN_STATUS סטטוס
-						SECTOR_TYPE מגזר
-						PLANING_TYPE חדש / התחדשות
-						SUBMITTER_NAME שם ועדה -->
+						
 					</template>
 
 					<template v-slot:item.flat_number="{ item }">
@@ -855,6 +935,114 @@ END CHAYA
 		</v-bottom-sheet>
 	  </div>
 
+
+	<v-btn class="select_map_watermark"
+	 v-model="mdiClose"
+	  @click="selectFromMapClick" 
+	  absolute
+	  dark
+	  fab
+	  small
+	  right
+	  color="#FF5722"
+	>
+	  <v-icon v-if="mdiClose">mdi-close</v-icon>
+	  <v-icon v-else>mdi-vector-rectangle</v-icon>
+	</v-btn>
+	  
+  <v-btn class="info_watermark"
+  absolute
+  dark
+  fab
+  small
+  left
+  color="#1A237E"
+  @click="sheet = true"
+>
+  <v-icon>info</v-icon>
+</v-btn>
+
+
+<v-btn class="search_watermark" 
+absolute
+dark
+fab
+small
+left
+color="#1A237E"
+@click="dialog_search = true; menu=false;"
+>
+<v-icon>search</v-icon>
+</v-btn>
+
+<v-btn class="filter_watermark"
+absolute
+dark
+fab
+small
+left
+color="#1A237E"
+@click="dialog_filter = true; menu=false;"
+>
+<v-icon>filter_list</v-icon>
+</v-btn>
+
+
+
+
+
+
+		<v-speed-dial
+					bottom
+					left
+					absolute
+					direction="right"
+					transition="slide-x-transition"
+					style="bottom: 20%!important; left: 0%!important;"
+
+					>
+            <template v-slot:activator>
+			  <v-btn 
+			  color="#1A237E"
+			  dark
+			  small
+			   fab>
+                <v-icon>share</v-icon>
+              </v-btn>
+			</template>
+			
+            <v-btn 
+			color="green"
+				style="bottom: 20%!important;"
+			    dark
+				fab
+				small
+				>
+			<v-icon>mdi-whatsapp</v-icon>
+			</v-btn>
+
+			<v-btn
+			color="blue"
+				style="bottom: 20%!important;"
+			    dark
+				fab
+				small
+				>
+			<v-icon>mdi-facebook</v-icon>
+			</v-btn>
+
+			<v-btn
+				color="red"
+					style="bottom: 20%!important;"
+					dark
+					fab
+					small
+					>
+				<v-icon>mdi-email</v-icon>
+			</v-btn>
+
+          </v-speed-dial>
+
 </v-app>
 </div>
 
@@ -863,11 +1051,6 @@ END CHAYA
 
 function isInArray(value, array) {
 	return array.indexOf(value) > -1;
-}
-
-function getValue(obj)
-{
-	return obj
 }
 
 
@@ -883,15 +1066,15 @@ var features = []
 $(document).ready(function (){
 		govmap.createMap('map_div', {
 			token: my_token,
-			visibleLayers: [],
+			visibleLayers: ['PerekDiurMitcham'],
 			layers:['PerekDiurMitcham', 'RAIL_STRATEGIC', 'METRO_STAT', 'METRO_LINE', 'WPLAN2019Q2', 'perekTaasukaTiadufim', 'perekTaasukaTochniyot', 'perekShrachimPtuchimNekudot', 'perekShrachimPtuchimBasis', "sites_tama1Points","sites_tama1Lines","sites_tama1Polygon"], 
-			layersMode: 2, 
+			layersMode: 3, 
 			showXY: true,
 			level: 2,
 			center: {x: 186000, y: 658000},
 			identifyOnClick: true
 		});
-
+		appVue.loading = true;
 		$.getJSON('PerekDiyur.json', function(data) {
 				//data is the JSON string
 				for (i = 0; i < data.length; i++)
@@ -902,6 +1085,7 @@ $(document).ready(function (){
 					paln_names.push(data[i].PLAN_NAME);
 				}
 				console.log("features loaded succesfully");
+				appVue.loading = false;
 		});
 		appVue.name_items = names.sort();
 		appVue.plan_nbs_items = paln_nbs.sort();
@@ -916,6 +1100,12 @@ var appVue = new Vue({
     vuetify: new Vuetify(),
     data () {
       return {
+
+
+
+
+
+		loading: true,
 		expanded: [],
 		search: '',
 		sheet: false,
@@ -1113,7 +1303,9 @@ items_tama1: [
 		geocode_text: "",
 
 		loading: false,
-		search_selected: []
+		search_selected: [],
+
+		mdiClose: false
       }
     },
     methods: {
@@ -1134,12 +1326,16 @@ items_tama1: [
 
 
 		selectFromMapClick(){
-			if (document.getElementById("cancel_button"))
+			console.log("select");
+			if (this.mdiClose  == false)
 			{
+				this.mdiClose  = true
+			//if (document.getElementById("cancel_button"))
+			//{
 				appVue.desserts = [];
 				tableData = [];
 				appVue.menu = true;
-				govmap.draw(govmap.drawType.Circle).progress(function (e)
+				govmap.draw(govmap.drawType.Polygon).progress(function (e)
 				{
 					appVue.menu = true;
 					progress_line = document.getElementById("progress_line");
@@ -1147,7 +1343,12 @@ items_tama1: [
 					progress_line_mobile = document.getElementById("progress_line_mobile");
 					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-none","d-flex"));
 					var counter = 0;
-					govmap.getLayerData({ 'LayerName': "PerekDiurMitcham", 'Point': { 'x': e.x, 'y':  e.y }, 'Radius':e.radius  })
+					//govmap.getLayerData({ 'LayerName': "PerekDiurMitcham", 'Point': { 'x': e.x, 'y':  e.y }, 'Radius':e.radius  })
+					govmap.intersectFeatures({
+						geometry: e.wkt,
+						layerName: "PerekDiurMitcham",
+						fields: ['POLYGON_NAME']
+					})
 					.then(function (e) {
 					res = e;
 					console.log(e);
@@ -1155,7 +1356,7 @@ items_tama1: [
 					var id_list = [];
 					for (i = 0; i < e.data.length; i++) {
 						//console.log(e.data[i].Fields);
-						var id = e.data[i].Fields[0].Value;
+						var id = e.data[i].Values[0];
 						id_list.push(id);
 						if (i == e.data.length - 1)
 						{
@@ -1186,10 +1387,18 @@ items_tama1: [
 					progress_line.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
 					progress_line_mobile = document.getElementById("progress_line_mobile");
 					progress_line_mobile.setAttribute("class", progress_line.getAttribute("class").replace("d-flex","d-none"));
+
+					appVue.sheet = true;
 					
 					});
 				});
 			}
+			else
+			{
+				this.mdiClose = false;
+				this.cancelClick();
+			}
+			//}
 		},
 
 		geocode () {
@@ -1312,6 +1521,9 @@ items_tama1: [
 			console.log(query);
 			appVue.desserts = tableData;
 
+			this.mdiClose  = true;
+			this.sheet = true;
+
 		},
 		
 		SearchSelected(){
@@ -1352,14 +1564,17 @@ items_tama1: [
 			{
 				govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': query, 'zoomToExtent': true});
 			}
+
+			this.mdiClose  = true;
+			this.sheet = true;
 		
 		},
 
 		ClearSearch(){
 			
-		this.POLYGON_NAME =  "";
-		this.PLAN_NB = "";
-		this.PLAN_NAME = "";
+			this.POLYGON_NAME =  "";
+			this.PLAN_NB = "";
+			this.PLAN_NAME = "";
 
 
 		},
@@ -1391,6 +1606,8 @@ items_tama1: [
 
 			govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': "", 'zoomToExtent': false});
 			govmap.refreshResource({ layerName: 'PerekDiurMitcham' });
+
+			govmap.clearDrawings(); 
 		},
 
 
@@ -1528,7 +1745,8 @@ items_tama1: [
 
 		}
 		
-    }
+	}
+	
 })
 
 
