@@ -6,11 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
 
 
-
-
-
-
-
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -112,12 +107,22 @@
     bottom: 0;
     left: 0;
 }
-
+.mot_watermark
+{
+    position:fixed;
+    right: 150px!important;
+    bottom: 45px!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
 .watermark
 {
-    position: absolute;
-    right: 0%!important;
-    bottom: 7%!important;
+    position:fixed;
+    right: 100px!important;
+    bottom: 45px!important;
     background-color: transparent;
     border: none;
     z-index: 1;
@@ -252,100 +257,15 @@
 
 
   <div class="text-right" style="width:25%; text-align:right">
-	
-	  <v-menu
-	  	right
-		v-model="menu"
+	<v-btn
+	block
+	color="#1A237E"
+	dark
 
-	
-        :close-on-content-click="false"
-        
-        offset-x
-      >
-        <template v-slot:activator="{ on }">
-		  <v-btn
-		  	block
-			color="#1A237E"
-			dark
-
-            v-on="on"
-		  >
-		  שכבות מידע  
-		  </v-btn>
-        </template>
-  
-        <v-card id="myMenu">
-
-  
-          <v-list>
-
-				<v-container id="progress_line" class="d-none">
-						<v-layout
-						  fill-height
-						  wrap
-						>
-						  <v-flex xs12>
-							<v-progress-linear
-							  
-							  color="deep-orange accent-4"
-							  indeterminate
-							  rounded
-							  height="6"
-							></v-progress-linear>
-						  </v-flex>
-						</v-layout>
-				</v-container>
-
-
-				
-				<v-list-item>
-					<div class="my-2">
-						<v-btn text @click="dialog_layers = true; menu=false;">שכבות מידע</v-btn>
-					</div>
-				</v-list-item>
-
-				<!-------------------------------------CHAYA--------------------------------------------------->
-				<v-list-item>
-					<div class="my-2">
-						<v-btn text @click="dialog_layers_tama1 = true; menu=false;">תמא 1</v-btn>
-					</div>
-				</v-list-item>
-				<!-------------------------------------END CHAYA--------------------------------------------------->
-
-              	<v-list-item>
-					<div class="my-2">
-						<v-btn text @click="dialog_search = true; menu=false;">חיפוש תכנית</v-btn>
-					</div>
-				</v-list-item>
-				
-				<v-list-item>
-					<div class="my-2">
-						<v-btn text @click="dialog_filter = true; menu=false;">סינון תכנית / מתחם</v-btn>
-					</div>
-				</v-list-item>
-
-                <v-list-item>
-                <div class="my-2">
-                    <v-btn text color="warning"  @click="selectFromMapClick" dark>בחירה מהמפה
-
-					</v-btn disable>
-                </div>
-              </v-list-item>
-
-
-              <v-list-item>
-              	<div class="my-2">
-                	<v-btn text color="error" id="cancel_button"  class="d-flex" @click="cancelClick" dark>ביטול בחירה </v-btn>
-                </div>
-              </v-list-item>
-
-
-
-
-          </v-list>
-
-        </v-card>
-	</v-menu>
+	@click="dialog_layers = true"
+	>
+	שכבות מידע  
+	</v-btn>
     </div>
 	
 		<v-divider vertical></v-divider>
@@ -361,7 +281,7 @@
 		<v-divider vertical></v-divider>
 		
 		<v-text-field v-model="geocode_text" style="margin-top: 30px; text-align: right;"
-		label="התמקדות לכתובת או ישוב"
+		placeholder="התמקדות לכתובת או ישוב"
 		outlined
 	  ></v-text-field>
 
@@ -412,7 +332,7 @@
 		class="ma-1" 
 		  color="white--text"
 
-		  v-on="on"
+		  @click="dialog_layers = true"
 		>
 		
 		<v-icon dark right center>menu</v-icon>
@@ -497,7 +417,7 @@
 	  <v-divider vertical></v-divider>
 	  
 	  <v-text-field v-model="geocode_text" style="margin-top: 25px; text-align: right;"
-	  label="התמקדות לכתובת או ישוב"
+	  placeholder="התמקדות לכתובת או ישוב"
 	  outlined
 	></v-text-field>
 
@@ -523,147 +443,327 @@
 
 
 
-<!---------------------------------------------CHAYA------------------------------------------------------------>
-
-<v-navigation-drawer disable-resize-watcher
-v-model="dialog_layers_tama1"
-id="layers_dialog"
-right
-
-absolute
-temporary
-width="320px"
-style="background-color:transparent;"
-
->
-
-<v-card right id="layers_card"
-	max-width="500"
-	class="mx-auto"
-  >
-	<v-toolbar
-	  color="teal"
-	  dark
-	>
-
-	  <v-toolbar-title>תמא 1 </v-toolbar-title>
-
-	  <v-spacer></v-spacer>
-
-	  <v-btn icon>
-		<v-icon>mdi-dots-vertical</v-icon>
-	  </v-btn>
-	</v-toolbar>
-
-	<v-list>
-	  <v-list-group
-		v-for="item in items_tama1"
-		:key="item.title"
-		v-model="item.active"
-		:prepend-icon="item.action"
-		no-action
-	  >
-		<template v-slot:activator>
-		  <v-list-item-content>
-			<v-list-item-title v-text="item.title"></v-list-item-title>
-		  </v-list-item-content>
-		</template>
-
-		<v-list-item
-		  v-for="subItem in item.items"
-		  :key="subItem.title"
-		  @click="LayerChange_tama1(subItem)"
-		>
-		<template v-slot:default="{ active }">
-			<v-list-item-action>
-			  <v-checkbox
-				v-model="active"
-				color="primary"
-			  ></v-checkbox>
-			</v-list-item-action>
-		  <v-list-item-content>
-			<v-list-item-title v-text="subItem.title"></v-list-item-title>
-		  </v-list-item-content>
-		</template>
-		</v-list-item>
-	  </v-list-group>
-
-
-	</v-list>
-</v-card>
-</v-navigation-drawer>
-<!--
-END CHAYA
---> 
-
-
 	
   <v-navigation-drawer disable-resize-watcher
 	v-model="dialog_layers"
 	id="layers_dialog"
 	right
-
+	width="fixMyWidth;"
 	absolute
 	temporary
-	width="320px"
-	height="auto"
+	style="background-color:transparent;"
+	
 	
   >
 	<v-card right id="layers_card"
-		max-width="500"
-		class="mx-auto"
+		class="mx-auto" style="max-width: 337px; min-width: 253px;"
 	  >
 		<v-toolbar
-		  color="teal"
+		  color="#1A237E"
 		  dark
+		  style="max-height: 50px;"
 		>
 	
 		  <v-toolbar-title>שכבות מידע </v-toolbar-title>
 	
-		  <v-spacer></v-spacer>
-	
-		  <v-btn icon>
-			<v-icon>mdi-dots-vertical</v-icon>
-		  </v-btn>
 		</v-toolbar>
+
+		<v-expansion-panels style="text-align: right;">
+			<v-expansion-panel style="text-align: right;">
+				
+
+			  <v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+				<v-badge left
+				color="green"
+				:content="diyur_count"
+				:value="diyur_count"
+				overlap
+				>
+				<span ><v-icon>location_city</v-icon>דיור</span>
+			</v-badge>
+				 </v-expansion-panel-header>
+				
+              <v-expansion-panel-content>
+				<v-checkbox right
+					hide-details
+					v-model="picked"
+					label="בחר הכל"
+					value='Diyur'
+					@change="cbxChanged('Diyur')"
+			  	></v-checkbox>
+                <v-checkbox v-model="query" label="מתחמי דיור" value="Diyur:PerekDiurMitcham" hide-details   @change="cbxChanged('Diyur:PerekDiurMitcham')" ></v-checkbox>
+              </v-expansion-panel-content>
+			</v-expansion-panel>
+
+		</v-expansion-panels>
 	
-		<v-list>
-		  <v-list-group
-			v-for="item in items"
-			:key="item.title"
-			v-model="item.active"
-			:prepend-icon="item.action"
-			no-action
-		  >
-			<template v-slot:activator>
-			  <v-list-item-content>
-				<v-list-item-title v-text="item.title"></v-list-item-title>
-			  </v-list-item-content>
-			</template>
-	
-			<v-list-item
-			  v-for="subItem in item.items"
-			  :key="subItem.title"
-			  @click="LayerChange(subItem)"
-			>
-			<template v-slot:default="{ active }">
-				<v-list-item-action>
-				  <v-checkbox
-					v-model="active"
-					color="primary"
-				  ></v-checkbox>
-				</v-list-item-action>
-			  <v-list-item-content>
-				<v-list-item-title v-text="subItem.title"></v-list-item-title>
-			  </v-list-item-content>
-			</template>
-			</v-list-item>
-		  </v-list-group>
+
+        <v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+				<v-badge left
+				color="green"
+				:content="tachbura_count"
+				:value="tachbura_count"
+				overlap
+				>
+				<span > <v-icon >directions_transit</v-icon>תחבורה</span>
+				</v-badge>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+
+				<v-checkbox right
+					hide-details
+					v-model="picked"
+					label="בחר הכל"
+					value='Tachbura'
+					@change="cbxChanged('Tachbura')"
+			  	></v-checkbox>
+                <v-checkbox right v-model="query" label='מטרו - קווים במטרופולין ת"א' value="Tachbura:METRO_LINE" hide-details @change="cbxChanged('Tachbura:METRO_LINE')"></v-checkbox>
+				<v-checkbox  right v-model="query" label='מטרו - תחנות במטרופולין ת"א' value='Tachbura:METRO_STAT' hide-details @change="cbxChanged('Tachbura:METRO_STAT')" ></v-checkbox>
+				<v-checkbox  right v-model="query" label='פרויקטי תשתית תחבורה' value='Tachbura:WPLAN2019Q2' hide-details @change="cbxChanged('Tachbura:WPLAN2019Q2')" ></v-checkbox>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+		</v-expansion-panels>
+
+		<v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+				<v-badge left
+				color="green"
+				:content="taasuka_count"
+				:value="taasuka_count"
+				overlap
+				>
+				<span ><v-icon >card_travel</v-icon>תעסוקה</span>	
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+				<v-checkbox right
+					hide-details
+					v-model="picked"
+					label="בחר הכל"
+					value='Taasuka'
+					@change="cbxChanged('Taasuka')"
+			  	></v-checkbox>
+				<v-checkbox v-model="query" label="תכניות" value="Taasuka:perekTaasukaTochniyot" hide-details   @change="cbxChanged('Taasuka:perekTaasukaTochniyot')" ></v-checkbox>
+				<v-checkbox v-model="query" label="תיעדופים" value="Taasuka:perekTaasukaTiadufim" hide-details   @change="cbxChanged('Taasuka:perekTaasukaTiadufim')" ></v-checkbox>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+		</v-expansion-panels>
+		
+		<v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+				<v-badge left
+				color="green"
+				:content="ptuchim_count"
+				:value="ptuchim_count"
+				overlap
+				>
+				<span ><v-icon >spa</v-icon>שטחים פתוחים</span>	
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+				<v-checkbox right
+					hide-details
+					v-model="picked"
+					label="בחר הכל"
+					value='Ptuchim'
+					@change="cbxChanged('Ptuchim')"
+			  	></v-checkbox>
+				<v-checkbox v-model="query" label="נקודות" value="Ptuchim:perekShrachimPtuchimNekudot" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimNekudot')" ></v-checkbox>
+				<v-checkbox v-model="query" label="רמות" value="Ptuchim:perekShrachimPtuchimBasis" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimBasis')" ></v-checkbox>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+		</v-expansion-panels>
+
+		<v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header disable-icon-rotate>
+				<span style="text-align: right;"><v-icon >mdi-plus</v-icon> שכבות נוספות</span>	
+				<template v-slot:actions>
+					<v-icon></v-icon>
+				</template>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content> 
+
+				<v-expansion-panels>
+					<v-expansion-panel>
+						<v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+							<v-badge left
+							color="green"
+							:content="tama1_count"
+							:value="tama1_count"
+							overlap
+							>
+							<span ><v-icon >mdi-plus</v-icon> תמ"א 1</span>
+							</v-badge>
+						  </v-expansion-panel-header>	
+							<template v-slot:actions>
+								<v-icon></v-icon>
+							</template>
+						  </v-expansion-panel-header>
+
+						<v-expansion-panel-content>
+						  
+							<v-expansion-panels>
+								<v-expansion-panel>
+								<v-expansion-panel-header disable-icon-rotate>
+									<span style="text-align: right;"><v-icon >location_city</v-icon>תשריט ראשי</span>	
+								</v-expansion-panel-header>
+								<v-expansion-panel-content>
+									<v-checkbox right
+										hide-details
+										v-model="picked"
+										label="בחר הכל"
+										value="sites_tama1Points,sites_tama1Lines,sites_tama1Polygon"
+										@change="cbxChanged('sites_tama1Points,sites_tama1Lines,sites_tama1Polygon')"
+									></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל" value="sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל" hide-details @change="cbxChanged('sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מוצא ימי למי רכז" value="sites_tama1Points:מוצא ימי למי רכז" hide-details @change="cbxChanged('sites_tama1Points:מוצא ימי למי רכז')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מחלף" value="sites_tama1Points:מחלף" hide-details @change="cbxChanged('sites_tama1Points:מחלף')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מתקן טיפול בשפכים" value="sites_tama1Points:מתקן טיפול בשפכים" hide-details @change="cbxChanged('sites_tama1Points:מתקן טיפול בשפכים')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="נמל ומעגנה" value="sites_tama1Points:נמל ומעגנה" hide-details @change="cbxChanged('sites_tama1Points:נמל ומעגנה')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="תחנת חשמל - לידיעה בלבד" value="sites_tama1Points:תחנת חשמל - לידיעה בלבד" hide-details @change="cbxChanged('sites_tama1Points:תחנת חשמל - לידיעה בלבד')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="תיירות מוטת חוף יישוב עירוני" value="sites_tama1Points:תיירות מוטת חוף יישוב עירוני" hide-details @change="cbxChanged('sites_tama1Points:תיירות מוטת חוף יישוב עירוני')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="דרכים" value="sites_tama1Lines:דרכים" hide-details @change="cbxChanged('sites_tama1Lines:דרכים')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מוביל ארצי" value="sites_tama1Lines:מוביל ארצי" hide-details @change="cbxChanged('sites_tama1Lines:מוביל ארצי')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מסילות ברזל" value="sites_tama1Lines:מסילות ברזל" hide-details @change="cbxChanged('sites_tama1Lines:מסילות ברזל')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="נחל" value="sites_tama1Lines:נחל" hide-details @change="cbxChanged('sites_tama1Lines:נחל')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="סיווג חוף" value="sites_tama1Lines:סיווג חוף" hide-details @change="cbxChanged('sites_tama1Lines:סיווג חוף')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" style="text-align: right;" label="קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד" value="sites_tama1Lines:קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד" hide-details @change="cbxChanged('sites_tama1Lines:קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="קו צינור הולכת גז טבעי" value="sites_tama1Lines:קו צינור הולכת גז טבעי" hide-details @change="cbxChanged('sites_tama1Lines:קו צינור הולכת גז טבעי')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="קו קולחין" value="sites_tama1Lines:קו קולחין" hide-details @change="cbxChanged('sites_tama1Lines:קו קולחין')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="רצועה לתכנון וקו מים" value="sites_tama1Lines:רצועה לתכנון וקו מים" hide-details @change="cbxChanged('sites_tama1Lines:רצועה לתכנון וקו מים')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="אזור רגישות להחדרת מי נגר עילי" value="sites_tama1Polygon:אזור רגישות להחדרת מי נגר עילי" hide-details @change="cbxChanged('sites_tama1Polygon:אזור רגישות להחדרת מי נגר עילי')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="אתר איגום והחדרה" value="sites_tama1Polygon:אתר איגום והחדרה" hide-details @change="cbxChanged('sites_tama1Polygon:אתר איגום והחדרה')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="אתר גפמ" value="sites_tama1Polygon:אתר גפמ" hide-details @change="cbxChanged('sites_tama1Polygon:אתר גפמ')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="אתר התפלה" value="sites_tama1Polygon:אתר התפלה" hide-details @change="cbxChanged('sites_tama1Polygon:אתר התפלה')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="אתר פסולת" value="sites_tama1Polygon:אתר פסולת" hide-details @change="cbxChanged('sites_tama1Polygon:אתר פסולת')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="יער" value="sites_tama1Polygon:יער" hide-details @change="cbxChanged('sites_tama1Polygon:יער')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="יערות - תוויות" value="sites_tama1Polygon:יערות - תוויות" hide-details @change="cbxChanged('sites_tama1Polygon:יערות - תוויות')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מכלול חוף" value="sites_tama1Polygon:מכלול חוף" hide-details @change="cbxChanged('sites_tama1Polygon:מכלול חוף')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מכלול עם הנחיות מיוחדות" value="sites_tama1Polygon:מכלול עם הנחיות מיוחדות" hide-details @change="cbxChanged('sites_tama1Polygon:מכלול עם הנחיות מיוחדות')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מתחם ימי לרצועת תשתיות" value="sites_tama1Polygon:מתחם ימי לרצועת תשתיות" hide-details @change="cbxChanged('sites_tama1Polygon:מתחם ימי לרצועת תשתיות')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="מתקן גז טבעי" value="sites_tama1Polygon:מתקן גז טבעי" hide-details @change="cbxChanged('sites_tama1Polygon:מתקן גז טבעי')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="פשט הצפה" value="sites_tama1Polygon:פשט הצפה" hide-details @change="cbxChanged('sites_tama1Polygon:פשט הצפה')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="שטח הצפה" value="sites_tama1Polygon:שטח הצפה" hide-details @change="cbxChanged('sites_tama1Polygon:שטח הצפה')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="שמורה וגן" value="sites_tama1Polygon:שמורה וגן" hide-details @change="cbxChanged('sites_tama1Polygon:שמורה וגן')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="תחנת כוח" value="sites_tama1Polygon:תחנת כוח" hide-details @change="cbxChanged('sites_tama1Polygon:תחנת כוח')" ></v-checkbox>
+									<v-checkbox v-model="query" style="text-align: right;" label="תיירות מוטת חוף פתוח" value="sites_tama1Polygon:תיירות מוטת חוף פתוח" hide-details @change="cbxChanged('sites_tama1Polygon:תיירות מוטת חוף פתוח')" ></v-checkbox>
+								</v-expansion-panel-content>
+								</v-expansion-panel>
+
+								<v-expansion-panel>
+									<v-expansion-panel-header disable-icon-rotate>
+										<span style="text-align: right;"><v-icon >spa</v-icon>נספחים</span>	
+									</v-expansion-panel-header>
+									<v-expansion-panel-content>
+										<v-checkbox v-model="query" label="פארק חוף עירוני" value="sites_tama1Polygon:פארק חוף עירוני" hide-details @change="cbxChanged('sites_tama1Polygon:פארק חוף עירוני')" ></v-checkbox>
+										<v-checkbox v-model="query" label="אתר איגום והחדרה" value="sites_tama1Points:אתר איגום והחדרה" hide-details @change="cbxChanged('sites_tama1Points:אתר איגום והחדרה')" ></v-checkbox>
+										<v-checkbox v-model="query" label="אתר התפלה" value="sites_tama1Points:אתר התפלה" hide-details @change="cbxChanged('sites_tama1Points:אתר התפלה')" ></v-checkbox>
+										<v-checkbox v-model="query" label="אתר פסולת" value="sites_tama1Points:אתר פסולת" hide-details @change="cbxChanged('sites_tama1Points:אתר פסולת')" ></v-checkbox>
+										<v-checkbox v-model="query" label="אתר גפמ" value="sites_tama1Points:אתר גפמ" hide-details @change="cbxChanged('sites_tama1Points:אתר גפמ')" ></v-checkbox>
+										<v-checkbox v-model="query" label="תיירות" value="sites_tama1Polygon:תיירות" hide-details @change="cbxChanged('sites_tama1Polygon:תיירות')" ></v-checkbox>
+									</v-expansion-panel-content>
+									</v-expansion-panel>
+
+									<v-expansion-panel>
+										<v-expansion-panel-header disable-icon-rotate>
+											<span style="text-align: right;"><v-icon >book</v-icon>תשריט משלים</span>	
+										</v-expansion-panel-header>
+										<v-expansion-panel-content>
+											<v-checkbox v-model="query" label="שטח בעל חשיבות להחדרה והעשרה של מי תהום" value="sites_tama1Polygon:שטח בעל חשיבות להחדרה והעשרה של מי תהום" hide-details @change="cbxChanged('sites_tama1Polygon:שטח בעל חשיבות להחדרה והעשרה של מי תהום')" ></v-checkbox>
+											<v-checkbox v-model="query" label="תחום יער" value="sites_tama1Polygon:תחום יער" hide-details @change="cbxChanged('sites_tama1Polygon:תחום יער')" ></v-checkbox>
+
+										</v-expansion-panel-content>
+										</v-expansion-panel>
+		
+									<v-expansion-panel>
+										<v-expansion-panel-header disable-icon-rotate>
+											<span style="text-align: right;"><v-icon >mdi-firebase</v-icon>רקע</span>	
+										</v-expansion-panel-header>
+										<v-expansion-panel-content>
+											<v-checkbox v-model="query" label="תחום התוכנית" value="sites_tama1Lines:תחום התוכנית" hide-details @change="cbxChanged('sites_tama1Lines:תחום התוכנית')" ></v-checkbox>
+											<v-checkbox v-model="query" label="קו סביבה חופית - 300 מטר" value="sites_tama1Lines:קו סביבה חופית - 300 מטר" hide-details @change="cbxChanged('sites_tama1Lines:קו סביבה חופית - 300 מטר')" ></v-checkbox>
+											<v-checkbox v-model="query" label="רצועת דלק" value="sites_tama1Lines:רצועת דלק" hide-details @change="cbxChanged('sites_tama1Lines:רצועת דלק')" ></v-checkbox>
+										</v-expansion-panel-content>
+										</v-expansion-panel>
+							</v-expansion-panels>
+
+						</v-expansion-panel-content>
+					  </v-expansion-panel>
 
 
-		</v-list>
+
+					  <v-expansion-panel>
+						<v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+							<v-badge left
+							color="green"
+							:content="tama35_count"
+							:value="tama35_count"
+							overlap
+							>
+							<span ><v-icon >mdi-plus</v-icon> תמ"א 35</span>
+							</v-badge>
+						  </v-expansion-panel-header>	
+							<template v-slot:actions>
+								<v-icon></v-icon>
+							</template>
+						  </v-expansion-panel-header>
+						<v-expansion-panel-content>
+									<v-checkbox right
+										hide-details
+										v-model="picked"
+										label="בחר הכל"
+										value="moch_tama35_points,moch_tama35_lines,moch_tama35_polygons"
+										@change="cbxChanged('moch_tama35_points,moch_tama35_lines,moch_tama35_polygons')"
+									></v-checkbox>
+									<v-checkbox v-model="query" label="גבול ישראל" value="moch_tama35_lines:גבול ישראל" hide-details @change="cbxChanged('moch_tama35_lines:גבול ישראל')" ></v-checkbox>
+									<v-checkbox v-model="query" label="גבול תכנית" value="moch_tama35_lines:גבול תכנית" hide-details @change="cbxChanged('moch_tama35_lines:גבול תכנית')" ></v-checkbox>
+									<v-checkbox v-model="query" label="גבול תכנית2" value="moch_tama35_lines:גבול תכנית2" hide-details @change="cbxChanged('moch_tama35_lines:גבול תכנית2')" ></v-checkbox>
+									<v-checkbox v-model="query" label="דרכים" value="moch_tama35_lines:דרכים" hide-details @change="cbxChanged('moch_tama35_lines:דרכים')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מסדרון אקולוגי" value="moch_tama35_lines:מסדרון אקולוגי" hide-details @change="cbxChanged('moch_tama35_lines:מסדרון אקולוגי')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מסילות ברזל" value="moch_tama35_lines:מסילות ברזל" hide-details @change="cbxChanged('moch_tama35_lines:מסילות ברזל')" ></v-checkbox>
+									<v-checkbox v-model="query" label="קו תוחם" value="moch_tama35_lines:קו תוחם" hide-details @change="cbxChanged('moch_tama35_lines:קו תוחם')" ></v-checkbox>
+									<v-checkbox v-model="query" label="רצועות נחל" value="moch_tama35_lines:רצועות נחל" hide-details @change="cbxChanged('moch_tama35_lines:רצועות נחל')" ></v-checkbox>
+									<v-checkbox v-model="query" label="רצועת חוף" value="moch_tama35_lines:רצועת חוף" hide-details @change="cbxChanged('moch_tama35_lines:רצועת חוף')" ></v-checkbox>
+									<v-checkbox v-model="query" label="יער ויעור" value="moch_tama35_polygons:יער ויעור" hide-details @change="cbxChanged('moch_tama35_polygons:יער ויעור')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מכלולי נוף" value="moch_tama35_polygons:מכלולי נוף" hide-details @change="cbxChanged('moch_tama35_polygons:מכלולי נוף')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מעטפת המכלול" value="moch_tama35_polygons:מעטפת המכלול" hide-details @change="cbxChanged('moch_tama35_polygons:מעטפת המכלול')" ></v-checkbox>
+									<v-checkbox v-model="query" label="רצף מרקמים" value="moch_tama35_polygons:רצף מרקמים" hide-details @change="cbxChanged('moch_tama35_polygons:רצף מרקמים')" ></v-checkbox>
+									<v-checkbox v-model="query" label="שמורות וגנים" value="moch_tama35_polygons:שמורות וגנים" hide-details @change="cbxChanged('moch_tama35_polygons:שמורות וגנים')" ></v-checkbox>
+
+									<v-checkbox v-model="query" label="ישובים מיוחדים" value="moch_tama35_points:ישובים מיוחדים" hide-details @change="cbxChanged('moch_tama35_points:ישובים מיוחדים')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מחלפים" value="moch_tama35_points:מחלפים" hide-details @change="cbxChanged('moch_tama35_points:מחלפים')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מכלול שימור" value="moch_tama35_points:מכלול שימור" hide-details @change="cbxChanged('moch_tama35_points:מכלול שימור')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מעבר גבול" value="moch_tama35_points:מעבר גבול" hide-details @change="cbxChanged('moch_tama35_points:מעבר גבול')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מתקן ארצי" value="moch_tama35_points:מתקן ארצי" hide-details @change="cbxChanged('moch_tama35_points:מתקן ארצי')" ></v-checkbox>
+									<v-checkbox v-model="query" label="מתקן בטחוני" value="moch_tama35_points:מתקן בטחוני" hide-details @change="cbxChanged('moch_tama35_points:מתקן בטחוני')" ></v-checkbox>
+									<v-checkbox v-model="query" label="נמל ים" value="moch_tama35_points:נמל ים" hide-details @change="cbxChanged('moch_tama35_points:נמל ים')" ></v-checkbox>
+									<v-checkbox v-model="query" label="פארק מטרופוליני" value="moch_tama35_points:פארק מטרופוליני" hide-details @change="cbxChanged('moch_tama35_points:פארק מטרופוליני')" ></v-checkbox>
+									<v-checkbox v-model="query" label="שדה תעופה" value="moch_tama35_points:שדה תעופה" hide-details @change="cbxChanged('moch_tama35_points:שדה תעופה')" ></v-checkbox>
+									<v-checkbox v-model="query" label="תחנות רכבת" value="moch_tama35_points:תחנות רכבת" hide-details @change="cbxChanged('moch_tama35_points:תחנות רכבת')" ></v-checkbox>
+								</v-expansion-panel-content>
+								</v-expansion-panel>
+
+				</v-expansion-panels>
+
+		</v-expansion-panels>
+
+              </v-expansion-panel-content>
+			</v-expansion-panel>
+
+
+		
+
+
+		</v-expansion-panels>
 	</v-card>
   </v-navigation-drawer>
+
+
+
+
 
 
 
@@ -698,11 +798,11 @@ END CHAYA
 				append-icon=""
 			></v-autocomplete>
 
-			<v-autocomplete id="paln_nb_ac" reverse
+			<v-autocomplete id="plan_nb_ac" reverse
 			  v-model="PLAN_NB"
 			  :loading="loading"
 			  :items="plan_nbs_items"
-			  :search-input.sync="paln_nbs_search"
+			  :search-input.sync="plan_nbs_search"
 			  cache-items
 			  flat
 			  hide-no-data
@@ -711,7 +811,7 @@ END CHAYA
 			  append-icon=""
 			></v-autocomplete>
 
-			<v-autocomplete id="paln_name_ac" reverse
+			<v-autocomplete id="plan_name_ac" reverse
 				v-model="PLAN_NAME"
 				:loading="loading"
 				:items="plan_names_items"
@@ -808,6 +908,13 @@ END CHAYA
 		   ></v-select>
 
 
+		   <v-select
+		   v-model = "SETL_NAME"
+				 :items="SETL_NAME_items"
+				 label='ישוב'
+		  ></v-select>
+
+
 			</v-container>
 	  </v-card-text>
 	  <v-card-actions>
@@ -841,6 +948,7 @@ END CHAYA
 
 
   <img class="watermark" src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40"/>
+  <img class="mot_watermark" src="https://www.gov.il/BlobFolder/office/ministry_of_transport_and_road_safety/he/ministry_of_transport_and_road_safety.png" height="40"/>
 	<form name="form" style='height: 100%;' scrolling='no'> 
 			
 			<div id="map_div" style="width: 100%; height: 100%; float:left">
@@ -1056,21 +1164,23 @@ function isInArray(value, array) {
 	return array.indexOf(value) > -1;
 }
 
-
+var diyur_selected;
 var layerData;
 //var my_token = "5a4b8472-b95b-4687-8179-0ccb621c7990";//localhost
 //var my_token = "0fff9694-a045-4ede-b997-ee9927b0d56c";//govmap
 var my_token ='aafedfe5-8dfa-4fd5-9af9-8b95759447bd'; // my github
 var WktExtent;
 var names = [];
-var paln_nbs = [];
-var paln_names = [];
+var plan_nbs = [];
+var plan_names = [];
+var setl_names = [];
 var features = []
 $(document).ready(function (){
 		govmap.createMap('map_div', {
 			token: my_token,
-			visibleLayers: ['PerekDiurMitcham'],
-			layers:['PerekDiurMitcham', 'RAIL_STRATEGIC', 'METRO_STAT', 'METRO_LINE', 'WPLAN2019Q2', 'perekTaasukaTiadufim', 'perekTaasukaTochniyot', 'perekShrachimPtuchimNekudot', 'perekShrachimPtuchimBasis', "sites_tama1Points","sites_tama1Lines","sites_tama1Polygon"], 
+			visibleLayers: [],
+			//layers:['PerekDiurMitcham', 'RAIL_STRATEGIC', 'METRO_STAT', 'METRO_LINE', 'WPLAN2019Q2', 'perekTaasukaTiadufim', 'perekTaasukaTochniyot', 'perekShrachimPtuchimNekudot', 'perekShrachimPtuchimBasis', "sites_tama1Points","sites_tama1Lines","sites_tama1Polygon"], 
+			layers:["PARCEL_ALL"],
 			layersMode: 3, 
 			showXY: true,
 			level: 2,
@@ -1084,29 +1194,51 @@ $(document).ready(function (){
 				{
 					features.push(data[i]);
 					names.push(data[i].POLYGON_NAME);
-					paln_nbs.push(data[i].PLAN_NB);
-					paln_names.push(data[i].PLAN_NAME);
+					plan_nbs.push(data[i].PLAN_NB);
+					plan_names.push(data[i].PLAN_NAME);
+					if (!isInArray(data[i].SETTLE_NAME, setl_names) && data[i].SETTLE_NAME != "")
+					{
+						setl_names.push(data[i].SETTLE_NAME);
+					}
+
 				}
 				console.log("features loaded succesfully");
 				appVue.loading = false;
 		});
 		appVue.name_items = names.sort();
-		appVue.plan_nbs_items = paln_nbs.sort();
-		appVue.plan_names_items = paln_names.sort();
+		appVue.plan_nbs_items = plan_nbs.sort();
+		appVue.plan_names_items = plan_names.sort();
+		appVue.SETL_NAME_items = setl_names.sort();
 });
 
 var tableData = [];
 var WktExtent = ""
 var planning_types = {};
+
 var appVue = new Vue({
     el:"#toolbar_app",
     vuetify: new Vuetify(),
     data () {
       return {
 
+		diyur_count:0,
+		tachbura_count:0,
+		taasuka_count:0,
+		ptuchim_count:0,
+		tama1_count:0,
+		tama35_count:0,
 
+        picked: [],
+        query: [],
 
+        radioGroup: 1,
+        switch1: true,
 
+        diyur_checkbox: true,
+        tachbura_checkbox: true,
+
+        diyur_cbx_selected : [],
+        tachbura_cbx_selected : [],
 
 		loading: true,
 		expanded: [],
@@ -1128,130 +1260,8 @@ var appVue = new Vue({
         desserts: [
 	
         ],
- 
-
-		items: [
-			{
-				action: 'location_city',
-				title: 'דיור',
-				items: [
-					{ title: 'פרק דיור מתחמי דיור', value: 'PerekDiurMitcham', active: false},
-				],
-			},
-			{
-				action: 'directions_transit',
-				title: 'תחבורה',
-				items: [
-					{ title: 'מטרו - תחנות במטרופולין ת"א', value: 'METRO_LINE', active: false },
-					{ title: 'מטרו - קווים במטרופולין ת"א', value: 'METRO_STAT', active: false },
-				],
-			},
-			{
-				action: 'flash_on',
-				title: 'תשתיות הנדסיות',
-				items: [
-				{ title: 'פרויקטי תשתית תחבורה', value: 'WPLAN2019Q2', active: false },
-				],
-			},
-			{
-				action: 'card_travel',
-				title: 'תעסוקה',
-				items: [
-					{ title: 'פרק תוכניות תעסוקה' , value: 'perekTaasukaTochniyot', active: false},
-				],
-			},
-			{
-				action: 'spa',
-				title: 'שטחים פתוחים',
-				items: [
-					{ title: 'פרק שטחים פתוחים - שכבת נקודות' , value: 'perekShrachimPtuchimNekudot', active: false},
-					{ title: 'פרק שטחים פתוחים - שכבת רמות' , value: 'perekShrachimPtuchimBasis', active: false},
-				],
-			},
-		],
 
 
-
-//polygons = 'אזור רגישות להחדרת מי נגר עילי', 'אתר איגום והחדרה', 'אתר גפמ', 'אתר התפלה', 'אתר פסולת', 'יער', 'יערות - תוויות', 'מכלול חוף', 'מכלול עם הנחיות מיוחדות', 'מתחם ימי לרצועת תשתיות', 'מתקן גז טבעי', 'פארק חוף עירוני', 'פשט הצפה', 'שטח בעל חשיבות להחדרה והעשרה של מי תהום', 'שטח הצפה', 'שמורה וגן', 'תחום יער', 'תחנת כוח', 'תיירות', 'תיירות מוטת חוף פתוח'
-//
-//--------------------------------------------------CHAYA---------------------------------------------------------------------------
-items_tama1: [
-			{
-				action: 'location_city',
-				title: 'תשריט ראשי',
-				items: [
-					{ title: 'אתר איגום והחדרה', value: 'sites_tama1Points', active: false, layer: 'אתר איגום והחדרה'},
-					{ title: 'אתר התפלה', value: 'sites_tama1Points', active: false, layer:'אתר התפלה'},
-					{ title: 'מוצא ימי למי רכז', value: 'sites_tama1Points', active: false, layer:'מוצא ימי למי רכז'},
-					{ title: 'מתקן טיפול בשפכים', value: 'sites_tama1Points', active: false, layer:'מתקן טיפול בשפכים'},
-					{ title: 'תחנת חשמל - לידיעה בלבד', value: 'sites_tama1Points', active: false, layer:'תחנת חשמל - לידיעה בלבד'},
-					{ title: 'אתר גפ"מ', value: 'sites_tama1Points', active: false, layer:'אתר גפ"מ'},
-					{ title: 'מחלף', value: 'sites_tama1Points', active: false, layer:'מחלף'},
-					{ title: 'נמל ומעגנה', value: 'sites_tama1Points', active: false, layer:'נמל ומעגנה'},
-					{ title: 'אזור מוטה שימושים נמליים, תשתיות, מע"ר ופארק נחל', value: 'sites_tama1Points', active: false, layer:'אזור מוטה שימושים נמליים, תשתיות, מע"ר ופארק נחל'},
-					{ title: 'מוביל ארצי', value: 'sites_tama1Lines', active: false, layer:'מוביל ארצי'},
-					{ title: 'קו קולחין', value: 'sites_tama1Lines', active: false, layer:'קו קולחין'},
-					{ title: 'קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד', value: 'sites_tama1Lines', active: false, layer:'קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד'},
-					{ title: 'קו צינור הולכת גז טבעי', value: 'sites_tama1Lines', active: false, layer:'קו צינור הולכת גז טבעי'},
-					{ title: 'דרכים', value: 'sites_tama1Lines', active: false, layer:'דרכים'},
-					{ title: 'מסילות ברזל', value: 'sites_tama1Lines', active: false, layer:'מסילות ברזל'},
-					{ title: 'נחל', value: 'sites_tama1Lines', active: false, layer:'נחל'},
-					{ title: 'סיווג חוף', value: 'sites_tama1Lines', active: false, layer:'סיווג חוף'},
-					{ title: 'תחנת כוח', value: 'sites_tama1Polygon', active: false, layer:'תחנת כוח'},
-					{ title: 'מתחם ימי לרצועת תשתיות', value: 'sites_tama1Polygon', active: false, layer:'מתחם ימי לרצועת תשתיות'},
-					{ title: 'יער', value: 'sites_tama1Polygon', active: false, layer:'יער'},
-					{ title: 'שמורה וגן', value: 'sites_tama1Polygon', active: false, layer:'שמורה וגן'},
-					{ title: 'פשט הצפה', value: 'sites_tama1Polygon', active: false, layer:'פשט הצפה'},
-					{ title: 'שטח הצפה', value: 'sites_tama1Polygon', active: false, layer:'שטח הצפה'},
-					{ title: 'תיירות מוטת חוף יישוב עירוני', value: 'sites_tama1Polygon', active: false, layer:'תיירות מוטת חוף יישוב עירוני'},
-					{ title: 'מכלול חוף', value: 'sites_tama1Polygon', active: false, layer:'מכלול חוף'},
-					{ title: 'מכלול עם הנחיות מיוחדות', value: 'sites_tama1Polygon', active: false, layer:'מכלול עם הנחיות מיוחדות'},
-					{ title: 'תיירות מוטת חוף פתוח', value: 'sites_tama1Polygon', active: false, layer:'תיירות מוטת חוף פתוח'},					
-					],
-			},
-			{
-				action: 'directions_transit',
-				title: 'עזר',
-				items: [
-					{ title: 'יערות - תוויות', value: 'sites_tama1Lines', active: false },
-				//POLYGON'יערות - תוויות'
-				],
-			},
-			{
-				action: 'spa',
-				title: 'נספחים',
-				items: [
-				{ title: 'פארק חוף עירוני', value: '', active: false },
-			/*	POLYGON'פארק חוף עירוני'
-				'אתר איגום והחדרה'
-				'אתר התפלה'
-				'אתר פסולת'
-				'אתר גפ"מ'
-				'פארק חוף עירוני'
-				'תיירות'*/
-				],
-			},
-			{
-				action: 'card_travel',
-				title: 'תשריט_משלים',
-				items: [
-					{ title: 'שטח בעל חשיבות להחדרה והעשרה של מי תהום' , value: '', active: false},
-				/*	POLYGON'שטח בעל חשיבות להחדרה והעשרה של מי תהום'
-					'תחום יער'*/
-				],
-			},
-			{
-				action: 'card_travel',
-				title: 'רקע',
-				items: [
-					{ title: 'תחום התוכנית' , value: 'sites_tama1Polygon', active: false},
-					/*LINE'תחום התוכנית'
-					'קו סביבה חופית - 300 מטר'
-					'רצועת דלק'*/
-				],
-			},
-			
-		],
 		query_tama1 : "OBJECTID > 0 AND LayerName in (",
 		in_query_tama1: "",
 		//---------------------------------------------END CHAYA--------------------------------------------------------------
@@ -1268,6 +1278,7 @@ items_tama1: [
 		PLAN_STATUS: "",
 		FLAT_NUMBER: "",
 		YEARLY_WORK_PLAN: "",
+		SETL_NAME: "",
 		PLAN_STATUS: "",
 
 		PLANING_TYPE_items_groups: {התחדשות:['התחדשות', 'התחדשות - אחר , התחדשות - פינוי בינוי אחר',  'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי', 'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי , התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - אחר , התחדשות - פינוי בינוי רשויות', 'התחדשות - אחר , התחדשות - תמ\"א 38', 'התחדשות - פינוי בינוי אחר', 'התחדשות - פינוי בינוי מיסוי', 'התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - פינוי בינוי מתחם מוכרז , התחדשות - פינוי בינוי רשויות', 'התחדשות - פינוי בינוי רשויות', 'התחדשות - שכונתית/רובעית', 'התחדשות - תמ\"א 38', 'התחדשות עירונית'], חדש: ['חדשה'],הסדרה: ['הסדרה', 'הסדרה , התחדשות - אחר', 'אחר']},
@@ -1281,6 +1292,7 @@ items_tama1: [
 		PLAN_STATUS_items: ['בבדיקה תכנונית', 'בהליך אישור', 'בהליך סטטוטורי', 'בהמתנה', 'בהפקדה', 'במילוי תנאים להפקדה', 'הוסר', 'הופק נוסח אישור', 'טרום הגשה', 'מאושר', 'ממתינות להכרעה בתכנית', 'פורסם לאישור', 'קליטת תכנית'],
 		FLAT_NUMBER_items: ['50 - 250', '250 - 500','500 - 1000','1000 - 5000','5000 - 10000','10000 - 20000','20000 - 50000','50000 - 100000','100000 - 500000' ],
 		YEARLY_WORK_PLAN_items: ['2017', '2018', '2019', '2020', '2021', '2021-2040', '2022', '2022-2025', '2023-2025', '2024', '2026-2030', '2027', '2031-2035', '2036-2040'],
+		SETL_NAME_items: [],
 		dialog_layers: false,
 		dialog_layers_tama1: false,
         dialog_search: false,
@@ -1296,7 +1308,7 @@ items_tama1: [
 
 		PLAN_NB: "",
 		plan_nbs_items: [],
-		paln_nbs_search: null,
+		plan_nbs_search: null,
 
 		PLAN_NAME: "",
 		plan_names_items: [],
@@ -1612,138 +1624,11 @@ items_tama1: [
 		},
 
 
-		LayerChange(e){
-			var layers_on = [];
-			var layers_off = [];
-			if (e.active == false)
-			{
-				e.active = true;
-				console.log(e);
-			}
-			else
-			{
-				e.active =false;
-				console.log(e);
-			}
-			for (i = 0; i < this.items.length; i++)
-			{
-				inner_items = this.items[i].items;
-				for (ii = 0; ii < inner_items.length; ii++)
-				{
-					if (inner_items[ii].active == true)
-					{
-						layers_on.push(inner_items[ii].value)
-					}
-					else
-					{
-						layers_off.push(inner_items[ii].value)
-					}
-				}
-			}
-			console.log(layers_on);
-			console.log(layers_off);
-			govmap.setVisibleLayers(layers_on, layers_off);
-
-		},
-
-
-		//---------------------CHAYA----------------------------------------
-		LayerChange_tama1(e){
-			var layers_on = [];
-			var layers_off = [];
-			
-			if (e.active == false)
-			{
-				e.active = true;
-				console.log(e);
-			}
-			else
-			{
-				e.active = false;
-				console.log(e);
-			}
-			
-			sites_tama1Points_fl = false;
-			sites_tama1Lines_fl = false;
-			sites_tama1Polygon_fl = false;
-			this.query_tama1 = "OBJECTID > 0 AND LayerName in (";
-			this.in_query_tama1 = "";
-			for (i = 0; i < this.items_tama1.length; i++)
-			{
-				inner_items = this.items_tama1[i].items;
-				
-				for (ii = 0; ii < inner_items.length; ii++)
-				{
-					
-					if (inner_items[ii].active == true)
-					{
-						if (this.in_query_tama1 != "")
-						{
-							this.in_query_tama1 = this.in_query_tama1+",";
-						}
-						this.in_query_tama1 = this.in_query_tama1 + "'" + inner_items[ii].layer + "'";
-						if (inner_items[ii].value == "sites_tama1Points")
-						{
-							sites_tama1Points_fl = true;
-						}
-						else if (inner_items[ii].value == "sites_tama1Lines")
-						{
-							sites_tama1Lines_fl = true;
-						}
-						else if(inner_items[ii].value == "sites_tama1Polygons")
-						{
-							sites_tama1Polygon_fl = true;
-						}
-						console.log('layer val: '+inner_items[ii].value)
-						layers_on.push(inner_items[ii].value);
-					}
-					else
-					{
-						if (inner_items[ii].value == "sites_tama1Points" && sites_tama1Points_fl == false)
-						{
-							layers_off.push(inner_items[ii].value);
-						}
-						else if (inner_items[ii].value == "sites_tama1Lines" && sites_tama1Lines_fl == false)
-						{
-							layers_off.push(inner_items[ii].value);
-						}
-						else if(inner_items[ii].value == "sites_tama1Polygons" && sites_tama1Polygon_fl == false)
-						{
-							layers_off.push(inner_items[ii].value);
-						}
-						
-					}
-					
-					
-				}
-			}
-			this.query_tama1 = this.query_tama1 + this.in_query_tama1 +")";
-			console.log('on: '+layers_on);
-			console.log('Off: '+layers_off);
-			//------------------CHAYA--------------------
-			for (i=0;i<layers_on.length;i++)
-			{
-			var params ={ 
-                 layerName: layers_on[i],  
-				 whereClause: this.query_tama1,
-                 zoomToExtent: false 
-                 }
-			//	 console.log('params: '+params); //whereClause: "OBJECTID > 0 AND LayerName in ('אתר התפלה')",
-            //govmap.filterLayers({'LayerName': 'sites_tama1Points','whereClause':'OBJECTID > 0 AND LayerName in ('+'אתר התפלה'+')','zoomToExtent':true}); 
-			govmap.filterLayers(params);
-			}
-		    //govmap.setVisibleLayers('sites_tama1Points','sites_tama1Lines');
-			//govmap.filterLayers({ 'layerName': layers_on, 'whereClause': query, 'zoomToExtent': true});
-			govmap.setVisibleLayers(layers_on, layers_off);
-		},
-
 		zoomItem(item)
 		{
 			var pid = item.POLYGON_NAME;
 			console.log(pid);
 			govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': "POLYGON_NAME = '"+pid+"'", 'zoomToExtent': true});
-
-
 		},
 
 		shareWhatsapp()
@@ -1788,11 +1673,415 @@ items_tama1: [
 			'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href), 
 			'facebook-share-dialog', 
 			'width=626,height=436');
+        },
+        
+
+
+
+        cbxChanged(e)
+        {
+			this.layers_on = [];
+			this.layers_off = [];
+			arg1 = e;
+			//console.log(e);
+			if (e.includes("tama1") || e.includes("moch_tama35"))
+			{
+				console.log('Here we go...');
+						arg1 = e;
+						c = this.picked;
+						q = this.query;
+						q_unchecked = AllQueries.filter((x) => !q.includes(x));	
+					  
+						var isParent = isInArray(e, AllLayers);
+						if (isParent)
+						{
+							var checkedStatus =  isInArray(e, this.picked)
+							lyrs = e.split(",");
+							for (i = 0; i < lyrs.length; i++)
+							{
+								//console.log(lyrs[i]);
+								for (ii = 0; ii < AllQueries.length; ii++)
+								{
+									if (AllQueries[ii].split(":")[0] == lyrs[i])
+									{
+										//console.log(AllQueries[ii]);
+										if (!isInArray(AllQueries[ii],this.query))
+										{
+											if (checkedStatus == true)
+											{
+												this.query.push(AllQueries[ii]);
+											}
+										}
+										else
+										{
+											if (checkedStatus == false)
+											{
+												this.query.splice(this.query.indexOf(AllQueries[ii]), 1);
+											}
+										}
+									}
+								}
+							}				
+						}
+						else
+						{
+							for (i = 0; i < AllLayers.length; i++)
+							{
+								// child reflect on parent
+								lyrs = AllLayers[i].split(",");
+								var in_ = true;
+								//console.log("q_unchecked =" + q_unchecked)
+								for (ii = 0; ii < lyrs.length; ii++)
+								{
+									var result = q_unchecked.filter(word => word.split(":")[0] == lyrs[ii]);
+									//console.log("child on parent: " + result);
+									if (result.length > 0)
+									{
+										in_ = false;
+									}
+								}
+								//console.log("in_ ="+in_);
+								if (in_ == true && !isInArray(AllLayers[i], this.picked))
+								{
+									//console.log("need to check " + AllLayers[i] + "!!!");
+									this.picked.push(AllLayers[i]);	
+								}
+								if (in_ == false && isInArray(AllLayers[i], this.picked))
+								{
+									//console.log("need to uncheck " + AllLayers[i] + "!!!");
+									this.picked.splice(this.picked.indexOf(AllLayers[i]), 1);
+								}
+							}
+						}
+	
+						filteredAry = AllLayers;
+						li = []
+						visibleLayers = [];
+						//console.log(visibleLayers);
+						remove_li = AllLayers;
+						for (i = 0 ; i < filteredAry.length; i++)
+						{
+							remove_li = remove_li.concat(filteredAry[i].split(","))
+						}
+						
+						layerNames = [];
+						quaeries = [];
+						for (i = 0 ; i < this.query.length; i++)
+						{
+							layerName = this.query[i].split(":")[0];
+							query = this.query[i].split(":")[1];
+							console.log(query);
+							if (!isInArray(layerName, li))
+							{
+								//govmap.filterLayers({ 'layerName': layerName, 'whereClause': query, 'zoomToExtent': false });
+								if (!isInArray(layerName, layerNames))
+								{
+									layerNames.push(layerName);
+									quaeries.push("LayerName ='" + query +"' ");
+
+								}
+								else
+								{
+									quaeries[(quaeries.length) - 1] = quaeries[(quaeries.length) - 1] + " OR LayerName ='" + query + "' ";
+								}
+							}
+						}
+						
+						for (i = 0; i < layerNames.length; i++)
+						{
+							console.log(layerNames[i] + " " + quaeries[i]);
+
+							govmap.filterLayers({ 'layerName': layerNames[i], 'whereClause': quaeries[i], 'zoomToExtent': false });
+							li.push(layerNames[i]);
+							var index = remove_li.indexOf(layerNames[i]);
+							if (index > -1) {
+							  remove_li.splice(index, 1);
+							}
+						}
+						this.layers_on  = li;
+						this.layers_off  = remove_li;
+						console.log("li: " + li);
+						//console.log("remove_li: "+remove_li);
+						govmap.setVisibleLayers(li,remove_li);
+			}
+			else
+			{
+
+				
+				c = this.picked;
+				q = this.query;
+				q_unchecked = AllQueries.filter((x) => !q.includes(x));	
+				//console.log(q_unchecked);
+					
+				var isParent = isInArray(e, AllLayers);
+				if (isParent)
+				{
+					//console.log("parent!");
+
+					var checkedStatus = isInArray(e, this.picked)
+					for (ii = 0; ii < AllQueries.length; ii++)
+					{
+						if (AllQueries[ii].split(":")[0] == e)
+						{
+							//console.log(AllQueries[ii]);
+							//parent reflect ton child
+							if (!isInArray(AllQueries[ii],this.query))
+							{
+								if (checkedStatus == true)
+								{
+									this.query.push(AllQueries[ii]);
+								}
+							}
+							else
+							{
+								if (checkedStatus == false)
+								{
+									this.query.splice(this.query.indexOf(AllQueries[ii]), 1);
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					//console.log("child!");
+					for (i = 0; i < AllLayers.length; i++)
+					{
+						// child reflect on parent
+						lyr = AllLayers[i];
+						var in_ = true;
+
+						var result = q_unchecked.filter(word => word.split(":")[0] == lyr);
+						if (result.length > 0)
+						{
+							in_ = false;
+							//console.log('in_ = false');
+						}
+
+						if (in_ == true && !isInArray(lyr, this.picked))
+						{
+							//console.log("need to check " + lyr + "!!!");
+							this.picked.push(lyr);
+						}
+						if (in_ == false && isInArray(lyr, this.picked))
+						{
+							//console.log("need to uncheck " + lyr + "!!!");
+							this.picked.splice(this.picked.indexOf(lyr), 1);
+						}
+					}
+				}
+				q_unchecked = AllQueries.filter((x) => !q.includes(x));	
+				//console.log("turn on layers")
+				for (i = 0; i < this.query.length; i++)
+				{
+					this.layers_on.push(this.query[i].split(":")[1])
+				}
+				//console.log("turn off layers")
+				for (i = 0; i < q_unchecked.length; i++)
+				{
+					this.layers_off.push(q_unchecked[i].split(":")[1])
+				}
+				govmap.setVisibleLayers(this.layers_on, this.layers_off);
+
+			}
+			
+				//badge..
+				this.diyur_count = (q.filter(function(f) {
+								return f.split(":")[0] == "Diyur";			
+				})).length;
+				this.tachbura_count = (q.filter(function(f) {
+								return f.split(":")[0] == "Tachbura";			
+				})).length;
+				this.taasuka_count = (q.filter(function(f) {
+								return f.split(":")[0] == "Taasuka";			
+				})).length;
+				this.ptuchim_count = (q.filter(function(f) {
+								return f.split(":")[0] == "Ptuchim";			
+				})).length;
+				this.tama1_count = (q.filter(function(f) {
+								return f.split(":")[0].includes("sites_tama1");			
+				})).length;
+				this.tama35_count = (q.filter(function(f) {
+								return f.split(":")[0].includes("moch_tama35");			
+				})).length;
+				
+				
+
+
+		},
+
+		fixMyWidth () {
+     	switch (this.$vuetify.breakpoint.name) {
+			case 'xs': return '100%';
+			case 'sm': return '90%';
+			case 'md': return '70%';
+			case 'lg': return '26%';
+			case 'xl': return '26%';
+			}
 		}
-		
+	},
+	mounted() {
+		console.log("This is a breakpoint name " + this.$vuetify.breakpoint.name);
+		console.log(this.show);
+		document.getElementById ("layers_dialog").width = this.fixMyWidth;
 	}
 	
 })
+
+
+var arg1;
+var AllQueries = ["Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuchimNekudot","Diyur:PerekDiurMitcham", "Tachbura:METRO_LINE","Tachbura:METRO_STAT", "Tachbura:WPLAN2019Q2", "Taasuka:perekTaasukaTochniyot", "Taasuka:perekTaasukaTiadufim",
+"sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל",
+"sites_tama1Points:אתר איגום והחדרה",
+"sites_tama1Points:אתר גפמ",
+"sites_tama1Points:אתר התפלה",
+"sites_tama1Points:אתר פסולת",
+"sites_tama1Points:מוצא ימי למי רכז",
+"sites_tama1Points:מחלף",
+"sites_tama1Points:מתקן טיפול בשפכים",
+"sites_tama1Points:נמל ומעגנה",
+"sites_tama1Points:תחנת חשמל - לידיעה בלבד",
+"sites_tama1Points:תיירות מוטת חוף יישוב עירוני",
+"sites_tama1Lines:דרכים",
+"sites_tama1Lines:מוביל ארצי",
+"sites_tama1Lines:מסילות ברזל",
+"sites_tama1Lines:נחל",
+"sites_tama1Lines:סיווג חוף",
+"sites_tama1Lines:קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד",
+"sites_tama1Lines:קו סביבה חופית - 300 מטר",
+"sites_tama1Lines:קו צינור הולכת גז טבעי",
+"sites_tama1Lines:קו קולחין",
+"sites_tama1Lines:רצועה לתכנון וקו מים",
+"sites_tama1Lines:רצועת דלק",
+"sites_tama1Lines:תחום התוכנית",
+"sites_tama1Polygon:אזור רגישות להחדרת מי נגר עילי",
+"sites_tama1Polygon:אתר איגום והחדרה",
+"sites_tama1Polygon:אתר גפמ",
+"sites_tama1Polygon:אתר התפלה",
+"sites_tama1Polygon:אתר פסולת",
+"sites_tama1Polygon:יער",
+"sites_tama1Polygon:יערות - תוויות",
+"sites_tama1Polygon:מכלול חוף",
+"sites_tama1Polygon:מכלול עם הנחיות מיוחדות",
+"sites_tama1Polygon:מתחם ימי לרצועת תשתיות",
+"sites_tama1Polygon:מתקן גז טבעי",
+"sites_tama1Polygon:פארק חוף עירוני",
+"sites_tama1Polygon:פשט הצפה",
+"sites_tama1Polygon:שטח בעל חשיבות להחדרה והעשרה של מי תהום",
+"sites_tama1Polygon:שטח הצפה",
+"sites_tama1Polygon:שמורה וגן",
+"sites_tama1Polygon:תחום יער",
+"sites_tama1Polygon:תחנת כוח",
+"sites_tama1Polygon:תיירות",
+"sites_tama1Polygon:תיירות מוטת חוף פתוח",
+'moch_tama35_lines:גבול ישראל',
+'moch_tama35_lines:גבול תכנית',
+'moch_tama35_lines:גבול תכנית2',
+'moch_tama35_lines:דרכים',
+'moch_tama35_lines:מסדרון אקולוגי',
+'moch_tama35_lines:מסילות ברזל',
+'moch_tama35_lines:קו תוחם',
+'moch_tama35_lines:רצועות נחל',
+'moch_tama35_lines:רצועת חוף',
+'moch_tama35_polygons:יער ויעור',
+'moch_tama35_polygons:מכלולי נוף',
+'moch_tama35_polygons:מעטפת המכלול',
+'moch_tama35_polygons:רצף מרקמים',
+'moch_tama35_polygons:שמורות וגנים',
+'moch_tama35_points:ישובים מיוחדים',
+'moch_tama35_points:מחלפים',
+'moch_tama35_points:מכלול שימור',
+'moch_tama35_points:מעבר גבול',
+'moch_tama35_points:מתקן ארצי',
+'moch_tama35_points:מתקן בטחוני',
+'moch_tama35_points:נמל ים',
+'moch_tama35_points:פארק מטרופוליני',
+'moch_tama35_points:שדה תעופה',
+'moch_tama35_points:תחנות רכבת'];
+
+var AllLayers = ['Diyur','Tachbura', 'Taasuka', 'Ptuchim','sites_tama1Points,sites_tama1Lines,sites_tama1Polygon', 'moch_tama35_points,moch_tama35_lines,moch_tama35_polygons'];
+
+
+var AllQueriesTama1 = ["sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל", 
+'sites_tama1Points:אתר איגום והחדרה',
+'sites_tama1Points:אתר גפמ',
+'sites_tama1Points:אתר התפלה',
+'sites_tama1Points:אתר פסולת',
+'sites_tama1Points:מוצא ימי למי רכז',
+'sites_tama1Points:מחלף',
+'sites_tama1Points:מתקן טיפול בשפכים',
+'sites_tama1Points:נמל ומעגנה',
+'sites_tama1Points:תחנת חשמל - לידיעה בלבד',
+'sites_tama1Points:תיירות מוטת חוף יישוב עירוני',
+'sites_tama1Lines:דרכים',
+'sites_tama1Lines:מוביל ארצי',
+'sites_tama1Lines:מסילות ברזל',
+'sites_tama1Lines:נחל',
+'sites_tama1Lines:סיווג חוף',
+'sites_tama1Lines:קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד',
+'sites_tama1Lines:קו סביבה חופית - 300 מטר',
+'sites_tama1Lines:קו צינור הולכת גז טבעי',
+'sites_tama1Lines:קו קולחין',
+'sites_tama1Lines:רצועה לתכנון וקו מים',
+'sites_tama1Lines:רצועת דלק',
+'sites_tama1Lines:תחום התוכנית',
+'sites_tama1Polygon:אזור רגישות להחדרת מי נגר עילי',
+'sites_tama1Polygon:אתר איגום והחדרה',
+'sites_tama1Polygon:אתר גפמ',
+'sites_tama1Polygon:אתר התפלה',
+'sites_tama1Polygon:אתר פסולת',
+'sites_tama1Polygon:יער',
+'sites_tama1Polygon:יערות - תוויות',
+'sites_tama1Polygon:מכלול חוף',
+'sites_tama1Polygon:מכלול עם הנחיות מיוחדות',
+'sites_tama1Polygon:מתחם ימי לרצועת תשתיות',
+'sites_tama1Polygon:מתקן גז טבעי',
+'sites_tama1Polygon:פארק חוף עירוני',
+'sites_tama1Polygon:פשט הצפה',
+'sites_tama1Polygon:שטח בעל חשיבות להחדרה והעשרה של מי תהום',
+'sites_tama1Polygon:שטח הצפה',
+'sites_tama1Polygon:שמורה וגן',
+'sites_tama1Polygon:תחום יער',
+'sites_tama1Polygon:תחנת כוח',
+'sites_tama1Polygon:תיירות',
+'sites_tama1Polygon:תיירות מוטת חוף פתוח'
+];
+var AllLayersTama1 = ['sites_tama1Points','sites_tama1Lines', 'sites_tama1Polygon'];
+
+
+
+
+
+
+var AllQueriesTama35 = ["moch_tama35_lines:גבול ישראל", 
+'moch_tama35_lines:גבול תכנית',
+'moch_tama35_lines:גבול תכנית2',
+'moch_tama35_lines:דרכים',
+'moch_tama35_lines:מסדרון אקולוגי',
+'moch_tama35_lines:מסילות ברזל',
+'moch_tama35_lines:קו תוחם',
+'moch_tama35_lines:רצועות נחל',
+'moch_tama35_lines:רצועת חוף',
+'moch_tama35_polygons:יער ויעור',
+'moch_tama35_polygons:מכלולי נוף',
+'moch_tama35_polygons:מעטפת המכלול',
+'moch_tama35_polygons:רצף מרקמים',
+'moch_tama35_polygons:שמורות וגנים',
+'moch_tama35_points:ישובים מיוחדים',
+'moch_tama35_points:מחלפים',
+'moch_tama35_points:מכלול שימור',
+'moch_tama35_points:מעבר גבול',
+'moch_tama35_points:מתקן ארצי',
+'moch_tama35_points:מתקן בטחוני',
+'moch_tama35_points:נמל ים',
+'moch_tama35_points:פארק מטרופוליני',
+'moch_tama35_points:שדה תעופה',
+'moch_tama35_points:תחנות רכבת'
+];
+var AllLayersTama35 = ['sites_tama1Points','sites_tama1Lines', 'sites_tama1Polygon'];
+
+
+
 
 
 </script>
