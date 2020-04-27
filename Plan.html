@@ -102,11 +102,6 @@
     right: 0;
 }
 
-.v-dialog {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
 .mot_watermark
 {
     position:fixed;
@@ -368,14 +363,6 @@
 				</div>
 			</v-list-item>
 
-			<!-------------------------------------CHAYA--------------------------------------------------->
-			<v-list-item>
-				<div class="my-2">
-					<v-btn text @click="dialog_layers_tama1 = true; menu=false;">תמא 1</v-btn>
-				</div>
-			</v-list-item>
-			<!-------------------------------------END CHAYA--------------------------------------------------->
-
 			<v-list-item>
 				<div class="my-2" block >
 						<v-btn text @click="dialog_search = true; menu=false;">חיפוש תכנית</v-btn>
@@ -578,12 +565,19 @@
 
 		<v-expansion-panels>
             <v-expansion-panel>
-              <v-expansion-panel-header disable-icon-rotate>
-				<span style="text-align: right;"><v-icon >mdi-plus</v-icon> שכבות נוספות</span>	
+				<v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+				<v-badge left
+				color="blue"
+				:content="additional_count"
+				:value="additional_count"
+				overlap
+				>
+				<span ><v-icon >mdi-plus</v-icon> שכבות נוספות</span>	
 				<template v-slot:actions>
 					<v-icon></v-icon>
 				</template>
-              </v-expansion-panel-header>
+			  </v-badge>
+			  </v-expansion-panel-header>
               <v-expansion-panel-content> 
 
 				<v-expansion-panels>
@@ -877,22 +871,34 @@
 	  <v-card-text right>
 			<v-container fluid style="text-align: right;" hight=90% right>
 
+
+			<v-select
+			v-model = "SETL_NAME"
+					:items="SETL_NAME_items"
+					label='ישוב'
+					multiple
+			></v-select>
+
 			<v-select
 				v-model ="PLANING_TYPE"
 				:items="PLANING_TYPE_items"
 				label="חדש / התחדשות"
+				multiple
 			></v-select>
+
 
 			<v-select
 				v-model = "MAIN_STATUS"
 				:items="MAIN_STATUS_items"
 				label="סטטוס עיקרי"
+				multiple
 			></v-select>
 
 			<v-select
 				v-model = "PLAN_STATUS"
 			    :items="PLAN_STATUS_items"
-			    label="סטטוס"
+				label="סטטוס"
+				multiple
 			></v-select>
 
 			<v-select
@@ -906,13 +912,6 @@
 		  	    :items="YEARLY_WORK_PLAN_items"
 		  	    label='תכנית עבודה'
 		   ></v-select>
-
-
-		   <v-select
-		   v-model = "SETL_NAME"
-				 :items="SETL_NAME_items"
-				 label='ישוב'
-		  ></v-select>
 
 
 			</v-container>
@@ -1152,7 +1151,38 @@ color="#1A237E"
 				<v-icon>mdi-email</v-icon>
 			</v-btn>
 
-          </v-speed-dial>
+		  </v-speed-dial>
+		  
+
+
+
+			<v-dialog
+			  v-model="dialog"
+			  width="500"
+			>
+		
+			  <v-card>
+				<v-card-title
+				  class="headline grey lighten-2"
+				  primary-title
+				>
+				לא נמצאו תוצאות לחיפוש המבוקש
+				</v-card-title>
+		
+				<v-divider></v-divider>
+		
+				<v-card-actions>
+				  <v-spacer></v-spacer>
+				  <v-btn
+					color="primary"
+					text
+					@click="dialog = false"
+				  >
+					אישור
+				  </v-btn>
+				</v-card-actions>
+			  </v-card>
+			</v-dialog>
 
 </v-app>
 </div>
@@ -1162,6 +1192,13 @@ color="#1A237E"
 
 function isInArray(value, array) {
 	return array.indexOf(value) > -1;
+}
+
+function getNum(val) {
+	if (isNaN(val)) {
+		return 0;
+	}
+	return val;
 }
 
 var diyur_selected;
@@ -1178,15 +1215,16 @@ var features = []
 $(document).ready(function (){
 		govmap.createMap('map_div', {
 			token: my_token,
-			visibleLayers: [],
+			visibleLayers: ["PerekDiurMitcham"],
 			//layers:['PerekDiurMitcham', 'RAIL_STRATEGIC', 'METRO_STAT', 'METRO_LINE', 'WPLAN2019Q2', 'perekTaasukaTiadufim', 'perekTaasukaTochniyot', 'perekShrachimPtuchimNekudot', 'perekShrachimPtuchimBasis', "sites_tama1Points","sites_tama1Lines","sites_tama1Polygon"], 
-			layers:["PARCEL_ALL"],
+			layers:["PerekDiurMitcham"],
 			layersMode: 3, 
 			showXY: true,
 			level: 2,
 			center: {x: 186000, y: 658000},
 			identifyOnClick: true
 		});
+
 		appVue.loading = true;
 		$.getJSON('PerekDiyur.json', function(data) {
 				//data is the JSON string
@@ -1203,12 +1241,24 @@ $(document).ready(function (){
 
 				}
 				console.log("features loaded succesfully");
+				
+
+
+				appVue.name_items = names;
+				names = names.sort()
+				appVue.plan_nbs_items = plan_nbs;
+				plan_nbs = plan_nbs.sort();
+				appVue.plan_names_items = plan_names;
+				plan_names = plan_names.sort();
+				appVue.SETL_NAME_items = setl_names;
+				setl_names = setl_names.sort();
 				appVue.loading = false;
 		});
-		appVue.name_items = names.sort();
-		appVue.plan_nbs_items = plan_nbs.sort();
-		appVue.plan_names_items = plan_names.sort();
-		appVue.SETL_NAME_items = setl_names.sort();
+		
+		appVue.picked.push("Diyur");
+		appVue.query.push("Diyur:PerekDiurMitcham");
+		appVue.diyur_count = 1;
+
 });
 
 var tableData = [];
@@ -1221,12 +1271,15 @@ var appVue = new Vue({
     data () {
       return {
 
+		dialog: false,
+
 		diyur_count:0,
 		tachbura_count:0,
 		taasuka_count:0,
 		ptuchim_count:0,
 		tama1_count:0,
 		tama35_count:0,
+		additional_count: 0,
 
         picked: [],
         query: [],
@@ -1273,13 +1326,12 @@ var appVue = new Vue({
 		
 		selected: [],
 
-		PLANING_TYPE: "",
-		MAIN_STATUS: "",
-		PLAN_STATUS: "",
+		PLANING_TYPE: [],
+		MAIN_STATUS: [],
+		PLAN_STATUS: [],
 		FLAT_NUMBER: "",
 		YEARLY_WORK_PLAN: "",
-		SETL_NAME: "",
-		PLAN_STATUS: "",
+		SETL_NAME: [],
 
 		PLANING_TYPE_items_groups: {התחדשות:['התחדשות', 'התחדשות - אחר , התחדשות - פינוי בינוי אחר',  'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי', 'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי , התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - אחר , התחדשות - פינוי בינוי רשויות', 'התחדשות - אחר , התחדשות - תמ\"א 38', 'התחדשות - פינוי בינוי אחר', 'התחדשות - פינוי בינוי מיסוי', 'התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - פינוי בינוי מתחם מוכרז , התחדשות - פינוי בינוי רשויות', 'התחדשות - פינוי בינוי רשויות', 'התחדשות - שכונתית/רובעית', 'התחדשות - תמ\"א 38', 'התחדשות עירונית'], חדש: ['חדשה'],הסדרה: ['הסדרה', 'הסדרה , התחדשות - אחר', 'אחר']},
 
@@ -1430,90 +1482,113 @@ var appVue = new Vue({
         FilterSelected(){
 			appVue.desserts = [];
 			tableData = [];
-			var query = "OBJECTID > 0 AND ";
-			tableData = [];
-			if (this.PLANING_TYPE){
-				p_types = this.PLANING_TYPE_items_groups[this.PLANING_TYPE];
-				p_type = this.PLANING_TYPE;
+			var query = "";
+
+
+			var filteredData = features;
+
+			var setl_name = this.SETL_NAME;
+			if (setl_name.length > 0){
+
+				in_query = "";
+				for (i = 0; i < setl_name.length; i++)
+				{
+					in_query = in_query + "'" + setl_name[i] + "',";
+					
+					filteredData = filteredData.filter(function(item) {
+						if (setl_name.length > 0)
+						{
+							return setl_name.includes(item["SETTLE_NAME"]);
+						}
+					});
+				}
+				in_query = in_query.substring(0, in_query.length - 1);
+				query = query + "SETTLE_NAME IN ("+in_query+") AND ";
+			}
+
+			if (this.PLANING_TYPE.length > 0){
+				console.log(this.PLANING_TYPE.length);
+				p_types = []
+				for (ii = 0; ii < this.PLANING_TYPE.length; ii++)
+				{
+					//alert(this.PLANING_TYPE[ii]);
+					p_types_i = this.PLANING_TYPE_items_groups[this.PLANING_TYPE[ii]];
+					console.log(p_types_i);
+					for (i = 0 ; i < p_types_i.length; i++)
+					{
+						p_types.push(p_types_i[i]);
+					}
+				}
 				in_query = ""
 				for (i = 0; i < p_types.length; i++)
 				{
 					in_query = in_query + "'" + p_types[i] + "',";
-					var filteredData = features.filter(function(item) {
-						return item["PLANING_TYPE"] == p_types[i];
-					});
-					for (i = 0; i < filteredData.length; i++)
-					{
-						obj = filteredData[i];
-						obj.flat_number = obj.FLAT_NUMBER;
-						delete obj.FLAT_NUMBER;
-						tableData.push(obj);
-					}
 				}
 				in_query = in_query.substring(0, in_query.length - 1);
+				console.log(in_query);
 				query = query + "PLANING_TYPE IN ("+in_query+") AND ";
 
+
+				filteredData = filteredData.filter(function(item) {
+					return p_types.includes(item["PLANING_TYPE"]);
+				});
 			}
 
-			if (this.MAIN_STATUS){
+			if (this.MAIN_STATUS.length > 0){
+
 				var main_s = this.MAIN_STATUS;
 				//query = query + "MAIN_STATUS ='"+this.MAIN_STATUS+"' AND ";
-				var filteredData = features.filter(function(item) {
-						return item["MAIN_STATUS"] == main_s;
+
+				var filteredData = filteredData.filter(function(item) {
+						return main_s.includes(item["MAIN_STATUS"]);
 				});
-				in_query = "";
+				var POLYGON_NAMES = [];
+				var in_query = "";
 				for (i = 0; i < filteredData.length; i++)
 				{
-					in_query = in_query  + filteredData[i].OBJECTID + ",";
-					obj = filteredData[i];
-					obj.flat_number = obj.FLAT_NUMBER;
-					delete obj.FLAT_NUMBER;
-					tableData.push(obj);
+					in_query = in_query  + "'" + filteredData[i].POLYGON_NAME + "'" + ",";
 				};
 				in_query = in_query.substring(0, in_query.length - 1);
-				console.log(filteredData);
-				query = query + "OBJECTID IN ("+in_query+") AND ";
-
-				
-
+				query = query + "POLYGON_NAME IN ("+in_query+") AND ";
 			}
-			if (this.PLAN_STATUS){
+			if (this.PLAN_STATUS.length > 0){
 				var plan_s = this.PLAN_STATUS;
-				var filteredData = features.filter(function(item) {
-						return item["PLAN_STATUS"] == plan_s;
+				var filteredData = filteredData.filter(function(item) {
+						return plan_s.includes(item["PLAN_STATUS"]);
 				});
-				for (i = 0; i < filteredData.length; i++)
+				var in_query = "";
+				for (i = 0; i < plan_s.length; i++)
 				{
-					obj = filteredData[i];
-					obj.flat_number = obj.FLAT_NUMBER;
-					delete obj.FLAT_NUMBER;
-					tableData.push(obj);
-				}
-				query = query + "PLAN_STATUS ='"+this.PLAN_STATUS+"' AND "
+					in_query = in_query  + "'" + plan_s[i] + "'" + ",";
+				};
+				in_query = in_query.substring(0, in_query.length - 1);
+				query = query + "PLAN_STATUS  IN ("+in_query+") AND "
 			}
-			if (this.FLAT_NUMBER){
+			if (this.FLAT_NUMBER != ""){
 				flats_numbers = this.FLAT_NUMBER.split(" - ");
 				var min = flats_numbers[0];
 				var max = flats_numbers[1];
-				var filteredData = features.filter(function(item) {
+				filteredData = filteredData.filter(function(item) {
 						return item["FLAT_NUMBER"] > min &&  item["FLAT_NUMBER"] < max;
 				});
-				for (i = 0; i < filteredData.length; i++)
-				{
-					obj = filteredData[i];
-					obj.flat_number = obj.FLAT_NUMBER;
-					delete obj.FLAT_NUMBER;
-					tableData.push(obj);
-				}
 
 				query = query + "(FLAT_NUMBER BETWEEN "+flats_numbers[0]+" AND "+ flats_numbers[1] + ") AND ";
 			}
-			if (this.YEARLY_WORK_PLAN)
+			if (this.YEARLY_WORK_PLAN != "")
 			{
 				var yearly_work = this.YEARLY_WORK_PLAN;
-				var filteredData = features.filter(function(item) {
+				var filteredData = filteredData.filter(function(item) {
 						return item["YEARLY_WORK_PLAN"] == yearly_work;
 				});
+				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
+			}
+
+
+
+
+
+			if (filteredData.length > 0)
+			{
 				for (i = 0; i < filteredData.length; i++)
 				{
 					obj = filteredData[i];
@@ -1521,21 +1596,24 @@ var appVue = new Vue({
 					delete obj.FLAT_NUMBER;
 					tableData.push(obj);
 				}
-				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
-			}
-			query = query + " OBJECTID > -1"
 
-			if (this.PLANING_TYPE || this.PLAN_STATUS || this.MAIN_STATUS  || this.FLAT_NUMBER || this.YEARLY_WORK_PLAN)
+				console.log(filteredData);
+				appVue.desserts = tableData;
+
+				this.mdiClose  = true;
+				this.sheet = true;
+
+				if (query.endsWith("AND "))
+				{
+					query = query.substring(0, query.length - 4);
+				}
+				console.log(query);
+				govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': query, 'zoomToExtent': true});
+			}
+			else
 			{
-
-					govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': query, 'zoomToExtent': true});
-
+				this.dialog = true;
 			}
-			console.log(query);
-			appVue.desserts = tableData;
-
-			this.mdiClose  = true;
-			this.sheet = true;
 
 		},
 		
@@ -1594,11 +1672,12 @@ var appVue = new Vue({
 
 		ClearFilter(){
 			
-			this.PLANING_TYPE = "";
-			this.MAIN_STATUS=  "";
-			this.FLAT_NUMBER=  "";
-			this.YEARLY_WORK_PLAN=  "";
-			this.PLAN_STATUS=  "";
+			this.SETL_NAME = [];
+			this.PLANING_TYPE = [];
+			this.MAIN_STATUS=  [];
+			this.FLAT_NUMBER=  [];
+			this.YEARLY_WORK_PLAN=  [];
+			this.PLAN_STATUS=  [];
 	
 	
 			},
@@ -1611,11 +1690,12 @@ var appVue = new Vue({
 			this.PLAN_NB = "";
 			this.PLAN_NAME = "";
 
-			this.PLANING_TYPE = "";
-			this.MAIN_STATUS=  "";
-			this.FLAT_NUMBER=  "";
-			this.YEARLY_WORK_PLAN=  "";
-			this.PLAN_STATUS=  "";
+			this.SETL_NAME = [];
+			this.PLANING_TYPE = [];
+			this.MAIN_STATUS=  [];
+			this.FLAT_NUMBER=  [];
+			this.YEARLY_WORK_PLAN=  [];
+			this.PLAN_STATUS=  [];
 
 			govmap.filterLayers({ 'layerName': "PerekDiurMitcham", 'whereClause': "", 'zoomToExtent': false});
 			govmap.refreshResource({ layerName: 'PerekDiurMitcham' });
@@ -1743,7 +1823,7 @@ var appVue = new Vue({
 								//console.log("in_ ="+in_);
 								if (in_ == true && !isInArray(AllLayers[i], this.picked))
 								{
-									//console.log("need to check " + AllLayers[i] + "!!!");
+									//alert("need to check " + AllLayers[i] + "!!!");
 									this.picked.push(AllLayers[i]);	
 								}
 								if (in_ == false && isInArray(AllLayers[i], this.picked))
@@ -1858,9 +1938,9 @@ var appVue = new Vue({
 							//console.log('in_ = false');
 						}
 
-						if (in_ == true && !isInArray(lyr, this.picked))
+						if (in_ == true && !isInArray(lyr, this.picked) && !lyr.includes('tama'))
 						{
-							//console.log("need to check " + lyr + "!!!");
+							console.log("need to check " + lyr + "!!!");
 							this.picked.push(lyr);
 						}
 						if (in_ == false && isInArray(lyr, this.picked))
@@ -1899,11 +1979,13 @@ var appVue = new Vue({
 								return f.split(":")[0] == "Ptuchim";			
 				})).length;
 				this.tama1_count = (q.filter(function(f) {
-								return f.split(":")[0].includes("sites_tama1");			
+								return f.split(":")[0].includes("sites_tama1");
 				})).length;
 				this.tama35_count = (q.filter(function(f) {
 								return f.split(":")[0].includes("moch_tama35");			
 				})).length;
+
+				this.additional_count = getNum((this.tama1_count / this.tama1_count)) + getNum((this.tama35_count / this.tama35_count));
 				
 				
 
