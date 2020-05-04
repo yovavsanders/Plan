@@ -431,14 +431,16 @@
 
 
 	
-  <v-navigation-drawer disable-resize-watcher
+  <v-navigation-drawer disable-resize-watcher floating
 	v-model="dialog_layers"
 	id="layers_dialog"
 	right
+	fixed
+	height="fixMyWidth;"
 	width="fixMyWidth;"
 	absolute
 	temporary
-	style="background-color:transparent;"
+	style="background-color:transparent; max-height: 100%;"
 	
 	
   >
@@ -590,6 +592,114 @@
 							overlap
 							>
 							<span ><v-icon >mdi-plus</v-icon> תמ"א 1</span>
+							<!-- תמא 1
+							--------
+
+							תשריט ראשי
+							--------
+
+							מים
+							--------
+							אתר איגום והחדרה
+							אתר התפלה
+							מוצא ימי למי רכז
+							מתקן טיפול בשפכים
+							רצועה לתכנון וקו מים
+							מוביל ארצי
+							קו קולחין
+							אזור רגישות להחדרת מי נגר עילי
+
+							חשמל
+							--------
+							תחנת חשמל - לידיעה בלבד
+							קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד
+							תחנת כוח
+
+							גז טבעי
+							--------
+							קו צינור הולכת גז טבעי
+							מתקן גז טבעי
+							מתחם ימי לרצועת תשתיות
+
+							גפ"מ
+							--------
+							אתר גפ"מ
+
+							פסולת
+							--------
+							אתר פסולת
+
+							דרכים
+							--------
+							מחלף
+							דרכים
+
+							מסילות ברזל
+							--------
+							מסילות ברזל
+
+							מוגנים
+							--------
+							יער
+							שמורה וגן
+
+							נחלים
+							--------
+							נחל
+							פשט הצפה
+							שטח הצפה
+
+							חופים
+							--------
+							תיירות מוטת חוף יישוב עירוני
+							נמל ומעגנה
+							אזור מוטה שימושים נמליים, תשתיות, מע"ר ופארק נחל
+							סיווג חוף
+							מכלול חוף
+							מכלול מיוחד
+							פארק חוף עירוני
+							תיירות מוטת חוף פתוח
+
+							תשריט משלים
+							--------
+
+							מים
+							--------
+							שטח בעל חשיבות להחדרה והעשרה של מי תהום
+
+							מוגנים
+							--------
+							תחום יער
+
+							נספחים
+							--------
+
+							מים
+							--------
+							אתר איגום והחדרה
+
+							אתרי התפלה
+							--------
+							אתר התפלה
+
+							פסולת
+							--------
+							אתר פסולת
+
+							גפ"מ
+							--------
+							אתר גפ"מ
+
+							חופים - נספחים מנחים
+							--------
+							פארק חוף עירוני
+							תיירות
+
+							שכבות רקע
+							--------
+							תחום התוכנית
+							קו סביבה חופית - 300 מטר
+							רצועת דלק -->
 							</v-badge>
 						  </v-expansion-panel-header>	
 							<template v-slot:actions>
@@ -755,12 +865,7 @@
 	</v-card>
   </v-navigation-drawer>
 
-
-
-
-
-
-
+  
 	<v-navigation-drawer disable-resize-watcher
 	v-model="dialog_search"
 	id="tchum_dialog"
@@ -872,45 +977,83 @@
 			<v-container fluid style="text-align: right;" hight=90% right>
 
 
-			<v-select
+			<v-autocomplete reverse
 			v-model = "SETL_NAME"
 					:items="SETL_NAME_items"
 					label='ישוב'
 					multiple
-			></v-select>
+					chips
+			></v-autocomplete>
 
-			<v-select
+			<v-select reverse
 				v-model ="PLANING_TYPE"
 				:items="PLANING_TYPE_items"
 				label="חדש / התחדשות"
 				multiple
+				chips
+				flat
+				hide-no-data
+				hide-details
+				append-icon=""
 			></v-select>
 
 
-			<v-select
+			<v-select reverse
 				v-model = "MAIN_STATUS"
 				:items="MAIN_STATUS_items"
 				label="סטטוס עיקרי"
 				multiple
+				chips
+				flat
+				hide-no-data
+				hide-details
+				append-icon=""
 			></v-select>
 
-			<v-select
+			<v-select reverse
 				v-model = "PLAN_STATUS"
 			    :items="PLAN_STATUS_items"
 				label="סטטוס"
 				multiple
+				chips
+				flat
+				hide-no-data
+				hide-details
+				append-icon=""
 			></v-select>
 
-			<v-select
+			<v-select reverse
 				v-model = "FLAT_NUMBER"
 			    :items="FLAT_NUMBER_items"
-			    label='תוספת יח"ד'
+				label='תוספת יח"ד'
+				flat
+				hide-no-data
+				hide-details
+				append-icon=""
 		    ></v-select>
 
-			<v-select
+			<v-select reverse
 			v-model = "YEARLY_WORK_PLAN"
 		  	    :items="YEARLY_WORK_PLAN_items"
-		  	    label='תכנית עבודה'
+				  label='תכנית עבודה'
+				  flat
+				  hide-no-data
+				  hide-details
+				  append-icon=""
+		   ></v-select>
+
+
+
+		   	<v-select reverse
+			v-model = "BLOCKS"
+		  	    :items="BLOCKS_items"
+				  label='חסמים'
+				  multiple
+				  chips
+				  flat
+				  hide-no-data
+				  hide-details
+				  append-icon=""
 		   ></v-select>
 
 
@@ -962,8 +1105,9 @@
 		  <template v-slot:activator="{ on }">
 			<v-btn
 			  block 
-			  color="info"
+			  color="blue lighten-1"
 			  dark
+			  dense
 			  v-on="on"
 			  @click="sheet = false"
 			>
@@ -1043,8 +1187,9 @@
 		</v-bottom-sheet>
 	  </div>
 
-
-	<v-btn class="select_map_watermark"
+	<v-tooltip left>
+	<template v-slot:activator="{ on }">
+	<v-btn class="select_map_watermark" v-on="on"
 	 v-model="mdiClose"
 	  @click="selectFromMapClick" 
 	  absolute
@@ -1057,8 +1202,14 @@
 	  <v-icon v-if="mdiClose">mdi-close</v-icon>
 	  <v-icon v-else>mdi-vector-rectangle</v-icon>
 	</v-btn>
-	  
-  <v-btn class="info_watermark"
+	</template>
+	<span>{{mdi_text}}</span>
+	</v-tooltip>
+	
+	
+	<v-tooltip right>
+		<template v-slot:activator="{ on }">
+  <v-btn class="info_watermark" v-on="on"
   absolute
   dark
   fab
@@ -1069,9 +1220,13 @@
 >
   <v-icon>info</v-icon>
 </v-btn>
+	</template>
+	<span>הצגת טבלת תוכניות לאחר סינון או חיפוש</span>
+	</v-tooltip>
 
-
-<v-btn class="search_watermark" 
+	<v-tooltip right>
+		<template v-slot:activator="{ on }">
+<v-btn class="search_watermark" v-on="on"
 absolute
 dark
 fab
@@ -1082,8 +1237,13 @@ color="#1A237E"
 >
 <v-icon>search</v-icon>
 </v-btn>
+</template>
+<span>חיפוש תכנית לפי שם או מספר מזהה</span>
+</v-tooltip>
 
-<v-btn class="filter_watermark"
+<v-tooltip right>
+	<template v-slot:activator="{ on }">
+<v-btn class="filter_watermark" v-on="on"
 absolute
 dark
 fab
@@ -1094,8 +1254,9 @@ color="#1A237E"
 >
 <v-icon>filter_list</v-icon>
 </v-btn>
-
-
+</template>
+<span>סינון תכניות לפי מאפיינים (שם ישוב, סוג התכנית, מספר יח"ד ועוד)</span>
+</v-tooltip>
 
 
 
@@ -1166,7 +1327,7 @@ color="#1A237E"
 				  class="headline grey lighten-2"
 				  primary-title
 				>
-				לא נמצאו תוצאות לחיפוש המבוקש
+				לא נמצאו תוצאות לחיפוש
 				</v-card-title>
 		
 				<v-divider></v-divider>
@@ -1331,13 +1492,19 @@ var appVue = new Vue({
 		PLAN_STATUS: [],
 		FLAT_NUMBER: "",
 		YEARLY_WORK_PLAN: "",
+		BLOCKS: [],
 		SETL_NAME: [],
 
 		PLANING_TYPE_items_groups: {התחדשות:['התחדשות', 'התחדשות - אחר , התחדשות - פינוי בינוי אחר',  'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי', 'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי , התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - אחר , התחדשות - פינוי בינוי רשויות', 'התחדשות - אחר , התחדשות - תמ\"א 38', 'התחדשות - פינוי בינוי אחר', 'התחדשות - פינוי בינוי מיסוי', 'התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - פינוי בינוי מתחם מוכרז , התחדשות - פינוי בינוי רשויות', 'התחדשות - פינוי בינוי רשויות', 'התחדשות - שכונתית/רובעית', 'התחדשות - תמ\"א 38', 'התחדשות עירונית'], חדש: ['חדשה'],הסדרה: ['הסדרה', 'הסדרה , התחדשות - אחר', 'אחר']},
 
-
-	
-
+		BLOCKS_index: {"תחבורה":"BLOCK_ROAD" ,
+						"ביוב":"BLOCK_SEWER" ,
+						"מים":"BLOCK_WATER" ,
+						"אנרגיה":"BLOCK_ENERGY" ,
+						"אחר": "BLOCK_OTHERS" ,
+						'תמ"א 35':"BLOCK_TMA35" ,
+						'תמ"מים': "BLOCK_TMM" },
+		BLOCKS_items: ["תחבורה" , "ביוב","מים", "אנרגיה",  "אחר", 'תמ"א 35', 'תמ"מים'],
 		PLANING_TYPE_items: ['התחדשות', 'חדש', 'הסדרה'],
 		//PLANING_TYPE_items: ['לא סטטוטורי', 'מסמך מדיניות', 'תכנית כוללנית', 'תכנית מועדפת לדיור', 'תכנית מפורטת', 'תכנית מתאר כוללנית/ מתאר', 'תכנית מתאר מקומית'],
 		MAIN_STATUS_items: ['אסטרטגי', 'קדם תכנון', 'בתהליך', 'מאושר'],
@@ -1372,7 +1539,9 @@ var appVue = new Vue({
 		loading: false,
 		search_selected: [],
 
-		mdiClose: false
+		mdiClose: false,
+
+		mdi_text: "בחירת תכנית על ידי שרטוט מצולע על המפה"
       }
     },
     methods: {
@@ -1397,6 +1566,7 @@ var appVue = new Vue({
 			if (this.mdiClose  == false)
 			{
 				this.mdiClose  = true
+				this.mdi_text = "ביטול בחירה";
 			//if (document.getElementById("cancel_button"))
 			//{
 				appVue.desserts = [];
@@ -1461,6 +1631,7 @@ var appVue = new Vue({
 			else
 			{
 				this.mdiClose = false;
+				this.mdi_text = "בחירת תכנית על ידי שרטוט מצולע על המפה";
 				this.cancelClick();
 			}
 			//}
@@ -1583,6 +1754,34 @@ var appVue = new Vue({
 				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
 			}
 
+			filteredDataTempAll = [];
+			if (this.BLOCKS.length > 0){
+
+				var block_s = this.BLOCKS;
+				for (i = 0; i < block_s.length; i++)
+				{
+					block = this.BLOCKS_index[block_s[i]];
+					console.log(block);
+					var filteredDataTemp = filteredData.filter(function(item) {
+						return item[block] != "";
+					});
+					for (ii = 0; ii < filteredDataTemp.length; ii++)
+					{
+						filteredDataTempAll.push(filteredDataTemp[ii]);
+					}
+				}
+				filteredData = filteredDataTempAll;
+				var POLYGON_NAMES = [];
+				var in_query = "";
+				for (i = 0; i < filteredData.length; i++)
+				{
+					in_query = in_query  + "'" + filteredData[i].POLYGON_NAME + "'" + ",";
+				};
+				in_query = in_query.substring(0, in_query.length - 1);
+				query = query + "POLYGON_NAME IN ("+in_query+") AND ";
+
+			}
+
 
 
 
@@ -1601,6 +1800,7 @@ var appVue = new Vue({
 				appVue.desserts = tableData;
 
 				this.mdiClose  = true;
+				this.mdi_text = "ביטול בחירה";
 				this.sheet = true;
 
 				if (query.endsWith("AND "))
@@ -1657,6 +1857,7 @@ var appVue = new Vue({
 			}
 
 			this.mdiClose  = true;
+			this.mdi_text = "ביטול בחירה";
 			this.sheet = true;
 		
 		},
@@ -1678,6 +1879,7 @@ var appVue = new Vue({
 			this.FLAT_NUMBER=  [];
 			this.YEARLY_WORK_PLAN=  [];
 			this.PLAN_STATUS=  [];
+			this.BLOCKS = [];
 	
 	
 			},
