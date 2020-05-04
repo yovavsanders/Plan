@@ -979,10 +979,16 @@
 
 			<v-autocomplete reverse
 			v-model = "SETL_NAME"
-					:items="SETL_NAME_items"
-					label='ישוב'
-					multiple
-					chips
+			:loading="loading"
+			:items="SETL_NAME_items"
+			:search-input.sync="name_search"
+			cache-items
+			flat
+			hide-no-data
+			hide-details
+			label='ישוב'
+			multiple
+			chips
 			></v-autocomplete>
 
 			<v-select reverse
