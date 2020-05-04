@@ -981,14 +981,14 @@
 			v-model = "SETL_NAME"
 			:loading="loading"
 			:items="SETL_NAME_items"
-			:search-input.sync="name_search"
+			:search-input.sync="setlname_search"
 			cache-items
 			flat
 			hide-no-data
 			hide-details
+			append-icon=""
 			label='ישוב'
 			multiple
-			chips
 			></v-autocomplete>
 
 			<v-select reverse
@@ -1530,6 +1530,7 @@ var appVue = new Vue({
 		POLYGON_NAME: "",
 		name_items: [],
 		name_search: null,
+		setlname_search: null,
 
 		PLAN_NB: "",
 		plan_nbs_items: [],
