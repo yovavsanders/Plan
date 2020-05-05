@@ -1007,7 +1007,7 @@
 			<v-container fluid style="text-align: right;" hight=90% right>
 
 
-			<v-autocomplete
+			<v-autocomplete reverse
 					:search-input.sync="ac_search"
 					v-model = "SETL_NAME"
 					:items="SETL_NAME_items"
@@ -1019,6 +1019,14 @@
 					hide-details
 					append-icon=""
 					@change="ac_search = ''"
+					clearable
+					deletable-chips
+					disable-lookup
+					full-width
+					hide-selected
+					open-on-clear
+					persistent-hint
+					validate-on-blur
 			></v-autocomplete>
 
 			<v-select reverse
