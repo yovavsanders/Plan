@@ -979,15 +979,14 @@
 
 			<v-autocomplete reverse
 			v-model = "SETL_NAME"
-			:loading="loading"
-			:items="SETL_NAME_items"
-			cache-items
-			flat
-			hide-no-data
-			hide-details
-			append-icon=""
-			label='ישוב'
-			multiple
+					:items="SETL_NAME_items"
+					label='ישוב'
+					multiple
+					chips
+					flat
+					hide-no-data
+					hide-details
+					append-icon=""
 			></v-autocomplete>
 
 			<v-select reverse
@@ -1048,20 +1047,6 @@
 		   ></v-select>
 
 
-
-		   	<v-select reverse
-			v-model = "BLOCKS"
-		  	    :items="BLOCKS_items"
-				  label='חסמים'
-				  multiple
-				  chips
-				  flat
-				  hide-no-data
-				  hide-details
-				  append-icon=""
-		   ></v-select>
-
-
 			</v-container>
 	  </v-card-text>
 	  <v-card-actions>
@@ -1110,9 +1095,8 @@
 		  <template v-slot:activator="{ on }">
 			<v-btn
 			  block 
-			  color="blue lighten-1"
+			  color="info"
 			  dark
-			  dense
 			  v-on="on"
 			  @click="sheet = false"
 			>
@@ -1266,7 +1250,7 @@ color="#1A237E"
 
 
 
-		<v-speed-dial
+		<v-speed-dial v-on="on"
 					bottom
 					left
 					absolute
@@ -1417,7 +1401,7 @@ $(document).ready(function (){
 				appVue.plan_names_items = plan_names;
 				plan_names = plan_names.sort();
 				appVue.SETL_NAME_items = setl_names;
-				//setl_names = setl_names.sort();
+				setl_names = setl_names.sort();
 				appVue.loading = false;
 		});
 		
@@ -1497,19 +1481,13 @@ var appVue = new Vue({
 		PLAN_STATUS: [],
 		FLAT_NUMBER: "",
 		YEARLY_WORK_PLAN: "",
-		BLOCKS: [],
 		SETL_NAME: [],
 
 		PLANING_TYPE_items_groups: {התחדשות:['התחדשות', 'התחדשות - אחר , התחדשות - פינוי בינוי אחר',  'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי', 'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי , התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - אחר , התחדשות - פינוי בינוי רשויות', 'התחדשות - אחר , התחדשות - תמ\"א 38', 'התחדשות - פינוי בינוי אחר', 'התחדשות - פינוי בינוי מיסוי', 'התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - פינוי בינוי מתחם מוכרז , התחדשות - פינוי בינוי רשויות', 'התחדשות - פינוי בינוי רשויות', 'התחדשות - שכונתית/רובעית', 'התחדשות - תמ\"א 38', 'התחדשות עירונית'], חדש: ['חדשה'],הסדרה: ['הסדרה', 'הסדרה , התחדשות - אחר', 'אחר']},
 
-		BLOCKS_index: {"תחבורה":"BLOCK_ROAD" ,
-						"ביוב":"BLOCK_SEWER" ,
-						"מים":"BLOCK_WATER" ,
-						"אנרגיה":"BLOCK_ENERGY" ,
-						"אחר": "BLOCK_OTHERS" ,
-						'תמ"א 35':"BLOCK_TMA35" ,
-						'תמ"מים': "BLOCK_TMM" },
-		BLOCKS_items: ["תחבורה" , "ביוב","מים", "אנרגיה",  "אחר", 'תמ"א 35', 'תמ"מים'],
+
+	
+
 		PLANING_TYPE_items: ['התחדשות', 'חדש', 'הסדרה'],
 		//PLANING_TYPE_items: ['לא סטטוטורי', 'מסמך מדיניות', 'תכנית כוללנית', 'תכנית מועדפת לדיור', 'תכנית מפורטת', 'תכנית מתאר כוללנית/ מתאר', 'תכנית מתאר מקומית'],
 		MAIN_STATUS_items: ['אסטרטגי', 'קדם תכנון', 'בתהליך', 'מאושר'],
@@ -1529,7 +1507,6 @@ var appVue = new Vue({
 		POLYGON_NAME: "",
 		name_items: [],
 		name_search: null,
-		setlname_search: null,
 
 		PLAN_NB: "",
 		plan_nbs_items: [],
@@ -1760,34 +1737,6 @@ var appVue = new Vue({
 				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
 			}
 
-			filteredDataTempAll = [];
-			if (this.BLOCKS.length > 0){
-
-				var block_s = this.BLOCKS;
-				for (i = 0; i < block_s.length; i++)
-				{
-					block = this.BLOCKS_index[block_s[i]];
-					console.log(block);
-					var filteredDataTemp = filteredData.filter(function(item) {
-						return item[block] != "";
-					});
-					for (ii = 0; ii < filteredDataTemp.length; ii++)
-					{
-						filteredDataTempAll.push(filteredDataTemp[ii]);
-					}
-				}
-				filteredData = filteredDataTempAll;
-				var POLYGON_NAMES = [];
-				var in_query = "";
-				for (i = 0; i < filteredData.length; i++)
-				{
-					in_query = in_query  + "'" + filteredData[i].POLYGON_NAME + "'" + ",";
-				};
-				in_query = in_query.substring(0, in_query.length - 1);
-				query = query + "POLYGON_NAME IN ("+in_query+") AND ";
-
-			}
-
 
 
 
@@ -1885,7 +1834,6 @@ var appVue = new Vue({
 			this.FLAT_NUMBER=  [];
 			this.YEARLY_WORK_PLAN=  [];
 			this.PLAN_STATUS=  [];
-			this.BLOCKS = [];
 	
 	
 			},
