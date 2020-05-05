@@ -1010,7 +1010,7 @@
 			<v-autocomplete reverse
 			v-model = "SETL_NAME"
 					:items="SETL_NAME_items"
-					:search-input.sync="search"
+					:search-input.sync="ac_search"
 					cache-items
 					label='ישוב'
 					multiple
@@ -1517,7 +1517,8 @@ var appVue = new Vue({
 
 		loading: true,
 		expanded: [],
-		search: null,
+		search: "",
+		ac_search: null,
 		sheet: false,
 		headers: [
           {
@@ -1609,7 +1610,7 @@ var appVue = new Vue({
 
 	watch: {
 		SETL_NAME() {
-			this.search = ""
+			this.ac_search = ""
 		}
 	},
 
