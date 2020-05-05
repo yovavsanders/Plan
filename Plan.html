@@ -1010,8 +1010,6 @@
 			<v-autocomplete reverse
 			v-model = "SETL_NAME"
 					:items="SETL_NAME_items"
-					:search-input.sync="ac_search"
-					cache-items
 					label='ישוב'
 					multiple
 					small-chips
@@ -1607,12 +1605,6 @@ var appVue = new Vue({
       }
 	},
 	
-
-	watch: {
-		SETL_NAME() {
-			this.ac_search = "";
-		}
-	},
 
     methods: {
 
