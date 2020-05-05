@@ -1008,7 +1008,8 @@
 
 
 			<v-autocomplete reverse
-			v-model = "SETL_NAME"
+					:search-input.sync="ac_search"
+					v-model = "SETL_NAME"
 					:items="SETL_NAME_items"
 					label='ישוב'
 					multiple
@@ -1017,6 +1018,7 @@
 					hide-no-data
 					hide-details
 					append-icon=""
+					@change="ac_search = ''"
 			></v-autocomplete>
 
 			<v-select reverse
