@@ -1007,7 +1007,7 @@
 			<v-container fluid style="text-align: right;" hight=90% right>
 
 
-			<v-autocomplete reverse
+			<v-combobox reverse
 					:search-input.sync="ac_search"
 					v-model = "SETL_NAME"
 					:items="SETL_NAME_items"
@@ -1028,7 +1028,7 @@
 					dense
 					loader-height=20
 					height=20
-			></v-autocomplete>
+			></v-combobox>
 
 			<v-select reverse
 				v-model ="PLANING_TYPE"
