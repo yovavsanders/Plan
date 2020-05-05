@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 <html style='width:100%; height:90%;'>
 <head>
@@ -236,7 +238,7 @@
 
 
     <v-app-bar
-      color="blue lighten-1"
+      color="#1A237E"
       dense
 	  dark
 	  id="myTitle"
@@ -269,7 +271,7 @@
 
 
 	<v-spacer></v-spacer>
-      <v-toolbar-title class="white--text" style="text-align: center; width:50%">שולחן השרטוט הממשלתי TPlanGov</v-toolbar-title>
+      <v-toolbar-title class="white--text" style="text-align: center; width:50%">שולחן השרטוט הממשלתי</v-toolbar-title>
     <v-spacer></v-spacer>
 	
 	
@@ -302,7 +304,7 @@
 
 
 	<v-app-bar
-	color="blue lighten-1"
+	color="#1A237E"
 	dense
 	dark
 	id="myTitleMobile"
@@ -574,7 +576,7 @@
 				:value="additional_count"
 				overlap
 				>
-				<span ><v-icon >mdi-plus</v-icon> שכבות נוספות</span>	
+				<span ><v-icon >mdi-plus</v-icon>  תכנון ארצי - תמ"א</span>	
 				<template v-slot:actions>
 					<v-icon></v-icon>
 				</template>
@@ -852,6 +854,34 @@
 
 				</v-expansion-panels>
 
+        </v-expansion-panels>
+        
+
+
+
+        <v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+				<v-badge left
+				color="green"
+				:content="additional_layers_count"
+				:value="additional_layers_count"
+				overlap
+				>
+				<span ><v-icon >spa</v-icon>שכבות נוספות</span>	
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+				<v-checkbox right
+					hide-details
+					v-model="picked"
+					label="בחר הכל"
+					value='Additional'
+					@change="cbxChanged('Additional')"
+			  	></v-checkbox>
+				<v-checkbox v-model="query" label="חלקות" value="Additional:PARCEL_ALL" hide-details   @change="cbxChanged('Additional:PARCEL_ALL')" ></v-checkbox>
+				<v-checkbox v-model="query" label="גושים" value="Additional:SUB_GUSH_ALL" hide-details   @change="cbxChanged('Additional:SUB_GUSH_ALL')" ></v-checkbox>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
 		</v-expansion-panels>
 
               </v-expansion-panel-content>
@@ -980,9 +1010,11 @@
 			<v-autocomplete reverse
 			v-model = "SETL_NAME"
 					:items="SETL_NAME_items"
+					:search-input.sync="search"
+					cache-items
 					label='ישוב'
 					multiple
-					chips
+					small-chips
 					flat
 					hide-no-data
 					hide-details
@@ -1047,6 +1079,20 @@
 		   ></v-select>
 
 
+
+		   	<v-select reverse
+			v-model = "BLOCKS"
+		  	    :items="BLOCKS_items"
+				  label='חסמים'
+				  multiple
+				  chips
+				  flat
+				  hide-no-data
+				  hide-details
+				  append-icon=""
+		   ></v-select>
+
+
 			</v-container>
 	  </v-card-text>
 	  <v-card-actions>
@@ -1095,8 +1141,9 @@
 		  <template v-slot:activator="{ on }">
 			<v-btn
 			  block 
-			  color="info"
+			  color="#1A237E"
 			  dark
+			  dense
 			  v-on="on"
 			  @click="sheet = false"
 			>
@@ -1115,15 +1162,37 @@
 				  <v-flex style="overflow: auto;">
 					<v-card style="bottom: 0; ">
 					<v-card-title>
-						 מתחמי דיור
-						<v-spacer></v-spacer>
+
+						<v-divider vertical></v-divider>
+						
+						<p class="text--primary" style="width:auto; margin-top: 10px; margin-right: 20px; margin-left: 10px;">מתחמי דיור</p>
+
+						<v-divider vertical></v-divider>
+
 						<v-text-field
 						  v-model="search"
 						  append-icon="mdi-magnify"
-						  label="חיפוש בתוצאות"
+						  placeholder="חיפוש בתוצאות"
 						  single-line
 						  hide-details
+						  style="width: 30%; margin-left: 10px;  margin-right: 10px;"
 						></v-text-field>
+					
+
+						<v-divider vertical></v-divider>
+
+						
+
+						<v-tooltip right>
+							<template v-slot:activator="{ on }">
+								<v-btn class="ma-2" color="green" dark style="width: 5%;" v-on="on"  @click="fnExcelReport">
+									<v-icon dark>mdi-file-excel</v-icon>
+								</v-btn>
+							</template>
+							<span>יצוא לקובץ אקסל</span>
+						</v-tooltip>
+						<v-divider vertical></v-divider>
+
 					  </v-card-title>   
 
 					<v-data-table
@@ -1135,6 +1204,7 @@
 					show-expand
 					:search="search"
 					class="elevation-1"
+					fixed-header
 					>
 
 					<template v-slot:expanded-item="{ headers, item }">
@@ -1250,7 +1320,7 @@ color="#1A237E"
 
 
 
-		<v-speed-dial v-on="on"
+		<v-speed-dial
 					bottom
 					left
 					absolute
@@ -1372,7 +1442,8 @@ $(document).ready(function (){
 			showXY: true,
 			level: 2,
 			center: {x: 186000, y: 658000},
-			identifyOnClick: true
+			identifyOnClick: true,
+            isEmbeddedToggle: false
 		});
 
 		appVue.loading = true;
@@ -1430,6 +1501,7 @@ var appVue = new Vue({
 		tama1_count:0,
 		tama35_count:0,
 		additional_count: 0,
+        additional_layers_count: 0,
 
         picked: [],
         query: [],
@@ -1445,7 +1517,7 @@ var appVue = new Vue({
 
 		loading: true,
 		expanded: [],
-		search: '',
+		search: null,
 		sheet: false,
 		headers: [
           {
@@ -1481,13 +1553,19 @@ var appVue = new Vue({
 		PLAN_STATUS: [],
 		FLAT_NUMBER: "",
 		YEARLY_WORK_PLAN: "",
+		BLOCKS: [],
 		SETL_NAME: [],
 
 		PLANING_TYPE_items_groups: {התחדשות:['התחדשות', 'התחדשות - אחר , התחדשות - פינוי בינוי אחר',  'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי', 'התחדשות - אחר , התחדשות - פינוי בינוי מיסוי , התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - אחר , התחדשות - פינוי בינוי רשויות', 'התחדשות - אחר , התחדשות - תמ\"א 38', 'התחדשות - פינוי בינוי אחר', 'התחדשות - פינוי בינוי מיסוי', 'התחדשות - פינוי בינוי מתחם מוכרז', 'התחדשות - פינוי בינוי מתחם מוכרז , התחדשות - פינוי בינוי רשויות', 'התחדשות - פינוי בינוי רשויות', 'התחדשות - שכונתית/רובעית', 'התחדשות - תמ\"א 38', 'התחדשות עירונית'], חדש: ['חדשה'],הסדרה: ['הסדרה', 'הסדרה , התחדשות - אחר', 'אחר']},
 
-
-	
-
+		BLOCKS_index: {"תחבורה":"BLOCK_ROAD" ,
+						"ביוב":"BLOCK_SEWER" ,
+						"מים":"BLOCK_WATER" ,
+						"אנרגיה":"BLOCK_ENERGY" ,
+						"אחר": "BLOCK_OTHERS" ,
+						'תמ"א 35':"BLOCK_TMA35" ,
+						'תמ"מים': "BLOCK_TMM" },
+		BLOCKS_items: ["תחבורה" , "ביוב","מים", "אנרגיה",  "אחר", 'תמ"א 35', 'תמ"מים'],
 		PLANING_TYPE_items: ['התחדשות', 'חדש', 'הסדרה'],
 		//PLANING_TYPE_items: ['לא סטטוטורי', 'מסמך מדיניות', 'תכנית כוללנית', 'תכנית מועדפת לדיור', 'תכנית מפורטת', 'תכנית מתאר כוללנית/ מתאר', 'תכנית מתאר מקומית'],
 		MAIN_STATUS_items: ['אסטרטגי', 'קדם תכנון', 'בתהליך', 'מאושר'],
@@ -1526,9 +1604,85 @@ var appVue = new Vue({
 
 		mdi_text: "בחירת תכנית על ידי שרטוט מצולע על המפה"
       }
-    },
+	},
+	
+
+	watch: {
+		SETL_NAME() {
+			this.search = ""
+		}
+	},
+
     methods: {
 
+
+
+	fnExcelReport()
+	{
+
+
+
+		var col = [];
+        for (var i = 0; i < this.desserts.length; i++) {
+            for (var key in this.desserts[i]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+
+		var table = document.createElement("table");
+
+		var tr = table.insertRow(-1);                   // TABLE ROW.
+
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < this.desserts.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (var j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = this.desserts[i][col[j]];
+            }
+        }
+
+		var tab_text="<table><tr>";
+		var textRange; var j=0;
+		var tab = table;
+		
+		for(j = 0 ; j < tab.rows.length ; j++)
+		{
+			tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+			//tab_text=tab_text+"</tr>";
+		}
+
+		tab_text=tab_text+"</table>";
+		tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+		tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+		tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+		var ua = window.navigator.userAgent;
+		var msie = ua.indexOf("MSIE ");
+
+		if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+		{
+			txtArea1.document.open("txt/html","replace");
+			txtArea1.document.write(tab_text);
+			txtArea1.document.close();
+			txtArea1.focus();
+			sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+		}
+		else                 //other browser not tested on IE 11
+			sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+		return (sa);
+	},
 		getValueByFieldName(polygonname, field){//, Field){
 			var filteredData = this.desserts.filter(function(item) {
 				item["POLYGON_NAME"] == polygonname;
@@ -1737,6 +1891,34 @@ var appVue = new Vue({
 				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
 			}
 
+			filteredDataTempAll = [];
+			if (this.BLOCKS.length > 0){
+
+				var block_s = this.BLOCKS;
+				for (i = 0; i < block_s.length; i++)
+				{
+					block = this.BLOCKS_index[block_s[i]];
+					console.log(block);
+					var filteredDataTemp = filteredData.filter(function(item) {
+						return item[block] != "";
+					});
+					for (ii = 0; ii < filteredDataTemp.length; ii++)
+					{
+						filteredDataTempAll.push(filteredDataTemp[ii]);
+					}
+				}
+				filteredData = filteredDataTempAll;
+				var POLYGON_NAMES = [];
+				var in_query = "";
+				for (i = 0; i < filteredData.length; i++)
+				{
+					in_query = in_query  + "'" + filteredData[i].POLYGON_NAME + "'" + ",";
+				};
+				in_query = in_query.substring(0, in_query.length - 1);
+				query = query + "POLYGON_NAME IN ("+in_query+") AND ";
+
+			}
+
 
 
 
@@ -1834,6 +2016,7 @@ var appVue = new Vue({
 			this.FLAT_NUMBER=  [];
 			this.YEARLY_WORK_PLAN=  [];
 			this.PLAN_STATUS=  [];
+			this.BLOCKS = [];
 	
 	
 			},
@@ -2122,6 +2305,9 @@ var appVue = new Vue({
 			}
 			
 				//badge..
+                this.additional_layers_count = (q.filter(function(f) {
+								return f.split(":")[0] == "Additional";			
+				})).length;
 				this.diyur_count = (q.filter(function(f) {
 								return f.split(":")[0] == "Diyur";			
 				})).length;
@@ -2158,6 +2344,9 @@ var appVue = new Vue({
 			}
 		}
 	},
+
+
+
 	mounted() {
 		console.log("This is a breakpoint name " + this.$vuetify.breakpoint.name);
 		console.log(this.show);
@@ -2169,6 +2358,7 @@ var appVue = new Vue({
 
 var arg1;
 var AllQueries = ["Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuchimNekudot","Diyur:PerekDiurMitcham", "Tachbura:METRO_LINE","Tachbura:METRO_STAT", "Tachbura:WPLAN2019Q2", "Taasuka:perekTaasukaTochniyot", "Taasuka:perekTaasukaTiadufim",
+"Additional:PARCEL_ALL", "Additional:SUB_GUSH_ALL",
 "sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל",
 "sites_tama1Points:אתר איגום והחדרה",
 "sites_tama1Points:אתר גפמ",
@@ -2237,7 +2427,7 @@ var AllQueries = ["Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuc
 'moch_tama35_points:שדה תעופה',
 'moch_tama35_points:תחנות רכבת'];
 
-var AllLayers = ['Diyur','Tachbura', 'Taasuka', 'Ptuchim','sites_tama1Points,sites_tama1Lines,sites_tama1Polygon', 'moch_tama35_points,moch_tama35_lines,moch_tama35_polygons'];
+var AllLayers = ["Additional",'Diyur','Tachbura', 'Taasuka', 'Ptuchim','sites_tama1Points,sites_tama1Lines,sites_tama1Polygon', 'moch_tama35_points,moch_tama35_lines,moch_tama35_polygons'];
 
 
 var AllQueriesTama1 = ["sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל", 
