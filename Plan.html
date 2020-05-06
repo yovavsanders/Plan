@@ -567,6 +567,30 @@
             </v-expansion-panel>
 		</v-expansion-panels>
 
+
+		<v-expansion-panels>
+            <v-expansion-panel>
+              <v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+				<v-badge left
+				color="green"
+				:content="tashtiyot_count"
+				:value="tashtiyot_count"
+				overlap
+				>
+				<span ><v-icon > mdi-sign-caution </v-icon>תשתיות</span>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+				<v-checkbox right
+					hide-details
+					v-model="picked"
+					label="בחר הכל"
+					value='Tashtiyot'
+					@change="cbxChanged('Tashtiyot')"
+			  	></v-checkbox>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+		</v-expansion-panels>
+
 		<v-expansion-panels>
             <v-expansion-panel>
 				<v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
@@ -1163,14 +1187,19 @@
 			</v-btn>
 		  </template>
 
-			<v-layout column style="max-height: 50vh">       
+			<v-layout id="table-v-layout" column style="max-height: 50vh">       
 				  <v-flex style="overflow: auto;">
 					<v-card style="bottom: 0; ">
 					<v-card-title>
 
 						<v-divider vertical></v-divider>
-						
-						<p class="text--primary" style="width:auto; margin-top: 10px; margin-right: 20px; margin-left: 10px;">מתחמי דיור</p>
+
+						<v-badge left overlap
+									color="green"
+									:content="desserts.length"
+									:value="desserts.length">
+							<p class="font-weight-medium" style="width:auto; margin-top: 30px; margin-right: 20px; margin-left: 10px;">מתחמי דיור</p>
+						</v-badge>
 
 						<v-divider vertical></v-divider>
 
@@ -1203,6 +1232,7 @@
 					<v-data-table
 					:headers="headers"
 					:items="desserts"
+					:height="height"
 					:single-expand="true"
 					:expanded.sync="expanded"
 					item-key="POLYGON_NAME"
@@ -1419,11 +1449,35 @@ function isInArray(value, array) {
 	return array.indexOf(value) > -1;
 }
 
+
+function isMobile() {
+    var match = window.matchMedia || window.msMatchMedia;
+    if(match) {
+        var mq = match("(pointer:coarse)");
+        return mq.matches;
+    }
+    return false;
+}
+
 function getNum(val) {
 	if (isNaN(val)) {
 		return 0;
 	}
 	return val;
+}
+var lo_el;
+function getHeight()
+{
+	var height =  $(document).height()/2.5;
+	if (isMobile())
+	{
+		console.log("mobile");
+		height =  $(document).height()/1.1;
+		lo_el = document.getElementById("table-v-layout");
+		lo_el.style.maxHeight = "80vh";
+
+	}
+	return height;
 }
 
 var diyur_selected;
@@ -1497,12 +1551,15 @@ var appVue = new Vue({
     data () {
       return {
 
+		height: getHeight(),
+
 		dialog: false,
 
 		diyur_count:0,
 		tachbura_count:0,
 		taasuka_count:0,
 		ptuchim_count:0,
+		tashtiyot_count: 0,
 		tama1_count:0,
 		tama35_count:0,
 		additional_count: 0,
@@ -2320,6 +2377,9 @@ var appVue = new Vue({
 				this.ptuchim_count = (q.filter(function(f) {
 								return f.split(":")[0] == "Ptuchim";			
 				})).length;
+				this.tashtiyot_count = (q.filter(function(f) {
+								return f.split(":")[0] == "Tashtiyot";			
+				})).length;
 				this.tama1_count = (q.filter(function(f) {
 								return f.split(":")[0].includes("sites_tama1");
 				})).length;
@@ -2427,7 +2487,7 @@ var AllQueries = ["Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuc
 'moch_tama35_points:שדה תעופה',
 'moch_tama35_points:תחנות רכבת'];
 
-var AllLayers = ["Additional",'Diyur','Tachbura', 'Taasuka', 'Ptuchim','sites_tama1Points,sites_tama1Lines,sites_tama1Polygon', 'moch_tama35_points,moch_tama35_lines,moch_tama35_polygons'];
+var AllLayers = ["Additional",'Diyur','Tachbura', 'Taasuka', 'Ptuchim', 'Tashtiyot', 'sites_tama1Points,sites_tama1Lines,sites_tama1Polygon', 'moch_tama35_points,moch_tama35_lines,moch_tama35_polygons'];
 
 
 var AllQueriesTama1 = ["sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל", 
