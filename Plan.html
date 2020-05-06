@@ -1187,7 +1187,7 @@
 			</v-btn>
 		  </template>
 
-			<v-layout id="table-v-layout" column style="max-height: 50vh">       
+			<v-layout id="table-v-layout" column style="max-height: 60vh">       
 				  <v-flex style="overflow: auto;">
 					<v-card style="bottom: 0; ">
 					<v-card-title>
@@ -1468,11 +1468,11 @@ function getNum(val) {
 var lo_el;
 function getHeight()
 {
-	var height =  $(document).height()/2.5;
+	var height =  $(document).height()/2.7;
 	if (isMobile())
 	{
 		console.log("mobile");
-		height =  $(document).height()/1.1;
+		height =  $(document).height()/1.5;
 		lo_el = document.getElementById("table-v-layout");
 		lo_el.style.maxHeight = "80vh";
 
@@ -1602,9 +1602,7 @@ var appVue = new Vue({
 
 		query_tama1 : "OBJECTID > 0 AND LayerName in (",
 		in_query_tama1: "",
-		//---------------------------------------------END CHAYA--------------------------------------------------------------
 
-		
 		layers_on: [],
 		layers_off: [],
 
