@@ -8,9 +8,30 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
 
 
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+
+
+.v-data-table__mobile-row__header {
+
+width: 49.5%;	
+text-align: right;
+  direction: rtl;
+
+}
+
+.v-data-table__mobile-row__cell {
+  width: 49.5%;
+  text-align: right;
+  direction: rtl;
+  }
+
+  
+
+
+
+
+
  .custom-loader {
     animation: loader 1s infinite;
     display: flex;
@@ -139,6 +160,29 @@
     display: inline-block;
 }
 
+.add_layer_watermark
+{
+    position: absolute;
+    right: 0%!important;
+    bottom: 40%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
+
+.measure_watermark
+{
+    position: absolute;
+    right: 0%!important;
+    bottom: 30%!important;
+    background-color: transparent;
+    border: none;
+    z-index: 1;
+    font-family: mapiregular;
+    display: inline-block;
+}
 .info_watermark
 {
     position: absolute;
@@ -200,18 +244,24 @@
 
 
 </style>
-<html>
+
 
 <head>
   
 <!-- 		<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
 		<link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">  -->
-		<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  
+		<!-- <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>   -->
 <!-- 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> -->
 
+		<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js"></script> -->
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise,Object.assign"></script>
 
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"/>
+		<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+		<script src="https://cdn.rawgit.com/calvinmetcalf/shapefile-js/gh-pages/dist/shp.js"></script>
+		<script src="https://cdn.rawgit.com/calvinmetcalf/leaflet.shapefile/gh-pages/leaflet.shpfile.js"></script>
 
 
    <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'> 
@@ -226,7 +276,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script> 
+  <!-- <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  -->
 </head>
 <body style='width:100%; height:90%;' scrolling='no' dir="rtl">
   <div id="toolbar_app">
@@ -336,68 +386,6 @@
 		  
 		</v-btn>
 	  </template>
-
-	  <v-card id="myMenuMobile" right>
-
-
-		<v-list>
-
-			  <v-container id="progress_line_mobile" class="d-none">
-					  <v-layout
-						fill-height
-						wrap
-					  >
-						<v-flex xs12>
-						  <v-progress-linear
-							
-							color="deep-orange accent-4"
-							indeterminate
-							rounded
-							height="6"
-						  ></v-progress-linear>
-						</v-flex>
-					  </v-layout>
-			  </v-container>
-
-			  <v-list-item>
-				<div class="my-2">
-					<v-btn text @click="dialog_layers = true; menu=false;">שכבות מידע</v-btn>
-				</div>
-			</v-list-item>
-
-			<v-list-item>
-				<div class="my-2" block >
-						<v-btn text @click="dialog_search = true; menu=false;">חיפוש תכנית</v-btn>
-				  </div>
-			  </v-list-item>
-	
-			  <v-list-item>
-				  <div class="my-2">
-					<v-btn text @click="dialog_filter = true; menu=false;">סינון תכנית / מתחם</v-btn>
-				  </div>
-			  </v-list-item>
-
-			  <v-list-item>
-			  <div class="my-2">
-				  <v-btn text color="warning"  @click="selectFromMapClick" dark>בחירה מהמפה
-
-				  </v-btn disable>
-			  </div>
-			</v-list-item>
-
-
-			<v-list-item>
-			<div class="my-2">
-				<v-btn text color="error" id="cancel_button"  class="d-flex" @click="cancelClick" dark>ביטול בחירה </v-btn>
-			  </div>
-			</v-list-item>
-
-
-
-
-		</v-list>
-
-	  </v-card>
 	</v-menu>
   </div>
 
@@ -618,114 +606,7 @@
 							overlap
 							>
 							<span ><v-icon >mdi-plus</v-icon> תמ"א 1</span>
-							<!-- תמא 1
-							--------
-
-							תשריט ראשי
-							--------
-
-							מים
-							--------
-							אתר איגום והחדרה
-							אתר התפלה
-							מוצא ימי למי רכז
-							מתקן טיפול בשפכים
-							רצועה לתכנון וקו מים
-							מוביל ארצי
-							קו קולחין
-							אזור רגישות להחדרת מי נגר עילי
-
-							חשמל
-							--------
-							תחנת חשמל - לידיעה בלבד
-							קו חשמל ארצי מתוכנית מאושרת - לידיעה בלבד
-							תחנת כוח
-
-							גז טבעי
-							--------
-							קו צינור הולכת גז טבעי
-							מתקן גז טבעי
-							מתחם ימי לרצועת תשתיות
-
-							גפ"מ
-							--------
-							אתר גפ"מ
-
-							פסולת
-							--------
-							אתר פסולת
-
-							דרכים
-							--------
-							מחלף
-							דרכים
-
-							מסילות ברזל
-							--------
-							מסילות ברזל
-
-							מוגנים
-							--------
-							יער
-							שמורה וגן
-
-							נחלים
-							--------
-							נחל
-							פשט הצפה
-							שטח הצפה
-
-							חופים
-							--------
-							תיירות מוטת חוף יישוב עירוני
-							נמל ומעגנה
-							אזור מוטה שימושים נמליים, תשתיות, מע"ר ופארק נחל
-							סיווג חוף
-							מכלול חוף
-							מכלול מיוחד
-							פארק חוף עירוני
-							תיירות מוטת חוף פתוח
-
-							תשריט משלים
-							--------
-
-							מים
-							--------
-							שטח בעל חשיבות להחדרה והעשרה של מי תהום
-
-							מוגנים
-							--------
-							תחום יער
-
-							נספחים
-							--------
-
-							מים
-							--------
-							אתר איגום והחדרה
-
-							אתרי התפלה
-							--------
-							אתר התפלה
-
-							פסולת
-							--------
-							אתר פסולת
-
-							גפ"מ
-							--------
-							אתר גפ"מ
-
-							חופים - נספחים מנחים
-							--------
-							פארק חוף עירוני
-							תיירות
-
-							שכבות רקע
-							--------
-							תחום התוכנית
-							קו סביבה חופית - 300 מטר
-							רצועת דלק -->
+						
 							</v-badge>
 						  </v-expansion-panel-header>	
 							<template v-slot:actions>
@@ -1231,7 +1112,7 @@
 
 					  </v-card-title>   
 
-					<v-data-table
+					<v-data-table id="mytable"
 					:headers="headers"
 					:items="desserts"
 					:height="height"
@@ -1244,23 +1125,6 @@
 					fixed-header
 					>
 
-					<template v-slot:expanded-item="{ headers, item }">
-						
-						<td :colspan="headers.length">
-						<v-row style="text-align: right;">
-							<v-col>
-								<h4>מחוז:  {{ item.DISTRICT_NAME }}</h4>			
-								<h4>מרחב תכנון: {{ item.PLANING_AREA }}</h4>
-								<h4>סוג מתחם: {{ item.POLYGON_TYPE }}</h4>
-								<h4>סטטוס: {{ item.PLAN_STATUS }}</h4>
-								<h4>מגזר: {{  item.SECTOR_TYPE }}</h4>
-								<h4>חדש / התחדשות: {{  item.PLANING_TYPE }}</h4>
-								<h4>שם ועדה: {{  item.SUBMITTER_NAME }}</h4>
-							</v-col>
-						</v-row>
-						</td>
-						
-					</template>
 
 					<template v-slot:item.flat_number="{ item }">
 						<v-chip :color='getColor(item["flat_number"])' dark>{{ item.flat_number }}</v-chip>
@@ -1274,7 +1138,30 @@
 						mdi-map-marker-radius
 						</v-icon>
 					  </template>
+
+
+					  <template v-slot:expanded-item="{ headers, item }">
+						
+						<td :colspan="headers.length">
+						<v-row style="text-align: right;">
+							<v-col>
+								<h4>מחוז: {{ item.DISTRICT_NAME }}	</h4>	
+								<h4>מרחב תכנון: {{ item.PLANING_AREA }}</h4>
+								<h4>סוג מתחם: {{ item.POLYGON_TYPE }}</h4>
+								<h4>סטטוס: {{ item.PLAN_STATUS }}</h4>
+								<h4>מגזר: {{  item.SECTOR_TYPE }}</h4>
+								<h4>חדש / התחדשות: {{  item.PLANING_TYPE }}</h4>
+								<h4>שם ועדה: {{  item.SUBMITTER_NAME }}</h4>
+							</v-col>
+						</v-row>
+						</td>
+						
+					</template>
 				   
+
+
+					  
+	
 					
 					</v-data-table>
 					</v-card>
@@ -1282,6 +1169,10 @@
 			</v-layout>
 		</v-bottom-sheet>
 	  </div>
+
+
+
+
 
 	<v-tooltip left>
 	<template v-slot:activator="{ on }">
@@ -1301,6 +1192,43 @@
 	</template>
 	<span>{{mdi_text}}</span>
 	</v-tooltip>
+
+
+	<v-tooltip left>
+		<template v-slot:activator="{ on }">
+		<v-btn class="add_layer_watermark" v-on="on"
+		  @click="addLayer" 
+		  absolute
+		  dark
+		  fab
+		  small
+		  right
+		  color="#FF5722"
+		>
+		  <v-icon>mdi-layers-plus</v-icon>
+		</v-btn>
+		</template>
+		<span>הוספת שכבת משתמש (פורמט Shp.Zip)</span>
+		</v-tooltip>
+
+
+
+	<v-tooltip left>
+		<template v-slot:activator="{ on }">
+		<v-btn class="measure_watermark" v-on="on"
+		  @click="Measure" 
+		  absolute
+		  dark
+		  fab
+		  small
+		  right
+		  color="#FF5722"
+		>
+		  <v-icon >mdi-ruler-square</v-icon>
+		</v-btn>
+		</template>
+		<span>מדידות על המפה</span>
+		</v-tooltip>
 	
 	
 	<v-tooltip right>
@@ -1441,6 +1369,55 @@ color="#1A237E"
 			  </v-card>
 			</v-dialog>
 
+
+			<v-dialog
+			  v-model="file_input_dialog"
+			  width="500"
+			>
+			<v-card>
+				<v-card-title center
+				  class="headline grey lighten-4"
+				  primary-title
+				>
+			בחר קובץ shp מכווץ ל zip
+				</v-card-title>
+		
+				<v-divider></v-divider>
+				<input type="file" id="file"> 
+				<v-divider></v-divider>
+				<v-card-actions>
+				  <v-spacer></v-spacer>
+				  <v-btn
+					color="green"
+					text
+					@click="addToMap()"
+				  >
+					אישור
+				  </v-btn>
+				</v-card-actions>
+			  </v-card>
+			
+
+		</v-dialog>
+
+
+		<v-snackbar color="success"
+		v-model = "alert"
+		:timeout="2000"
+		transition="scale-transition"
+	  >
+	 {{feat_added_cnt}}  ישויות נוספו בהצלחה
+	  </v-snackbar>
+
+
+	  <v-snackbar color="error"
+	  v-model = "error_alert"
+	  :timeout="2000"
+	  transition="scale-transition"
+	>
+   הקובץ שנבחר אינו תקין
+	</v-snackbar>
+
 </v-app>
 </div>
 
@@ -1474,13 +1451,274 @@ function getHeight()
 	if (isMobile())
 	{
 		console.log("mobile");
-		height =  $(document).height()/1.5;
+		height =  $(document).height() / 1.8;
 		lo_el = document.getElementById("table-v-layout");
-		lo_el.style.maxHeight = "80vh";
+		lo_el.style.maxHeight = "90vh";
 
 	}
 	return height;
 }
+
+function degreesToRadians(degrees) {
+	  return degrees * Math.PI / 180;
+	}
+
+	function pow2(x) {
+	  return x*x;
+	}
+
+	function pow3(x) {
+	  return x*x*x;
+	}
+
+	function pow4(x) {
+	  return x*x*x*x;
+	}
+
+	function ITMLocation(easting, northing) {
+	  this.easting = easting;
+	  this.northing = northing;
+	  this.eastingInOldGrid = function() {
+		return easting - 50000;
+	  }
+	  this.northingInOldGrid = function() {
+		var retval = northing - 500000;
+		if (retval<0) {
+		  retval += 1000000;
+		}
+		return retval;
+	  }
+	}
+	
+	function Wgs84ToIsraeLtm(lat_lon_pair)
+	{
+				longitude = lat_lon_pair[0];
+				latitude = 	lat_lon_pair[1];
+				longitude = degreesToRadians(longitude);
+				latitude = degreesToRadians(latitude);
+				// Projection parameters
+				var centralMeridian = degreesToRadians(35.2045169444444);  // central meridian of ITM projection
+				var k0 = 1.0000067;  // scale factor
+
+				// Ellipsoid constants (WGS 80 datum)
+				var a = 6378137;  // equatorial radius
+				var b = 6356752.3141; // polar radius
+				var e = Math.sqrt(1 - b*b/a/a);  // eccentricity
+				var e1sq = e*e/(1-e*e);
+				var n = (a-b)/(a+b);
+
+				// Curvature at specified location
+				var tmp = e*Math.sin(latitude);
+				var nu = a/Math.sqrt(1 - tmp*tmp);
+
+				// Meridional arc length
+				var n3 = pow3(n);
+				var n4 = pow4(n);
+				var A0 = a*(1-n+(5*n*n/4)*(1-n) +(81*n4/64)*(1-n));
+				var B0 = (3*a*n/2)*(1 - n - (7*n*n/8)*(1-n) + 55*n4/64);
+				var C0 = (15*a*n*n/16)*(1 - n +(3*n*n/4)*(1-n));
+				var D0 = (35*a*n3/48)*(1 - n + 11*n*n/16);
+				var E0 = (315*a*n4/51)*(1-n);
+				var S = A0*latitude - B0*Math.sin(2*latitude) + C0*Math.sin(4*latitude)
+				- D0*Math.sin(6*latitude) + E0*Math.sin(8*latitude);
+
+				// Coefficients for ITM coordinates
+				var p = longitude-centralMeridian;
+				var Ki = S*k0;
+				var Kii = nu*Math.sin(latitude)*Math.cos(latitude)*k0/2;
+				var Kiii = ((nu*Math.sin(latitude)*pow3(Math.cos(latitude)))/24)*(5-pow2(Math.tan(latitude))+9*e1sq*pow2(Math.cos(latitude))+4*e1sq*e1sq*pow4(Math.cos(latitude)))*k0;
+				var Kiv = nu*Math.cos(latitude)*k0;
+				var Kv = pow3(Math.cos(latitude))*(nu/6)*(1-pow2(Math.tan(latitude))+e1sq*pow2(Math.cos(latitude)))*k0;
+
+				var x = Math.round(219529.58+ Kiv*p+Kv*pow3(p) - 60);
+				var y = Math.round(Ki+Kii*p*p+Kiii*pow4(p) - 3512424.41+ 626907.39 - 45);
+				var xy_pair = [x, y];
+				return xy_pair;
+	}
+
+
+	//More info: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+	function handleZipFile(file){
+		//alert(file);
+		var reader = new FileReader();
+	  reader.onload = function(){
+		  if (reader.readyState != 2 || reader.error){
+			  return;
+		  } else {
+			  convertToLayer(reader.result);
+		}
+	  }
+	  reader.readAsArrayBuffer(file);
+	}
+
+	var geoJson 
+	function convertToLayer(buffer){
+		shp(buffer).then(function(geojson){	//More info: https://github.com/calvinmetcalf/shapefile-js
+			var shpfile = new L.Shapefile(geojson);
+			//alert(shpfile.toGeoJSON().features.length + " ישויות בשכבה");
+			if (shpfile.toGeoJSON().features.length > 0)
+			{
+				geoJson = shpfile.toGeoJSON();
+				var wkts = [];
+				if (geoJson.features[0].geometry.type == "Point")
+				{
+					for (i = 0; i < geoJson.features.length; i++)
+					{
+						var latitude = geoJson.features[i].geometry.coordinates[1];
+						var longitude = geoJson.features[i].geometry.coordinates[0];
+						if (geoJson.features[i].geometry.coordinates[1] < 100)
+						{
+							xy_pair = Wgs84ToIsraeLtm([longitude, latitude]);
+							x = xy_pair[0];
+							y = xy_pair[1];
+						}
+						else
+						{
+							x = latitude;
+							y = longitude;
+						}
+						wkts.push('POINT('+x+' '+y+')');
+						//'POINT(196062.48 621458.39)'
+						//console.log(x + " " + y);
+					}
+					
+					var data = {	  
+						'wkts': wkts,  
+						'names': ['p1'],  
+						'geometryType': govmap.drawType.Point,  
+						'defaultSymbol':  
+						{  
+							'url':'http://www.creatingonline.com/webmaster/free_bullets/greenbullet1.gif',  
+							'width':15,  
+							'height':15  
+						},  
+						'symbols': [],  
+						'clearExisting':false,  
+						'data': {  
+						}  
+					};  
+					govmap.displayGeometries(data).then(function (e)  
+					{ 
+						console.log("points created");
+					});
+				}
+				if (geoJson.features[0].geometry.type == "LineString")
+				{
+					for (i = 0; i < geoJson.features.length; i++)
+					{
+						var coordinates = geoJson.features[i].geometry.coordinates;
+						var linestring = "LINESTRING(";
+						for (c = 0 ; c < coordinates.length; c++)
+						{
+							var latitude = coordinates[c][1];
+							var longitude = coordinates[c][0];
+							
+							if (latitude < 100)
+							{
+								xy_pair = Wgs84ToIsraeLtm([longitude, latitude]);
+								x = xy_pair[0] + 55;
+								y = xy_pair[1] + 45;
+							}
+							else
+							{
+								x = latitude + 55;
+								y = longitude + 45;
+							}
+							linestring = linestring + x + " " + y + ", ";
+						}
+						linestring_r = linestring.substring(0, linestring.length - 1);
+						linestring_r =linestring_r + ")";
+						wkts.push(linestring_r);
+						//LINESTRING(181638.5702018566 691584.9075372377, 230586.58476455236 683382.807799705)',  
+
+						//console.log(linestring_r);
+					}
+					
+					var data = {	  
+						'wkts': wkts,  
+						'names': ['p1'],  
+						'geometryType': govmap.drawType.Polyline,  
+						'defaultSymbol':  
+						{  
+							'color': [255, 0, 0, 1],  
+							'width': 1,  
+						},  
+						'symbols': [],  
+						'clearExisting':false,  
+						'data': { 
+						}  
+					};  
+					govmap.displayGeometries(data).then(function (e)  
+					{ 
+						console.log("points created");
+					});
+				}
+				if (geoJson.features[0].geometry.type == "Polygon")
+				{
+					for (i = 0; i < geoJson.features.length; i++)
+					{
+						var parts = geoJson.features[i].geometry.coordinates;
+						var linestring = "POLYGON((";
+						for (pr = 0; pr < parts.length; pr++)
+						{
+							coordinates = parts[pr]
+							for (p = 0; p < coordinates.length; p++)
+							{
+
+									var latitude = coordinates[p][1];
+									var longitude = coordinates[p][0];
+									
+									if (latitude < 100)
+									{
+										xy_pair = Wgs84ToIsraeLtm([longitude, latitude]);
+										x = xy_pair[0] + 55;
+										y = xy_pair[1] + 45;
+									}
+									else
+									{
+										x = latitude + 55;
+										y = longitude + 45;
+									}
+									linestring = linestring + x + " " + y + ", ";
+
+							}
+						}
+						linestring_r = linestring.substring(0, linestring.length - 1);
+						linestring_r =linestring_r + "))";
+						wkts.push(linestring_r);
+						//LINESTRING(181638.5702018566 691584.9075372377, 230586.58476455236 683382.807799705)',  
+
+						//console.log(linestring_r);
+					}
+					
+					var data = {	  
+						'wkts': wkts,  
+						'names': ['p1'],  
+						'geometryType': govmap.drawType.Polygon,  
+						'defaultSymbol':  
+						{  
+		                    'outlineColor': [0, 0, 255, 1],  
+	                        'outlineWidth': 1,  
+	                        'fillColor': [0, 255, 0, 0.5]  
+
+						},  
+						'symbols': [],  
+						'clearExisting':false,  
+						'data': { 
+						}  
+					};  
+					govmap.displayGeometries(data).then(function (e)  
+					{ 
+						console.log("layer created");
+					});
+				}
+				//appVue.file_input_dialog = false;
+				appVue.feat_added_cnt = shpfile.toGeoJSON().features.length;
+				appVue.alert = true;
+				appVue.file_input_dialog = false;
+			}
+		});
+	}
 
 var diyur_selected;
 var layerData;
@@ -1550,13 +1788,17 @@ var planning_types = {};
 var appVue = new Vue({
     el:"#toolbar_app",
     vuetify: new Vuetify(),
-    data () {
-      return {
+    data : {
+
+
+		feat_added_cnt: 0,
+		alert: false,
+		error_alert: false,
 
 		height: getHeight(),
 
 		dialog: false,
-
+		file_input_dialog: false,
 		diyur_count:0,
 		tachbura_count:0,
 		taasuka_count:0,
@@ -1666,13 +1908,45 @@ var appVue = new Vue({
 		mdiClose: false,
 
 		mdi_text: "בחירת תכנית על ידי שרטוט מצולע על המפה"
-      }
 	},
+
 	
 
     methods: {
 
 
+	addToMap()
+	{
+		var files = document.getElementById('file').files;
+			if (files.length == 0) {
+				return; //do nothing if no file given yet
+		}
+			
+		var file = files[0];
+			
+		if (file.name.slice(-3) != 'zip'){ //Demo only tested for .zip. All others, return.
+			this.error_alert = true; 	
+			return;
+		} 
+		else {
+			handleZipFile(file);
+
+		}
+	},
+
+
+
+	addLayer()
+	{
+		this.alert = false;
+		this.feat_added_cnt = 0;
+		this.file_input_dialog = true;
+	},
+		
+	Measure()
+	{
+		govmap.showMeasure();  
+	},
 
 	fnExcelReport()
 	{
@@ -2403,9 +2677,9 @@ var appVue = new Vue({
 			case 'xl': return '26%';
 			}
 		}
+	
+
 	},
-
-
 
 	mounted() {
 		console.log("This is a breakpoint name " + this.$vuetify.breakpoint.name);
