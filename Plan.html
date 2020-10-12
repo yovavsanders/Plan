@@ -1,16 +1,13 @@
 
-
-
-
 <!DOCTYPE html>
 <html style='width:100%; height:90%;'>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
 
 
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-
 
 .v-data-table__mobile-row__header {
 
@@ -89,7 +86,6 @@ text-align: right;
 
 
 
-
   
 .list__tile__title {
     text-align: right;
@@ -124,6 +120,7 @@ text-align: right;
     left: auto;
     right: 0;
 }
+
 
 .mot_watermark
 {
@@ -239,7 +236,12 @@ text-align: right;
   #create .v-btn--floating {
     position: relative;
   }
-
+  
+  
+#log {
+	height: 0;
+	z-index: 1;
+}
 
 
 
@@ -250,18 +252,19 @@ text-align: right;
   
 <!-- 		<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
 		<link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">  -->
-		<!-- <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>   -->
+		<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  
 <!-- 		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> -->
 
-		<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js"></script> -->
-		<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Promise,Object.assign"></script>
 
+		
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"/>
 		<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
 		<script src="https://cdn.rawgit.com/calvinmetcalf/shapefile-js/gh-pages/dist/shp.js"></script>
 		<script src="https://cdn.rawgit.com/calvinmetcalf/leaflet.shapefile/gh-pages/leaflet.shpfile.js"></script>
+
+
 
 
    <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'> 
@@ -276,14 +279,85 @@ text-align: right;
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <!-- <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  -->
+  <script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script> 
 </head>
 <body style='width:100%; height:90%;' scrolling='no' dir="rtl">
-  <div id="toolbar_app">
+
+
+
+
+
+
+
+
+
+
+
+
+  <div id="toolbar_app" >
     <v-app>
 
 		
-
+		<v-main right id="log" v-model="log">
+			<v-container
+			  class="fill-height"
+			  fluid
+			>
+			  <v-row
+				align="center"
+				justify="center"
+			  >
+				<v-col
+				  cols="12"
+				  sm="8"
+				  md="4"
+				>
+				  <v-card class="elevation-12" right v-model="log">
+					<v-toolbar
+					  color="primary"
+					  dark
+					  flat
+					>
+					  <v-toolbar-title>שולחן השרטוט הממשלתי - כניסה</v-toolbar-title>
+					  <v-spacer></v-spacer>
+					</v-toolbar>
+					<v-card-text>
+					  <v-form>
+						<v-text-field right
+						  v-model="usrname"
+						  label="שם משתמש"
+						  name="login"
+						  prepend-icon="person"
+						  type="text"
+						></v-text-field>
+	  
+						<v-text-field right
+						  v-model="passwrd"
+						  id="password"
+						  label="סיסמא"
+						  name="password"
+						  prepend-icon="lock"
+						  type="password"
+						></v-text-field>
+					  </v-form>
+					</v-card-text>
+					<v-card-actions right>
+					  <v-spacer></v-spacer>
+					  <v-btn color="primary" onclick="get();">כניסה</v-btn>
+					</v-card-actions>
+				<v-alert
+				  v-model="log_alert"
+				  dense
+				  outlined
+				  type="error"
+				>
+				  שם המשתמש / הסיסמא שהוקלדו  <strong>שגויים. </strong> אנא נסו שנית
+				</v-alert>
+				  </v-card>
+				</v-col>
+			  </v-row>
+			</v-container>
+		  </v-main>
 
 
 
@@ -785,6 +859,9 @@ text-align: right;
 			  	></v-checkbox>
 				<v-checkbox v-model="query" label="חלקות" value="Additional:PARCEL_ALL" hide-details   @change="cbxChanged('Additional:PARCEL_ALL')" ></v-checkbox>
 				<v-checkbox v-model="query" label="גושים" value="Additional:SUB_GUSH_ALL" hide-details   @change="cbxChanged('Additional:SUB_GUSH_ALL')" ></v-checkbox>
+				<v-checkbox v-model="query" label='קווים כחולים מבא"ת' value="Additional:MEHOZIOT_APP_TABA" hide-details   @change="cbxChanged('Additional:MEHOZIOT_APP_TABA')" ></v-checkbox>
+				<v-checkbox v-model="query" label='יעודי קרקע מבא"ת' value="Additional:MEHOZIOT_APP_YK" hide-details   @change="cbxChanged('Additional:MEHOZIOT_APP_YK')" ></v-checkbox>
+				<v-checkbox v-model="query" label='הרשאות תכנון בעבודה והכנה' value="Additional:TOCHNIOTAVODA" hide-details   @change="cbxChanged('Additional:TOCHNIOTAVODA')" ></v-checkbox>
               </v-expansion-panel-content>
             </v-expansion-panel>
 		</v-expansion-panels>
@@ -972,6 +1049,8 @@ text-align: right;
 				v-model = "FLAT_NUMBER"
 			    :items="FLAT_NUMBER_items"
 				label='תוספת יח"ד'
+				multiple
+				chips
 				flat
 				hide-no-data
 				hide-details
@@ -982,6 +1061,8 @@ text-align: right;
 			v-model = "YEARLY_WORK_PLAN"
 		  	    :items="YEARLY_WORK_PLAN_items"
 				  label='תכנית עבודה'
+				  multiple
+				  chips
 				  flat
 				  hide-no-data
 				  hide-details
@@ -1035,8 +1116,8 @@ text-align: right;
 
 
 
-  <img class="watermark" src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="40"/>
-  <img class="mot_watermark" src="https://www.gov.il/BlobFolder/office/ministry_of_transport_and_road_safety/he/ministry_of_transport_and_road_safety.png" height="40"/>
+  <img class="watermark" src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="50"/>
+  <img class="mot_watermark" src="https://yovavsanders.github.io/Plan/MOT_logo_trsp.png" height="50"/>
 	<form name="form" style='height: 90%;' scrolling='no'> 
 			
 			<div id="map_div" style="width: 100%; height: 100%; float:left">
@@ -1720,6 +1801,78 @@ function degreesToRadians(degrees) {
 		});
 	}
 
+	function get()
+	{
+
+		$.getJSON(appVue.qpt, function(data) {
+			if (appVue.usrname == data[0].UN && appVue.passwrd == data[0].PW)
+			{
+
+				var y = document.getElementById("log");
+				document.getElementById("log").remove();
+				ShowWatermarks();
+			}
+			else
+			{
+				appVue.log_alert = true;
+			}
+		});
+	}
+
+
+	Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+	}
+	NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+		for(var i = this.length - 1; i >= 0; i--) {
+			if(this[i] && this[i].parentElement) {
+				this[i].parentElement.removeChild(this[i]);
+			}
+		}
+	}
+
+
+function ShowWatermarks()
+{
+		var sm = document.getElementsByClassName("select_map_watermark")[0];
+		sm.style.visibility = "";
+		var fl = document.getElementsByClassName("filter_watermark")[0];
+		fl.style.visibility = "";
+		var ms = document.getElementsByClassName("measure_watermark")[0];
+		ms.style.visibility = "";
+		var al = document.getElementsByClassName("add_layer_watermark")[0];
+		al.style.visibility = "";
+		var inf = document.getElementsByClassName("info_watermark")[0];
+		inf.style.visibility = "";
+		var sr = document.getElementsByClassName("search_watermark")[0];
+		sr.style.visibility = "";
+		MD = document.getElementById('map_div');
+		MD.hidden = false;
+
+		appVue.dialog_layers = true;
+		govmap.zoomToXY({ x: 182000, y: 664000, level: 5, marker: false });
+}
+
+
+function HideWatermarks()
+{
+		var sm = document.getElementsByClassName("select_map_watermark")[0];
+		sm.style.visibility = "hidden";
+		var fl = document.getElementsByClassName("filter_watermark")[0];
+		fl.style.visibility = "hidden";
+		var ms = document.getElementsByClassName("measure_watermark")[0];
+		ms.style.visibility = "hidden";
+		var al = document.getElementsByClassName("add_layer_watermark")[0];
+		al.style.visibility = "hidden";
+		var inf = document.getElementsByClassName("info_watermark")[0];
+		inf.style.visibility = "hidden";
+		var sr = document.getElementsByClassName("search_watermark")[0];
+		sr.style.visibility = "hidden";
+		MD = document.getElementById('map_div');
+		MD.hidden = true;
+}
+
+
 var diyur_selected;
 var layerData;
 //var my_token = "5a4b8472-b95b-4687-8179-0ccb621c7990";//localhost
@@ -1732,6 +1885,15 @@ var plan_names = [];
 var setl_names = [];
 var features = []
 $(document).ready(function (){
+
+
+		HideWatermarks();
+
+
+
+
+
+
 		govmap.createMap('map_div', {
 			token: my_token,
 			visibleLayers: ["PerekDiurMitcham"],
@@ -1782,13 +1944,22 @@ $(document).ready(function (){
 });
 
 var tableData = [];
-var WktExtent = ""
+var WktExtent = "";
 var planning_types = {};
+//var filteredData;
 
 var appVue = new Vue({
     el:"#toolbar_app",
     vuetify: new Vuetify(),
-    data : {
+    data () {
+      return {
+
+		log: true,
+
+		qpt: "https://yovavsanders.github.io/Plan/enter.json",
+		usrname: "",
+		passwrd: "",
+		log_alert: false,
 
 
 		feat_added_cnt: 0,
@@ -1856,8 +2027,8 @@ var appVue = new Vue({
 		PLANING_TYPE: [],
 		MAIN_STATUS: [],
 		PLAN_STATUS: [],
-		FLAT_NUMBER: "",
-		YEARLY_WORK_PLAN: "",
+		FLAT_NUMBER: [],
+		YEARLY_WORK_PLAN: [],
 		BLOCKS: [],
 		SETL_NAME: [],
 
@@ -1875,7 +2046,7 @@ var appVue = new Vue({
 		//PLANING_TYPE_items: ['לא סטטוטורי', 'מסמך מדיניות', 'תכנית כוללנית', 'תכנית מועדפת לדיור', 'תכנית מפורטת', 'תכנית מתאר כוללנית/ מתאר', 'תכנית מתאר מקומית'],
 		MAIN_STATUS_items: ['אסטרטגי', 'קדם תכנון', 'בתהליך', 'מאושר'],
 		PLAN_STATUS_items: ['בבדיקה תכנונית', 'בהליך אישור', 'בהליך סטטוטורי', 'בהמתנה', 'בהפקדה', 'במילוי תנאים להפקדה', 'הוסר', 'הופק נוסח אישור', 'טרום הגשה', 'מאושר', 'ממתינות להכרעה בתכנית', 'פורסם לאישור', 'קליטת תכנית'],
-		FLAT_NUMBER_items: ['50 - 250', '250 - 500','500 - 1000','1000 - 5000','5000 - 10000','10000 - 20000','20000 - 50000','50000 - 100000','100000 - 500000' ],
+		FLAT_NUMBER_items: ['0 - 50', '50 - 250', '250 - 500','500 - 1000','1000 - 5000','5000 - 10000','10000 - 20000','20000 - 50000','50000 - 100000','100000 - 500000' ],
 		YEARLY_WORK_PLAN_items: ['2017', '2018', '2019', '2020', '2021', '2021-2040', '2022', '2022-2025', '2023-2025', '2024', '2026-2030', '2027', '2031-2035', '2036-2040'],
 		SETL_NAME_items: [],
 		dialog_layers: false,
@@ -1908,6 +2079,7 @@ var appVue = new Vue({
 		mdiClose: false,
 
 		mdi_text: "בחירת תכנית על ידי שרטוט מצולע על המפה"
+	  }
 	},
 
 	
@@ -2015,7 +2187,7 @@ var appVue = new Vue({
 		return (sa);
 	},
 		getValueByFieldName(polygonname, field){//, Field){
-			var filteredData = this.desserts.filter(function(item) {
+			filteredData = this.desserts.filter(function(item) {
 				item["POLYGON_NAME"] == polygonname;
 			});
 			return filteredData[0];
@@ -2071,7 +2243,7 @@ var appVue = new Vue({
 
 					}
 
-					var filteredData = features.filter(function(item) {
+					filteredData = features.filter(function(item) {
 						return isInArray(item["POLYGON_NAME"], id_list);
 					});
 					for (i = 0; i < filteredData.length; i++)
@@ -2124,7 +2296,10 @@ var appVue = new Vue({
 			var query = "";
 
 
-			var filteredData = features;
+			filteredData = features.filter(function(item) {
+							return item;
+					});
+			 ///?????? make it loop
 
 			var setl_name = this.SETL_NAME;
 			if (setl_name.length > 0){
@@ -2178,7 +2353,7 @@ var appVue = new Vue({
 				var main_s = this.MAIN_STATUS;
 				//query = query + "MAIN_STATUS ='"+this.MAIN_STATUS+"' AND ";
 
-				var filteredData = filteredData.filter(function(item) {
+				filteredData = filteredData.filter(function(item) {
 						return main_s.includes(item["MAIN_STATUS"]);
 				});
 				var POLYGON_NAMES = [];
@@ -2192,7 +2367,7 @@ var appVue = new Vue({
 			}
 			if (this.PLAN_STATUS.length > 0){
 				var plan_s = this.PLAN_STATUS;
-				var filteredData = filteredData.filter(function(item) {
+				filteredData = filteredData.filter(function(item) {
 						return plan_s.includes(item["PLAN_STATUS"]);
 				});
 				var in_query = "";
@@ -2203,23 +2378,74 @@ var appVue = new Vue({
 				in_query = in_query.substring(0, in_query.length - 1);
 				query = query + "PLAN_STATUS  IN ("+in_query+") AND "
 			}
-			if (this.FLAT_NUMBER != ""){
-				flats_numbers = this.FLAT_NUMBER.split(" - ");
-				var min = flats_numbers[0];
-				var max = flats_numbers[1];
-				filteredData = filteredData.filter(function(item) {
-						return item["FLAT_NUMBER"] > min &&  item["FLAT_NUMBER"] < max;
-				});
+			if (this.FLAT_NUMBER.length > 0){
 
-				query = query + "(FLAT_NUMBER BETWEEN "+flats_numbers[0]+" AND "+ flats_numbers[1] + ") AND ";
-			}
-			if (this.YEARLY_WORK_PLAN != "")
-			{
-				var yearly_work = this.YEARLY_WORK_PLAN;
-				var filteredData = filteredData.filter(function(item) {
-						return item["YEARLY_WORK_PLAN"] == yearly_work;
+
+
+
+
+
+
+				filtered = [];
+
+
+
+				//var flats_numbers = this.FLAT_NUMBER;
+				var flat_numbers_list = [];
+
+				for (i = 0; i < this.FLAT_NUMBER.length; i++ )
+				{
+					flats_numbers = this.FLAT_NUMBER[i].split(" - ");
+					var min = flats_numbers[0];
+					var max = flats_numbers[1];
+					li = [];
+					for (i = 0; i < filteredData.length; i ++)
+					{
+							item = filteredData[i];
+							if (item["FLAT_NUMBER"] > min &&  item["FLAT_NUMBER"] < max)
+							{
+								if (flat_numbers_list.includes(item["FLAT_NUMBER"]) == false)
+								{
+									flat_numbers_list.push(item["FLAT_NUMBER"]);
+								}
+							}
+					};
+					if (this.FLAT_NUMBER.length > 1 && i < this.FLAT_NUMBER.length -1)
+					{
+						query = query + "(FLAT_NUMBER BETWEEN "+flats_numbers[0]+" AND "+ flats_numbers[1] + ") OR ";
+					}
+					else
+					{
+						query = query + "(FLAT_NUMBER BETWEEN "+flats_numbers[0]+" AND "+ flats_numbers[1] + ")";
+					}
+				}
+				console.log(flat_numbers_list);
+				filteredData = filteredData.filter(function(item) {
+						return flat_numbers_list.includes(item["FLAT_NUMBER"]);
 				});
-				query = query + "YEARLY_WORK_PLAN ='"+this.YEARLY_WORK_PLAN+"' AND ";
+				console.log(query);
+			}
+			if (this.YEARLY_WORK_PLAN.length > 0)
+			{
+				var yearly_work_plan = this.YEARLY_WORK_PLAN;
+				if (yearly_work_plan.length > 0){
+
+					in_query = "";
+					for (i = 0; i < yearly_work_plan.length; i++)
+					{
+						in_query = in_query + "'" + yearly_work_plan[i] + "',";
+						
+						filteredData = filteredData.filter(function(item) {
+							if (yearly_work_plan.length > 0)
+							{
+								return yearly_work_plan.includes(item["YEARLY_WORK_PLAN"]);
+							}
+						});
+					}
+					in_query = in_query.substring(0, in_query.length - 1);
+					query = query + "YEARLY_WORK_PLAN IN ("+in_query+") AND ";
+				}
+				console.log(query);
 			}
 
 			filteredDataTempAll = [];
@@ -2230,7 +2456,7 @@ var appVue = new Vue({
 				{
 					block = this.BLOCKS_index[block_s[i]];
 					console.log(block);
-					var filteredDataTemp = filteredData.filter(function(item) {
+					filteredDataTemp = filteredData.filter(function(item) {
 						return item[block] != "";
 					});
 					for (ii = 0; ii < filteredDataTemp.length; ii++)
@@ -2260,7 +2486,7 @@ var appVue = new Vue({
 				{
 					obj = filteredData[i];
 					obj.flat_number = obj.FLAT_NUMBER;
-					delete obj.FLAT_NUMBER;
+					//delete obj.FLAT_NUMBER;
 					tableData.push(obj);
 				}
 
@@ -2304,7 +2530,7 @@ var appVue = new Vue({
 			}
 			query = query + " OBJECTID > -1"
 
-			var filteredData = features.filter(function(item) {
+			filteredData = features.filter(function(item) {
 						return ((item["POLYGON_NAME"] == appVue.POLYGON_NAME && item["POLYGON_NAME"] != "") || (item["PLAN_NB"] == appVue.PLAN_NB &&  item["PLAN_NB"]) ||  (item["PLAN_NAME"] == appVue.PLAN_NAME && item["PLAN_NAME"] != ""))
 						//&& (item["POLYGON_NAME"] != "" &&  item["PLAN_NB"] != "" && item["PLAN_NAME"] != "")
 			});
@@ -2692,7 +2918,7 @@ var appVue = new Vue({
 
 var arg1;
 var AllQueries = ["Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuchimNekudot","Diyur:PerekDiurMitcham", "Tachbura:METRO_LINE","Tachbura:METRO_STAT", "Tachbura:WPLAN2019Q2", "Taasuka:perekTaasukaTochniyot", "Taasuka:perekTaasukaTiadufim",
-"Additional:PARCEL_ALL", "Additional:SUB_GUSH_ALL",
+"Additional:PARCEL_ALL", "Additional:SUB_GUSH_ALL", "Additional:MEHOZIOT_APP_YK", "Additional:MEHOZIOT_APP_TABA","Additional:TOCHNIOTAVODA",
 "sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל",
 "sites_tama1Points:אתר איגום והחדרה",
 "sites_tama1Points:אתר גפמ",
