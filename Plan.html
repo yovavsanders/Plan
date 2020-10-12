@@ -1543,6 +1543,7 @@ color="#1A237E"
 
 
 
+
 			<v-dialog
 			  v-model="dialog"
 			  width="500"
@@ -1619,6 +1620,18 @@ color="#1A237E"
 	>
    הקובץ שנבחר אינו תקין
 	</v-snackbar>
+
+
+	<v-dialog v-model="scss">
+		<v-card>
+		<v-alert
+		dense
+		type="success"
+	  >
+		הרישום בוצע  <strong>בהצלחה</strong> !
+	  </v-alert>
+	  </v-card>
+	  </v-dialog>
 
 </v-app>
 </div>
@@ -2092,6 +2105,7 @@ const appVue = new Vue({
     vuetify: new Vuetify(),
     data () {
       return {
+		scss:false,
 		user: null,
 		signbtn: true,
 		welcome: "",
@@ -2334,6 +2348,8 @@ const appVue = new Vue({
             }).then(() => {
 				console.log("ok");
 				ShowWatermarks();
+				this.reg_dialog=false;
+          		this.scss = true;
 
             }).catch(err => {
                 console.log("error");
