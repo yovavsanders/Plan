@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html style='width:100%; height:100%;'>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+  <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style scoped>
+    .v-progress-circular {
+      margin: 1rem;
+    }
+
+    [v-cloak] {
+        display: none;
+    }
+
+
+    .block {
+    position: absolute;
+    left: 10px;
+}
+    
+    
+    </style>
+<title>שולחן השרטוט ניהול משתמשים</title>
+
+<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script>  
+<link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'> 
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script src="https://polyfill.io/v3/polyfill.js?features=es5,es6,es7&flags=gated"></script> 
+
+</head>
+
+<body style='width:100%; height:95%;' scrolling='no' dir="rtl">
+<div id="app">
+    <v-app v-cloak right style='background-image: linear-gradient(to bottom right, #FAFAFA ,  #BBDEFB); opacity: 90%;'>
+      <v-main>
+
+        <v-container>
+
+          <v-app-bar color="rgba(255, 255, 255, 0.8)" justify="space-around">
+
+          <div id="enter">
+            <v-btn text small 
+            @click="login_true" > כניסה 
+            <v-icon
+            class="ml-1"
+            small
+          >mdi-arrow-left
+          </v-icon></v-btn>
+          </div>
+
+
+          <div id="exit" hidden="true">
+            <v-btn text small 
+            @click="signOut" > יציאה
+            <v-icon
+            class="ml-1"
+            small
+          >mdi-arrow-right
+          </v-icon></v-btn>
+
+          </div>
+
+
+
+          <div style="margin-top: 17px; font-size: small;"><p class="center text small" >שולחן השרטוט הממשלתי - ניהול משתמשים</p></div>
+
+
+          <div id="settings" class="block">
+            <v-icon
+            left
+            class="ml-1"
+            small @click="settings=true" 
+          >mdi-settings
+          </v-icon>
+          </div>
+          
+          
+
+          </v-app-bar>
+
+
+          <v-data-table
+    :headers="headers"
+    :items="desserts"
+    sort-by="first_name"
+    class="elevation-1"
+  >
+    <template v-slot:top>
+      <v-toolbar
+        flat
+      >
+        <v-toolbar-title>ניהול פרטי משתמשים</v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
+        <v-spacer></v-spacer>
+        <v-dialog
+          v-model="dialog"
+          max-width="500px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              v-bind="attrs"
+              v-on="on"
+            >
+              משתמש חדש
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.first_name"
+                      label="שם פרטי"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.last_name"
+                      label="שם משפחה"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="editedItem.organization"
+                    label="ארגון"
+                  ></v-text-field>
+                </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.email"
+                      label="מייל"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.is_valid"
+                      label="מאומת"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.admin"
+                      label="מנהל"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="close"
+              >
+                ביטול
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="save"
+              >
+                שמירה
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="headline">האם לבצע מחיקת משתמש?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDelete">ביטול</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm">ביצוע</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        small
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
+    </template>
+    <template v-slot:no-data>
+      <v-btn
+        color="primary"
+        @click="initialize"
+      >
+        Reset
+      </v-btn>
+    </template>
+  </v-data-table>
+
+
+          
+        <v-dialog
+        v-model="settings"
+        max-width="600">
+        <v-card>
+            <v-card-title>
+                הגדרות
+            </v-card-title>
+            <v-card-text>
+                <v-btn class="ma-2" tile outlined color="success">
+                     שינוי פרטי משתמש <v-icon left>mdi-pencil</v-icon>
+                  </v-btn>
+            </v-card-text>
+        </v-card>
+
+
+        </v-dialog>
+
+
+
+
+
+
+      
+
+
+
+
+
+
+
+        </v-container >
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-functions.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
+
+  <script>
+
+
+
+
+
+
+
+		// Your web app's Firebase configuration
+		var firebaseConfig = {
+			apiKey: "AIzaSyDhrgO0rBHkeRvhM74rtv3kwSiWyFxh1eQ",
+			authDomain: "tplangov.firebaseapp.com",
+			databaseURL: "https://tplangov.firebaseio.com",
+			projectId: "tplangov",
+			storageBucket: "tplangov.appspot.com",
+			messagingSenderId: "785302920373",
+			appId: "1:785302920373:web:69fa25442098a8525af2fc",
+			measurementId: "G-7DZFG0J39E"
+	};
+
+
+
+
+
+	// Initialize Firebase
+
+
+    async function getUsers() {
+        const snapshot = await firebase.firestore().collection('users').get();
+        return snapshot.docs.map(doc => doc.data());
+    }
+
+
+	firebase.initializeApp(firebaseConfig);
+	const db = firebase.firestore();
+	const auth = firebase.auth();
+
+
+    var app_users = [];
+
+    $(document).ready(function ()
+    {
+        app_users = getUsers();
+
+        app_users.then(function (e)
+        { 
+            console.log(e);
+            appVue.desserts = e;
+        });
+    });
+
+
+
+    
+
+
+var dref ;
+
+const appVue = new Vue({
+    el: '#app',
+    vuetify: new Vuetify(),
+    data () {
+        return {
+            settings: false,
+            dialog: false,
+            dialogDelete: false,
+            headers: [
+                {
+                text: 'מזהה',
+                align: 'start',
+                sortable: false,
+                value: 'user_id',
+                },
+                { text: 'שם פרטי', value: 'first_name' },
+                { text: 'שם משפחה', value: 'last_name' },
+                { text: 'ארגון', value: 'organization' },
+                { text: 'מייל', value: 'email' },
+                { text: 'מאומת', value: 'is_valid' },
+                { text: 'מנהל', value: 'admin', sortable: false },
+                { text: 'עריכה', value: 'actions', sortable: false },
+            ],
+            desserts: [],
+            editedIndex: -1,
+            editedItem: {
+                first_name: '',
+                last_name: '',
+                organization: '',
+                email: '',
+                is_valid: true,
+                admin: false,
+            },
+            defaultItem: {
+                first_name: '',
+                last_name: '',
+                organization: '',
+                email: '',
+                is_valid: true,
+                admin: false,
+            }
+        }
+    },
+    
+    computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'משתמש חדש' : 'עריכת פרטים'
+      },
+    },
+
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+      dialogDelete (val) {
+        val || this.closeDelete()
+      },
+    },
+
+    created () {
+      this.initialize()
+    },
+
+    methods: {
+
+        signIn()
+		{
+				this.reg_dialog = false;
+				// get user info
+				const email = this.email
+				const password = this.password;
+				ShowWatermarks();
+
+		},
+		
+		signOut()
+		{
+			firebase.auth().signOut().then(function() {
+				console.log("Sign-out successful.");
+
+				appVue.welcome = "";
+				appVue.email = "";
+				appVue.password= "";
+				appVue.log_alert = false;
+
+				var enter = document.getElementById("enter");
+				enter.hidden = false;
+
+				var exit  = document.getElementById("exit");
+				exit.hidden = true;
+
+				appVue.turn_on_signbtn();
+				HideWatermarks();
+
+			}).catch(function(error) {
+				console.log("Sign-out Error.");
+			});
+        },
+        
+
+        login_true()
+        {
+			
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+					if (user.emailVerified)
+					{
+						console.log("User is signed in.")
+						console.log(user.uid);
+						console.log(user.email);
+						appVue.user = user;
+
+						
+						
+						appVue.login= false;
+						appVue.welcome = user.email;
+
+						var enter = document.getElementById("enter");
+						enter.hidden = true;
+
+
+						var exit  = document.getElementById("exit");
+						exit.hidden = false;
+
+
+						appVue.turn_off_signbtn();
+
+						appVue.log = false;
+
+						ShowWatermarks();
+					}
+
+                } else {
+                    //appVue.log  = true;
+                }
+            });
+		},
+      initialize () {
+        this.desserts = [
+         
+        ]
+      },
+
+      editItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      },
+
+      deleteItemConfirm () {
+        this.desserts.splice(this.editedIndex, 1)
+        this.closeDelete()
+      },
+
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      closeDelete () {
+        this.dialogDelete = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
+      },
+    },  
+});
+
+
+  
+  
+  </script>
+
+  
+</body>
+</html>
