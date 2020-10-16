@@ -106,6 +106,15 @@ text-align: right;
           </v-app-bar>
 
 
+						<v-text-field
+						  v-model="search"
+						  append-icon="mdi-magnify"
+						  placeholder="חיפוש בתוצאות"
+						  single-line
+						  hide-details
+						  style="width: 30%; margin-left: 10px;  margin-right: 10px;"
+						></v-text-field>
+					
           <v-data-table
     :headers="headers"
     :items="users"
