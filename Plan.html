@@ -411,6 +411,33 @@ text-align: right;
 		class="pa-4 pt-6"
 	  >
 
+	  <v-text-field
+	  v-model="first_name"
+	  right
+	  single-line
+	  solo
+	  placeholder="שם פרטי"
+	  style="min-height: 96px"
+	></v-text-field>
+  
+	<v-text-field
+	v-model="last_name"
+	right
+	single-line
+	solo
+	placeholder="שם משפחה"
+	style="min-height: 96px"
+  ></v-text-field>
+  
+  <v-text-field
+  v-model="organization"
+  right
+  single-line
+  solo
+  placeholder="ארגון"
+  style="min-height: 96px"
+></v-text-field>
+
 
 	  <v-text-field
 		v-model="email"
@@ -434,6 +461,9 @@ text-align: right;
 	  type="password"
 	  prepend-icon="lock"
 	></v-text-field>
+
+
+
   </v-form>
 
 
@@ -1396,7 +1426,7 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 
 	<v-tooltip left :disabled="!user">
 	<template v-slot:activator="{ on }">
-	<v-btn class="select_map_watermark" v-on="on" :disabled="!user.emailVerified"
+	<v-btn class="select_map_watermark" v-on="on" :disabled="!user_props.is_valid"
 	 v-model="mdiClose"
 	  @click="selectFromMapClick" 
 	  absolute
@@ -1416,7 +1446,7 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 
 	<v-tooltip left :disabled="!user">
 		<template v-slot:activator="{ on }">
-		<v-btn class="add_layer_watermark" v-on="on" :disabled="!user.emailVerified"
+		<v-btn class="add_layer_watermark" v-on="on" :disabled="!user_props.is_valid"
 		  @click="addLayer" 
 		  absolute
 		  dark
@@ -1435,7 +1465,7 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 
 	<v-tooltip left :disabled="!user">
 		<template v-slot:activator="{ on }">
-		<v-btn class="measure_watermark" v-on="on" :disabled="!user.emailVerified"
+		<v-btn class="measure_watermark" v-on="on" :disabled="!user_props.is_valid"
 		  @click="Measure" 
 		  absolute
 		  dark
@@ -1453,7 +1483,7 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 	
 	<v-tooltip right :disabled="!user">
 		<template v-slot:activator="{ on }">
-  <v-btn class="info_watermark" v-on="on" :disabled="!user.emailVerified"
+  <v-btn class="info_watermark" v-on="on" :disabled="!user_props.is_valid"
   absolute
   dark
   fab
@@ -1470,7 +1500,7 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 
 	<v-tooltip right :disabled="!user">
 		<template v-slot:activator="{ on }">
-<v-btn class="search_watermark" v-on="on" :disabled="!user.emailVerified"
+<v-btn class="search_watermark" v-on="on" :disabled="!user_props.is_valid"
 absolute
 dark
 fab
@@ -1487,7 +1517,7 @@ color="#1A237E"
 
 <v-tooltip right :disabled="!user">
 	<template v-slot:activator="{ on }">
-<v-btn class="filter_watermark" v-on="on" :disabled="!user.emailVerified"
+<v-btn class="filter_watermark" v-on="on" :disabled="!user_props.is_valid"
 absolute
 dark
 fab
@@ -2133,6 +2163,10 @@ const appVue = new Vue({
     vuetify: new Vuetify(),
     data () {
       return {
+		user_props: {is_valid: false},
+		first_name: "",
+		last_name: "",
+		organization: "",
 		scss:false,
 		mail_var_scss: false,
 		user: {emailVerified: false},
@@ -2300,31 +2334,41 @@ const appVue = new Vue({
             firebase.auth().signInWithEmailAndPassword(email, password).then(cred => {
 
 				console.log(cred.user.uid);
-				console.log(cred.user.emailVerified);
-				if (cred.user.emailVerified)
-				{
-					console.log("ok");
-					
-					var enter = document.getElementById("enter");
-					enter.hidden = true;
+				//console.log(cred.user.emailVerified);
+				//appVue.getUserProps(cred.user.uid);
+				dref = db.collection("users");
+				var query = dref.where("user_id", "==", cred.user.uid);
+				query.get().then(function (querySnapshot) {
+					querySnapshot.forEach(function (doc) {
+						console.log(doc.data());
+						appVue.user_props= doc.data();
+						if (appVue.user_props.is_valid)
+						{
+							console.log("ok");
+							
+							var enter = document.getElementById("enter");
+							enter.hidden = true;
 
-					var exit  = document.getElementById("exit");
-					exit.hidden = false;
+							var exit  = document.getElementById("exit");
+							exit.hidden = false;
 
-					appVue.log_alert = false;
-					ShowWatermarks();
-				}
-				else{
-					console.log("error mail validate");
-					//appVue.reg_failed = true;
-					appVue.log_alert_text = "משתמש רשום אך יש לבצע אימות במייל"
-					appVue.log_alert = true;
-					HideWatermarks();
+							appVue.log_alert = false;
+							ShowWatermarks();
+						}
+						else{
+							console.log("error mail validate");
+							//appVue.reg_failed = true;
+							appVue.log_alert_text = "משתמש רשום אך יש לבצע אימות"
+							appVue.log_alert = true;
+							HideWatermarks();
 
-				}
-            }).then(() => {
+						}
+				
+					})
+				});
+			}).then(() => {
 
-				console.log("ok");
+			console.log("ok");
 
 
             }).catch(err => {
@@ -2343,38 +2387,59 @@ const appVue = new Vue({
         turn_on_signbtn() {
             this.signbtn = true;
 		},
-		
+		getUserProps(user_id)
+		{
+			this.user_props = null;
+			dref = db.collection("users");
+			var query = dref.where("user_id", "==", user_id);
+			query.get().then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+					console.log(doc.data());
+					appVue.user_props= doc.data();
+				})
+			});
+		},
 		login_true()
         {
 			
             firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
-					if (user.emailVerified)
-					{
-						console.log("User is signed in.")
-						console.log(user.uid);
-						console.log(user.email);
-						appVue.user = user;
+					//appVue.getUserProps(user.uid);
+					dref = db.collection("users");
+					var query = dref.where("user_id", "==", user.uid);
+					query.get().then(function (querySnapshot) {
+						querySnapshot.forEach(function (doc) {
+							console.log(doc.data());
+							appVue.user_props= doc.data();
+							if (appVue.user_props.is_valid)
+							{
+								console.log("User is signed in.")
+								console.log(user.uid);
+								console.log(user.email);
+								appVue.user = user;
 
-						
-						
-						appVue.login= false;
-						appVue.welcome = user.email;
+								
+								
+								appVue.login= false;
+								appVue.welcome = user.email;
 
-						var enter = document.getElementById("enter");
-						enter.hidden = true;
-
-
-						var exit  = document.getElementById("exit");
-						exit.hidden = false;
+								var enter = document.getElementById("enter");
+								enter.hidden = true;
 
 
-						appVue.turn_off_signbtn();
+								var exit  = document.getElementById("exit");
+								exit.hidden = false;
 
-						appVue.log = false;
 
-						ShowWatermarks();
-					}
+								appVue.turn_off_signbtn();
+
+								appVue.log = false;
+
+								ShowWatermarks();
+							}
+						})
+					});
+
 
                 } else {
                     //appVue.log  = true;
@@ -2393,19 +2458,34 @@ const appVue = new Vue({
             auth.createUserWithEmailAndPassword(email, password).then(cred => {
                 console.log(cred);
 				appVue.userid = cred.user.uid;
+				db.collection('users').add(
+                    {
+                        first_name: appVue.first_name,
+                        last_name: appVue.last_name,
+                        organization: appVue.organization,
+                        email: email,
+                        is_valid: false,
+                        admin:false,
+                        user_id: cred.user.uid,
+                    }
+                ).then(function(docRef) {
+					appVue.user = cred.user;
+					appVue.signOut();
+                    console.log("thats all");
+                });
 				console.log("ok");
 				//ShowWatermarks();
-				//this.reg_dialog=false;
-				user = cred.user;
-				user.sendEmailVerification().then(function() {
-					console.log('Email sent.');
-					appVue.mail_var_scss = true;
-					appVue.reg_dialog = false;
-					appVue.signOut();
+				this.reg_dialog=false;
+				//user = cred.user;
+				// user.sendEmailVerification().then(function() {
+				// 	console.log('Email sent.');
+				// 	appVue.mail_var_scss = true;
+				// 	appVue.reg_dialog = false;
+				// 	appVue.signOut();
 
-				}).catch(function(error) {
-					console.log('An error happened.');
-				});
+				// }).catch(function(error) {
+				// 	console.log('An error happened.');
+				// });
             }).then(() => {
 
           		
