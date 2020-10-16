@@ -89,7 +89,7 @@
 
           <v-data-table
     :headers="headers"
-    :items="desserts"
+    :items="users"
     sort-by="first_name"
     class="elevation-1"
   >
@@ -172,20 +172,22 @@
                     sm="6"
                     md="4"
                   >
-                    <v-text-field
+                    <v-select
+                      :items="[true,false]"
                       v-model="editedItem.is_valid"
-                      label="מאומת"
-                    ></v-text-field>
+                      label="מאושר"
+                    ></v-select>
                   </v-col>
                   <v-col
                     cols="12"
                     sm="6"
                     md="4"
                   >
-                    <v-text-field
+                    <v-select
+                      :items="[true,false]"
                       v-model="editedItem.admin"
                       label="מנהל"
-                    ></v-text-field>
+                    ></v-select>
                   </v-col>
                 </v-row>
               </v-container>
@@ -338,7 +340,7 @@
         app_users.then(function (e)
         { 
             console.log(e);
-            appVue.desserts = e;
+            appVue.users = e;
         });
     });
 
@@ -368,11 +370,11 @@ const appVue = new Vue({
                 { text: 'שם משפחה', value: 'last_name' },
                 { text: 'ארגון', value: 'organization' },
                 { text: 'מייל', value: 'email' },
-                { text: 'מאומת', value: 'is_valid' },
+                { text: 'מאושר', value: 'is_valid' },
                 { text: 'מנהל', value: 'admin', sortable: false },
                 { text: 'עריכה', value: 'actions', sortable: false },
             ],
-            desserts: [],
+            users: [],
             editedIndex: -1,
             editedItem: {
                 first_name: '',
@@ -487,25 +489,25 @@ const appVue = new Vue({
             });
 		},
       initialize () {
-        this.desserts = [
+        this.users = [
          
         ]
       },
 
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.users.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.users.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true
       },
 
       deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
+        this.users.splice(this.editedIndex, 1)
         this.closeDelete()
       },
 
@@ -527,9 +529,37 @@ const appVue = new Vue({
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            Object.assign(this.users[this.editedIndex], this.editedItem)
+
+            // change on firebase
+            console.log("// Create a reference to the users collection");
+            dref = db.collection("users");
+            console.log(dref);
+            console.log("// get the userid " + this.editedItem.user_id );
+            var query = dref.where("user_id", "==", this.editedItem.user_id);
+            first_name = this.editedItem.first_name;
+            last_name = this.editedItem.last_name;
+            organization =  this.editedItem.organization;
+            email = this.editedItem.email;
+            is_valid = this.editedItem.is_valid;
+            admin = this.editedItem.admin;
+            query.get().then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    console.log(doc.data().user_id);
+                    doc.ref.update({
+                        first_name: first_name,
+                        last_name: last_name,
+                        organization: organization,
+                        email: email,
+                        is_valid: is_valid,
+                        admin: admin
+
+                    });
+                })
+            });
+
         } else {
-          this.desserts.push(this.editedItem)
+          this.users.push(this.editedItem)
         }
         this.close()
       },
