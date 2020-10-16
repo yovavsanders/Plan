@@ -106,14 +106,6 @@ text-align: right;
           </v-app-bar>
 
 
-						<v-text-field
-						  v-model="search"
-						  append-icon="mdi-magnify"
-						  placeholder="חיפוש בתוצאות"
-						  single-line
-						  hide-details
-						  style="width: 30%; margin-left: 10px;  margin-right: 10px;"
-						></v-text-field>
 					
           <v-data-table
     :headers="headers"
@@ -133,7 +125,23 @@ text-align: right;
           vertical
         ></v-divider>
         <v-spacer></v-spacer>
+<v-text-field
+						  v-model="search"
+						  append-icon="mdi-magnify"
+						  placeholder="חיפוש בתוצאות"
+						  single-line
+						  hide-details
+						  style="width: 30%; margin-left: 10px;  margin-right: 10px;"
+						></v-text-field>
+<v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
+        <v-spacer></v-spacer>
+
         <v-dialog
+						
           v-model="dialog"
           max-width="500px"
         >
