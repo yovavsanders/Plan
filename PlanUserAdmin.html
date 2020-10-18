@@ -13,24 +13,19 @@
         display: none;
     }
 
+    .v-data-table__mobile-row__header {
 
-.v-data-table__mobile-row__header {
+      width: 30%;	
+      text-align: right;
+      direction: rtl;
 
-width: 49.5%;	
-text-align: right;
-  direction: rtl;
+    }
 
-}
-
-.v-data-table__mobile-row__cell {
-  width: 49.5%;
-  text-align: right;
-  direction: rtl;
-  }
-
-  
-
-
+    .v-data-table__mobile-row__cell {
+      width: 70%;
+      text-align: right;
+      direction: rtl;
+    }
 
 
     .block {
@@ -62,12 +57,14 @@ text-align: right;
       <v-main>
 
         <v-container>
+          <v-system-bar><div style="margin-top: 17px; font-size: small;"><p class="center text small" >{{welcome}}</p></div></v-system-bar>
+          
 
           <v-app-bar color="rgba(255, 255, 255, 0.8)" justify="space-around">
 
           <div id="enter">
             <v-btn text small 
-            @click="login_true" > כניסה 
+            @click="loginPerson" > כניסה 
             <v-icon
             class="ml-1"
             small
@@ -87,8 +84,6 @@ text-align: right;
 
           </div>
 
-
-
           <div style="margin-top: 17px; font-size: small;"><p class="center text small" >שולחן השרטוט הממשלתי - ניהול משתמשים</p></div>
 
 
@@ -106,14 +101,68 @@ text-align: right;
           </v-app-bar>
 
 
-					
-          <v-data-table
-    :headers="headers"
-    :items="users"
-    sort-by="first_name"
-    :search="search"
-    class="elevation-1"
-  >
+          <v-container fill-height align-center>
+            <v-layout row wrap align-center>
+              <v-flex class="text-xs-center">
+                <v-form :hidden="user_props.admin">
+                <v-card elevation="6" right max-width="400"
+                center
+                class="mx-auto">
+                  <v-card-text>
+                      <v-form
+                      class="pa-4 pt-6"
+                    >
+                  
+                  
+                    <v-text-field
+        
+                      v-model="email"
+                      right
+                      single-line
+                      solo
+                      placeholder="מייל"
+                      type="email"
+                      prepend-icon="person"
+                    ></v-text-field>
+            
+                    <v-text-field right
+        
+                      v-model="password"
+                      right
+                      single-line
+                      solo
+                      placeholder="סיסמא"
+                      style="min-height: 96px"
+                      type="password"
+                      prepend-icon="lock"
+        
+                    ></v-text-field>
+                    </v-form>
+                  </v-card-text>
+                <v-alert
+                  v-model="log_alert"
+                  dense
+                  outlined
+                  type="error"
+                >
+                {{log_alert_text}}
+                  
+                </v-alert>
+                  </v-card>
+                </v-form>
+                </v-layout>
+              </v-flex>
+
+          </v-container>
+
+
+          <v-data-table 
+          :hidden="!user_props.admin"
+          :headers="headers"
+          :items="users"
+          sort-by="first_name"
+          class="elevation-1"
+        >
     <template v-slot:top>
       <v-toolbar
         flat
@@ -125,11 +174,7 @@ text-align: right;
           vertical
         ></v-divider>
         <v-spacer></v-spacer>
-
-
-
         <v-dialog
-						
           v-model="dialog"
           max-width="500px"
         >
@@ -362,10 +407,12 @@ text-align: right;
     {
         app_users = getUsers();
 
+
         app_users.then(function (e)
         { 
             console.log(e);
             appVue.users = e;
+            appVue.login_true();
         });
     });
 
@@ -381,7 +428,12 @@ const appVue = new Vue({
     vuetify: new Vuetify(),
     data () {
         return {
-            search: "",
+          		email: undefined,
+              password: undefined,
+              log_alert: false,
+              log_alert_text:"שם המשתמש / הסיסמא שהוקלדו שגויים. אנא נסו שנית",
+              welcome: "",
+            user_props: {admin: false},
             settings: false,
             dialog: false,
             dialogDelete: false,
@@ -448,7 +500,6 @@ const appVue = new Vue({
 				// get user info
 				const email = this.email
 				const password = this.password;
-				ShowWatermarks();
 
 		},
 		
@@ -468,12 +519,70 @@ const appVue = new Vue({
 				var exit  = document.getElementById("exit");
 				exit.hidden = true;
 
-				appVue.turn_on_signbtn();
-				HideWatermarks();
+        //appVue.turn_on_signbtn();
+        
+        appVue.user_props.admin = false;
 
 			}).catch(function(error) {
 				console.log("Sign-out Error.");
 			});
+        },
+
+        loginPerson()
+        {
+
+            const email = this.email;
+            const password = this.password;
+            console.log(email, password);
+
+
+
+            firebase.auth().signInWithEmailAndPassword(email, password).then(cred => {
+
+				console.log(cred.user.uid);
+				//console.log(cred.user.emailVerified);
+				//appVue.getUserProps(cred.user.uid);
+				dref = db.collection("users");
+				var query = dref.where("user_id", "==", cred.user.uid);
+				query.get().then(function (querySnapshot) {
+					querySnapshot.forEach(function (doc) {
+						console.log(doc.data());
+						appVue.user_props= doc.data();
+						if (appVue.user_props.admin)
+						{
+							console.log("ok");
+							
+							var enter = document.getElementById("enter");
+							enter.hidden = true;
+
+							var exit  = document.getElementById("exit");
+              exit.hidden = false;
+              
+              appVue.welcome = appVue.user_props.email;
+
+							appVue.log_alert = false;
+						}
+						else{
+							console.log("error mail validate");
+							//appVue.reg_failed = true;
+							appVue.log_alert_text = "משתמש רשום אך אין הרשאות ניהול"
+							appVue.log_alert = true;
+
+						}
+				
+					})
+				});
+			}).then(() => {
+
+			console.log("ok");
+
+
+            }).catch(err => {
+                console.log("error");
+				//appVue.reg_failed = true;
+				appVue.log_alert_text = "שם המשתמש / הסיסמא שהוקלדו שגויים. אנא נסו שנית"
+				appVue.log_alert = true;
+            });
         },
         
 
@@ -481,39 +590,43 @@ const appVue = new Vue({
         {
 			
             firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-					if (user.emailVerified)
-					{
-						console.log("User is signed in.")
-						console.log(user.uid);
-						console.log(user.email);
-						appVue.user = user;
+            if (user) {
+                  dref = db.collection("users");
+				          var query = dref.where("user_id", "==", user.uid);
+			          	query.get().then(function (querySnapshot) {
+				        	querySnapshot.forEach(function (doc) {
+					      	console.log(doc.data());
+			            appVue.user_props= doc.data();
+						      if (appVue.user_props.admin)
+						      {
+                      console.log("User is signed in.")
+                      console.log(appVue.user_props.user_id);
+                      console.log(appVue.user_props.email);
+                      //appVue.user = user;
+                      //appVue.login= false;
+                      appVue.welcome = appVue.user_props.email;
 
-						
-						
-						appVue.login= false;
-						appVue.welcome = user.email;
-
-						var enter = document.getElementById("enter");
-						enter.hidden = true;
+                      var enter = document.getElementById("enter");
+                      enter.hidden = true;
 
 
-						var exit  = document.getElementById("exit");
-						exit.hidden = false;
+                      var exit  = document.getElementById("exit");
+                      exit.hidden = false;
 
 
-						appVue.turn_off_signbtn();
+                      //appVue.turn_off_signbtn();
 
-						appVue.log = false;
+                      //appVue.log = false;
 
-						ShowWatermarks();
-					}
-
-                } else {
+                    }
+                  });
+                });
+              } 
+              else {
                     //appVue.log  = true;
                 }
-            });
-		},
+              });
+		      },
       initialize () {
         this.users = [
          
