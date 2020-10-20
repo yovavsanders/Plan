@@ -75,6 +75,9 @@ text-align: right;
 	#myMenu{
       display: none;
     }
+	#desktopSystemBar{
+      display: none;
+    }
   }
 
    @media (min-width: 600px) {
@@ -82,6 +85,9 @@ text-align: right;
       display: none;
     }
 	#myMenuMobile{
+      display: none;
+    }
+	#mobileSystemBar{
       display: none;
     }
   }
@@ -128,7 +134,7 @@ text-align: right;
 .rmi_watermark
 {
     position:fixed;
-    right: 200px!important;
+    right: 300px!important;
     bottom: 45px!important;
     background-color: transparent;
     border: none;
@@ -140,7 +146,7 @@ text-align: right;
 .mot_watermark
 {
     position:fixed;
-    right: 150px!important;
+    right: 250px!important;
     bottom: 45px!important;
     background-color: transparent;
     border: none;
@@ -522,8 +528,23 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 	  </div>
 
 	  <div style="margin-top: 17px; font-size: small;"><p class="center text small" >{{welcome}}</p></div>
-	
+	  <v-spacer></v-spacer>
+	  <div id="desktopSystemBar">	  
+		<img  src="https://yovavsanders.github.io/Plan/plan_logo.png" height="30" style="margin-bottom: 5px;"/>
+		<img  src="https://yovavsanders.github.io/Plan/MOT_logo_trsp.png" height="45" style="margin-top: 5px;"/>
+		<img src="https://yovavsanders.github.io/Plan/RMI_logo_trsp.png" height="45" style="margin-top: 5px;"/>
+	  </div>
+
 	</v-system-bar>
+
+	<v-system-bar height="30" color="#E8EAF6" id="mobileSystemBar">
+	  <v-spacer></v-spacer>
+	  <img  src="https://yovavsanders.github.io/Plan/plan_logo.png" height="30"/>
+	  <img  src="https://yovavsanders.github.io/Plan/MOT_logo_trsp.png" height="45"/>
+	  <img src="https://yovavsanders.github.io/Plan/RMI_logo_trsp.png" height="45"/>
+	  <v-spacer></v-spacer>
+	</v-system-bar>
+
 
     <v-app-bar
       color="#1A237E"
@@ -733,16 +754,48 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
 
+				<v-expansion-panels>
+					<v-expansion-panel>
+					  <v-expansion-panel-header style="text-align: right;" disable-icon-rotate>
+						<v-badge left
+						color="green"
+						:content="tachbura_count"
+						:value="tachbura_count"
+						overlap
+						>
+						<span ><v-icon >mdi-plus</v-icon> תחבורה - שכבות נוספות</span>
+						</v-badge>
+					  </v-expansion-panel-header>
+					  <v-expansion-panel-content>
+		
+						<v-checkbox right
+							hide-details
+							v-model="picked"
+							label="בחר הכל"
+							value='TachburaMot'
+							@change="cbxChanged('TachburaMot')"
+						  ></v-checkbox>
+						<v-checkbox right v-model="query" label='מטרו - קווים במטרופולין ת"א' value="TachburaMot:METRO_LINE" hide-details @change="cbxChanged('TachburaMot:METRO_LINE')"></v-checkbox>
+						<v-checkbox  right v-model="query" label='מטרו - תחנות במטרופולין ת"א' value='TachburaMot:METRO_STAT' hide-details @change="cbxChanged('TachburaMot:METRO_STAT')" ></v-checkbox>
+						<v-checkbox  right v-model="query" label='פרויקטי תשתית תחבורה' value='TachburaMot:WPLAN2019Q2' hide-details @change="cbxChanged('TachburaMot:WPLAN2019Q2')" ></v-checkbox>
+
+						<v-checkbox right v-model="query" label='פרויקטי תשתית תחבורה 2020' value="TachburaMot:WORKPLAN" hide-details @change="cbxChanged('TachburaMot:WORKPLAN')"></v-checkbox>
+						<v-checkbox  right v-model="query" label='קווי רקל' value='TachburaMot:LRT_LINE' hide-details @change="cbxChanged('TachburaMot:LRT_LINE')" ></v-checkbox>
+						<v-checkbox  right v-model="query" label='תחנות רקל' value='TachburaMot:LRT_STAT' hide-details @change="cbxChanged('TachburaMot:LRT_STAT')" ></v-checkbox>
+						<v-checkbox right v-model="query" label='מסילות רכבת כבדה' value="TachburaMot:RAIL_LINE" hide-details @change="cbxChanged('TachburaMot:RAIL_LINE')"></v-checkbox>
+						<v-checkbox  right v-model="query" label='תחנות רכבת כבדה' value='TachburaMot:RAIL_STAT' hide-details @change="cbxChanged('TachburaMot:RAIL_STAT')" ></v-checkbox>
+						<v-checkbox  right v-model="query" label='קווי BRT' value='TachburaMot:BRT_LINE' hide-details @change="cbxChanged('TachburaMot:BRT_LINE')" ></v-checkbox>
+						<v-checkbox  right v-model="query" label='דיפו של מטרו ורקל' value='TachburaMot:DEPO_LRT_METRO' hide-details @change="cbxChanged('TachburaMot:DEPO_LRT_METRO')" ></v-checkbox>
+
+					  </v-expansion-panel-content>
+					</v-expansion-panel>
+				</v-expansion-panels>
+
 				<v-checkbox right
 					hide-details
-					v-model="picked"
 					label="בחר הכל"
-					value='Tachbura'
-					@change="cbxChanged('Tachbura')"
+					value=''
 			  	></v-checkbox>
-                <v-checkbox right v-model="query" label='מטרו - קווים במטרופולין ת"א' value="Tachbura:METRO_LINE" hide-details @change="cbxChanged('Tachbura:METRO_LINE')"></v-checkbox>
-				<v-checkbox  right v-model="query" label='מטרו - תחנות במטרופולין ת"א' value='Tachbura:METRO_STAT' hide-details @change="cbxChanged('Tachbura:METRO_STAT')" ></v-checkbox>
-				<v-checkbox  right v-model="query" label='פרויקטי תשתית תחבורה' value='Tachbura:WPLAN2019Q2' hide-details @change="cbxChanged('Tachbura:WPLAN2019Q2')" ></v-checkbox>
               </v-expansion-panel-content>
             </v-expansion-panel>
 		</v-expansion-panels>
@@ -792,7 +845,15 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 					@change="cbxChanged('Ptuchim')"
 			  	></v-checkbox>
 				<v-checkbox v-model="query" label="נקודות" value="Ptuchim:perekShrachimPtuchimNekudot" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimNekudot')" ></v-checkbox>
-				<v-checkbox v-model="query" label="רמות" value="Ptuchim:perekShrachimPtuchimBasis" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimBasis')" ></v-checkbox>
+				<!-- <v-checkbox v-model="query" label="רמות" value="Ptuchim:perekShrachimPtuchimBasis" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimBasis')" ></v-checkbox> -->
+				<v-checkbox v-model="query" label="מרחב נחל" value="Ptuchim:perekShrachimPtuchimMerhavNahal" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimMerhavNahal')" ></v-checkbox>
+				<v-checkbox v-model="query" label="שטחים בעלי חשיבות אקולוגית" value="Ptuchim:perekShrachimPtuchimEcoImportance" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimEcoImportance')" ></v-checkbox>
+				<v-checkbox v-model="query" label="מסדרונות אקולוגיים" value="Ptuchim:perekShrachimPtuchimEcoCorridors" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimEcoCorridors')" ></v-checkbox>
+				<v-checkbox v-model="query" label="מוגנים" value="Ptuchim:perekShrachimPtuchimMuganim" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimMuganim')" ></v-checkbox>
+				<v-checkbox v-model="query" label="תרבות" value="Ptuchim:perekShrachimPtuchimTarbut" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimTarbut')" ></v-checkbox>
+				<v-checkbox v-model="query" label="שטחים לשימור משאב מים" value="Ptuchim:perekShrachimPtuchimWaterConservation" hide-details   @change="cbxChanged('Ptuchim:perekShrachimPtuchimWaterConservation')" ></v-checkbox>
+
+
               </v-expansion-panel-content>
             </v-expansion-panel>
 		</v-expansion-panels>
@@ -1283,10 +1344,6 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 
 
 
-
-  <img class="watermark" src="https://www.gov.il/BlobFolder/office/iplan/he/iplan.png" height="50"/>
-  <img class="mot_watermark" src="https://yovavsanders.github.io/Plan/MOT_logo_trsp.png" height="50"/>
-  <img class="rmi_watermark" src="https://yovavsanders.github.io/Plan/RMI_logo_trsp.png" height="50"/>
 	<form name="form" style='height: 90%;' scrolling='no'> 
 			
 			<div id="map_div" style="width: 100%; height: 100%; float:left">
@@ -1419,6 +1476,7 @@ v-on="on"  v-show="signbtn" >הרשמה</v-btn>
 			</v-layout>
 		</v-bottom-sheet>
 	  </div>
+
 
 
 
@@ -2102,9 +2160,9 @@ $(document).ready(function (){
 
 		govmap.createMap('map_div', {
 			token: my_token,
-			visibleLayers: ["PerekDiurMitcham"],
+			//visibleLayers: ["PerekDiurMitcham"],
 			//layers:['PerekDiurMitcham', 'RAIL_STRATEGIC', 'METRO_STAT', 'METRO_LINE', 'WPLAN2019Q2', 'perekTaasukaTiadufim', 'perekTaasukaTochniyot', 'perekShrachimPtuchimNekudot', 'perekShrachimPtuchimBasis', "sites_tama1Points","sites_tama1Lines","sites_tama1Polygon"], 
-			layers:["PerekDiurMitcham"],
+			layers:[],
 			layersMode: 3, 
 			showXY: true,
 			level: 2,
@@ -2143,9 +2201,9 @@ $(document).ready(function (){
 				appVue.loading = false;
 		});
 		
-		appVue.picked.push("Diyur");
-		appVue.query.push("Diyur:PerekDiurMitcham");
-		appVue.diyur_count = 1;
+		//appVue.picked.push("Diyur");
+		//appVue.query.push("Diyur:PerekDiurMitcham");
+		//appVue.diyur_count = 1;
 
 
 
@@ -2185,10 +2243,6 @@ const appVue = new Vue({
                 'מינימום 7 אותיות קטנות וגדולות',
                 required: v => !!v || 'שדה זה הינו חובה',
             },
-
-		qpt: "https://yovavsanders.github.io/Plan/enter.json",
-		usrname: "",
-		passwrd: "",
 		log_alert: false,
 		log_alert_text:"שם המשתמש / הסיסמא שהוקלדו שגויים. אנא נסו שנית",
 
@@ -3316,7 +3370,7 @@ const appVue = new Vue({
 								return f.split(":")[0] == "Diyur";			
 				})).length;
 				this.tachbura_count = (q.filter(function(f) {
-								return f.split(":")[0] == "Tachbura";			
+								return f.split(":")[0] == "TachburaMot";			
 				})).length;
 				this.taasuka_count = (q.filter(function(f) {
 								return f.split(":")[0] == "Taasuka";			
@@ -3364,7 +3418,10 @@ const appVue = new Vue({
 
 
 var arg1;
-var AllQueries = ["Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuchimNekudot","Diyur:PerekDiurMitcham", "Tachbura:METRO_LINE","Tachbura:METRO_STAT", "Tachbura:WPLAN2019Q2", "Taasuka:perekTaasukaTochniyot", "Taasuka:perekTaasukaTiadufim",
+var AllQueries = ["Ptuchim:perekShrachimPtuchimMerhavNahal", "Ptuchim:perekShrachimPtuchimEcoImportance", "Ptuchim:perekShrachimPtuchimEcoImportance", "Ptuchim:perekShrachimPtuchimEcoCorridors", "Ptuchim:perekShrachimPtuchimMuganim", "Ptuchim:perekShrachimPtuchimTarbut", "Ptuchim:perekShrachimPtuchimWaterConservation",
+"Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuchimNekudot","Diyur:PerekDiurMitcham", "TachburaMot:METRO_LINE","TachburaMot:METRO_STAT", "TachburaMot:WPLAN2019Q2",
+'TachburaMot:WORKPLAN', 'TachburaMot:LRT_LINE', 'TachburaMot:LRT_STAT', 'TachburaMot:RAIL_LINE', 'TachburaMot:RAIL_STAT', 'TachburaMot:BRT_LINE', 'TachburaMot:DEPO_LRT_METRO',
+ "Taasuka:perekTaasukaTochniyot", "Taasuka:perekTaasukaTiadufim",
 "Additional:PARCEL_ALL", "Additional:SUB_GUSH_ALL", "Additional:MEHOZIOT_APP_YK", "Additional:MEHOZIOT_APP_TABA","Additional:TOCHNIOTAVODA",
 "sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל",
 "sites_tama1Points:אתר איגום והחדרה",
@@ -3434,7 +3491,7 @@ var AllQueries = ["Ptuchim:perekShrachimPtuchimBasis","Ptuchim:perekShrachimPtuc
 'moch_tama35_points:שדה תעופה',
 'moch_tama35_points:תחנות רכבת'];
 
-var AllLayers = ["Additional",'Diyur','Tachbura', 'Taasuka', 'Ptuchim', 'Tashtiyot', 'sites_tama1Points,sites_tama1Lines,sites_tama1Polygon', 'moch_tama35_points,moch_tama35_lines,moch_tama35_polygons'];
+var AllLayers = ["Additional",'Diyur','TachburaMot', 'Taasuka', 'Ptuchim', 'Tashtiyot', 'sites_tama1Points,sites_tama1Lines,sites_tama1Polygon', 'moch_tama35_points,moch_tama35_lines,moch_tama35_polygons'];
 
 
 var AllQueriesTama1 = ["sites_tama1Points:אזור מוטה שימושים נמליים, תשתיות, מער ופארק נחל", 
